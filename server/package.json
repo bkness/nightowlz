@@ -1,0 +1,23 @@
+{
+  "name": "barfly",
+  "version": "1.0.0",
+  "description": "BarFly is a nightlife discovery platform that helps users find bars, breweries, and events happening around them. It aggregates events from Facebook, Google, and Eventbrite, and sends notifications when a user’s saved bars post new events.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@googlemaps/google-maps-services-js": "^3.4.2",
+    "axios": "^1.13.6",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "eventbrite": "^1.3.0",
+    "express": "^5.2.1",
+    "facebook-nodejs-business-sdk": "^24.0.1",
+    "mongoose": "^9.3.3",
+    "node-cron": "^4.2.1"
+  }
+}

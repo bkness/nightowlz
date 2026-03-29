@@ -1,0 +1,87 @@
+# Node modules
+node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Expo
+.expo/
+.expo-shared/
+web-build/
+
+# Build outputs
+android/app/build/
+ios/build/
+
+# Mac system files
+.DS_Store
+
+# Xcode
+ios/Pods/
+ios/Podfile.lock
+ios/Podfile.local
+ios/Pods/
+ios/build/
+ios/DerivedData/
+ios/*.xcworkspace/
+ios/*.xcuserstate
+
+# Misc
+.env
+.env.*
+*.keystore
+*.jks
+
+# VSCode
+.vscode/
+
+# Coverage
+coverage/
+
+# Watchman
+.watchmanconfig
+
+# Metro
+metro-cache/
+
+# React Native packager
+*.packager.js
+
+# Expo managed assets
+*.expo
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+
+# Temporary files
+*.tmp
+*.temp
+
+# Test artifacts
+*.log
+
+# Firebase
+firebase-debug.log
+
+# CocoaPods
+ios/Pods/
+
+# Android Studio
+*.iml
+.idea/
+.gradle/
+build/
+
+# Misc
+*.swp
+*.swo
+
+# JetBrains IDEs
+.idea/
+*.iml
+out/

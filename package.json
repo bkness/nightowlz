@@ -1,0 +1,17 @@
+{
+  "name": "barfly",
+  "private": true,
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "start": "echo \"Run client or server individually\"",
+    "client": "npm --workspace client run start",
+    "server": "npm --workspace server run dev"
+  },
+  "devDependencies": {
+    "prettier": "^3.2.5",
+    "eslint": "^9.0.0"
+  }
+}

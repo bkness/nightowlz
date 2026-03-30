@@ -1,5 +1,6 @@
 import { RFValue } from "react-native-responsive-fontsize";
 import colors from "./colors";
+// import { FlipInEasyX } from "react-native-reanimated"; // Removed for build compatibility
 
 const glow = (color, radius = 18, offset = { width: 0, height: 0 }) => ({
   textShadowColor: color,
@@ -13,7 +14,10 @@ const typography = {
     fontSize: RFValue(42),
     color: colors.neonYellow,
     letterSpacing: 1,
-    ...glow(colors.glowYellow, 18),
+    ...glow(colors.glowYellow, 12),
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    marginTop: 18,
   },
 
   tagline: {
@@ -21,6 +25,7 @@ const typography = {
     fontSize: RFValue(20),
     color: colors.neonBlue,
     marginTop: -4,
+    marginBottom: 12,
     ...glow(colors.glowBlue, 12),
   },
 
@@ -50,9 +55,12 @@ const typography = {
   },
 
   label: {
-    fontSize: RFValue(14),
-    fontWeight: "600",
+    fontSize: RFValue(11),
+    fontWeight: "500",
     color: colors.muted,
+    marginTop: 4,
+    letterSpacing: 0.1,
+    textAlign: "center",
   },
 
   buttonLabel: {

@@ -1,5 +1,6 @@
 import React from "react";
-import { Pressable, StyleSheet, Text, View, Animated } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import Animated from "react-native-reanimated";
 import colors from "../../theme/colors";
 import typography from "../../theme/typography";
 import { useNavigation } from "@react-navigation/native";
@@ -15,7 +16,9 @@ export default function BarCard({ name, vibe, neighborhood, onPress }) {
       <View style={styles.row}>
         <Text style={styles.name}>{name}</Text>
         <View style={styles.vibeTag}>
-          <Animated.Text style={[styles.vibeText, neonPulse]}>{vibe}</Animated.Text>
+          <Animated.Text style={[styles.vibeText, neonPulse]}>
+            {vibe}
+          </Animated.Text>
         </View>
       </View>
       <Text style={styles.neighborhood}>{neighborhood}</Text>

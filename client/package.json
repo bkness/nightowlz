@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "npx expo start",
-    "ios": "npx expo start --ios",
-    "android": "npx expo start --android",
-    "web": "npx expo start --web"
+    "ios": "npx expo run:ios",
+    "android": "npx expo run:android",
+    "web": "npx expo run:web",
+    "postinstall": "node ./scripts/patch-folly-coroutine.js"
   },
   "dependencies": {
     "@react-navigation/bottom-tabs": "^7.15.7",
@@ -15,6 +16,7 @@
     "@react-navigation/native-stack": "^7.14.8",
     "axios": "^1.14.0",
     "expo": "~55.0.9",
+    "expo-blur": "~55.0.10",
     "expo-linear-gradient": "~55.0.9",
     "firebase": "^12.11.0",
     "react": "19.2.0",

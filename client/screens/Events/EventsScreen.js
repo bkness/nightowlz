@@ -16,7 +16,7 @@ export default function EventsScreen() {
               {
                 color: colors.neonYellow,
                 textShadowColor: colors.glowYellow,
-                textShadowRadius: 24,
+                textShadowRadius: 12,
                 textShadowOffset: { width: 0, height: 0 },
               },
             ]}

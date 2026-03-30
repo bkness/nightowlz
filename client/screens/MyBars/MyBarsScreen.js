@@ -9,7 +9,9 @@ import typography from "../../theme/typography";
 export default function MyBarsScreen() {
   // Use theme context if available, otherwise fallback to static colors
   let themeColors = colors;
-  try { themeColors = useTheme().colors || colors; } catch {}
+  try {
+    themeColors = useTheme().colors || colors;
+  } catch {}
   // For now, always empty. Replace with your saved bars logic.
   const savedBars = [];
 
@@ -23,7 +25,7 @@ export default function MyBarsScreen() {
             {
               color: themeColors.neonYellow,
               textShadowColor: themeColors.glowYellow,
-              textShadowRadius: 24,
+              textShadowRadius: 12,
               textShadowOffset: { width: 0, height: 0 },
             },
           ]}
@@ -37,7 +39,7 @@ export default function MyBarsScreen() {
             {
               color: themeColors.neonBlue,
               textShadowColor: themeColors.glowBlue,
-              textShadowRadius: 12,
+              textShadowRadius: 8,
               textShadowOffset: { width: 0, height: 0 },
             },
           ]}
@@ -46,10 +48,41 @@ export default function MyBarsScreen() {
         </Text>
       </View>
       {savedBars.length === 0 && (
-        <View style={[styles.emptyCard, { backgroundColor: "rgba(0,0,0,0.25)", borderColor: themeColors.neonYellow }]}> 
-          <MaterialCommunityIcons name="star-outline" size={40} color={themeColors.neonYellow} style={{ marginBottom: 8, textShadowColor: themeColors.glowYellow, textShadowRadius: 16 }} />
-          <Text style={[typography.heading, { color: themeColors.white, textAlign: "center" }]}>No bars saved yet!</Text>
-          <Text style={[typography.body, { color: themeColors.muted, textAlign: "center", marginTop: 4 }]}>Tap the star on a bar to add it here.</Text>
+        <View
+          style={[
+            styles.emptyCard,
+            {
+              backgroundColor: "rgba(0,0,0,0.25)",
+              borderColor: themeColors.neonYellow,
+            },
+          ]}
+        >
+          <MaterialCommunityIcons
+            name="star-outline"
+            size={40}
+            color={themeColors.neonYellow}
+            style={{
+              marginBottom: 8,
+              textShadowColor: themeColors.glowYellow,
+              textShadowRadius: 12,
+            }}
+          />
+          <Text
+            style={[
+              typography.heading,
+              { color: themeColors.white, textAlign: "center" },
+            ]}
+          >
+            No bars saved yet!
+          </Text>
+          <Text
+            style={[
+              typography.body,
+              { color: themeColors.muted, textAlign: "center", marginTop: 4 },
+            ]}
+          >
+            Tap the star on a bar to add it here.
+          </Text>
         </View>
       )}
     </NeonScreen>

@@ -1,5 +1,5 @@
+import Animated from "react-native-reanimated";
 import { useRef, useEffect } from "react";
-import { Animated } from "react-native";
 
 export default function useNeonPulse(duration = 1500) {
   const glow = useRef(new Animated.Value(0)).current;

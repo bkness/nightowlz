@@ -55,7 +55,9 @@ export default function NeonTabIcon({ name, label, focused, color }) {
   const insets = useSafeAreaInsets();
 
   return (
-    <View style={[styles.container, { paddingBottom: Math.max(insets.bottom, 8) }]}>
+    <View
+      style={[styles.container, { paddingBottom: Math.max(insets.bottom, 8) }]}
+    >
       <Ionicons
         name={name}
         size={focused ? 40 : 30}

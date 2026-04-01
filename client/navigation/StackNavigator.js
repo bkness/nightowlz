@@ -1,5 +1,5 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Easing } from "react-native-reanimated";
+import { Easing } from "react-native";
 import { colors } from "../theme";
 import TabNavigator from "./TabNavigator";
 import BarProfileScreen from "../screens/BarProfile/BarProfileScreen";

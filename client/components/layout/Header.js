@@ -32,8 +32,7 @@
 // });
 
 import React, { useEffect, useRef } from "react";
-import { View, Text, StyleSheet } from "react-native";
-import Animated from "react-native-reanimated";
+import { View, Text, StyleSheet, Animated } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import typography from "../../theme/typography";
 import colors from "../../theme/colors";

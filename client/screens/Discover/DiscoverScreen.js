@@ -6,7 +6,7 @@ import {
   View,
   Animated as RNAnimated,
 } from "react-native";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import NeonScreen from "../../components/common/NeonScreen";
 import { gradients } from "../../theme";
@@ -21,25 +21,34 @@ const BARS = [
     name: "Chaparral Bar",
     vibe: "DJ Night Tonight",
     neighborhood: "Main Street",
+    distance: "0.8 mi",
+    category: "Neon Lounge",
+    icon: "owl",
   },
   {
     id: 2,
     name: "Main Stage",
     vibe: "Live Music - Friday 9PM",
     neighborhood: "Main Street",
+    distance: "1.2 mi",
+    category: "Live Music",
+    icon: "music-clef-treble",
   },
   {
     id: 3,
     name: "Kactus Kates",
     vibe: "Free JukeBox Night",
     neighborhood: "Riverfront District",
+    distance: "2.4 mi",
+    category: "Late Night",
+    icon: "cactus",
   },
 ];
 
 export default function DiscoverScreen() {
   const [searchText, setSearchText] = useState("");
   const [isFocused, setIsFocused] = useState(false);
-  const glowAnimation = new RNAnimated.Value(0);
+  const glowAnimation = useRef(new RNAnimated.Value(0)).current;
 
   const handleFocus = () => {
     setIsFocused(true);
@@ -75,41 +84,39 @@ export default function DiscoverScreen() {
       <Header />
       {/* CONTENT */}
       <ScrollView
-        style={{ paddingHorizontal: 20, marginTop: 12 }}
+        style={{ paddingHorizontal: 16, marginTop: 18 }}
         keyboardDismissMode="on-drag"
         scrollEventThrottle={16}
       >
         {/* Search Input */}
-        <View style={styles.searchWrapper}>
+        <RNAnimated.View
+          style={[
+            styles.inputContainer,
+            {
+              shadowRadius,
+              borderColor: isFocused ? colors.neonYellow : colors.muted,
+              borderWidth: isFocused ? 1.5 : 1,
+            },
+          ]}
+        >
           <Ionicons
             name="search"
             size={18}
-            color={isFocused ? colors.neonYellow : colors.muted}
+            color={isFocused ? colors.neonYellow : colors.navInactive}
             style={styles.searchIcon}
           />
-          <RNAnimated.View
-            style={[
-              styles.inputContainer,
-              {
-                shadowRadius,
-                borderColor: isFocused ? colors.neonYellow : colors.muted,
-                borderWidth: isFocused ? 1.5 : 1,
-              },
-            ]}
-          >
-            <TextInput
-              style={styles.searchInput}
-              placeholder="Search by city..."
-              placeholderTextColor={colors.muted}
-              value={searchText}
-              onChangeText={setSearchText}
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-              keyboardType="default"
-              returnKeyType="done"
-            />
-          </RNAnimated.View>
-        </View>
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search by city..."
+            placeholderTextColor={colors.navInactive}
+            value={searchText}
+            onChangeText={setSearchText}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            keyboardType="default"
+            returnKeyType="done"
+          />
+        </RNAnimated.View>
 
         {/* Bar Cards */}
         {filteredBars.length > 0 ? (
@@ -119,6 +126,9 @@ export default function DiscoverScreen() {
               name={bar.name}
               vibe={bar.vibe}
               neighborhood={bar.neighborhood}
+              distance={bar.distance}
+              category={bar.category}
+              icon={bar.icon}
             />
           ))
         ) : (
@@ -141,32 +151,28 @@ export default function DiscoverScreen() {
 }
 
 const styles = StyleSheet.create({
-  searchWrapper: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 20,
-  },
   searchIcon: {
-    marginRight: 12,
-    marginLeft: 12,
-    zIndex: 10,
+    marginLeft: 14,
+    marginRight: 8,
   },
   inputContainer: {
-    flex: 1,
-    height: 44,
-    borderRadius: 12,
-    backgroundColor: "rgba(13, 2, 23, 0.6)",
+    flexDirection: "row",
+    alignItems: "center",
+    height: 58,
+    borderRadius: 16,
+    backgroundColor: "rgba(13, 2, 23, 0.62)",
     borderColor: colors.muted,
     shadowColor: colors.neonYellow,
-    shadowOpacity: 0.3,
+    shadowOpacity: 0.22,
     shadowOffset: { width: 0, height: 0 },
+    marginTop: 50,
+    marginBottom: 20,
   },
   searchInput: {
     flex: 1,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
+    paddingRight: 14,
     color: colors.white,
-    fontSize: 16,
+    fontSize: 18,
   },
   emptyState: {
     alignItems: "center",

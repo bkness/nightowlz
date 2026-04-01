@@ -5,13 +5,19 @@ import Animated, {
   withSpring,
   useAnimatedStyle,
 } from "react-native-reanimated";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import colors from "../../theme/colors";
 import typography from "../../theme/typography";
-import { useNavigation } from "@react-navigation/native";
 
-export default function BarCard({ name, vibe, neighborhood, onPress }) {
-  const navigation = useNavigation();
-
+export default function BarCard({
+  name,
+  vibe,
+  neighborhood,
+  onPress,
+  distance,
+  category,
+  icon = "owl",
+}) {
   // Press feedback animation
   const scale = useSharedValue(1);
   const opacity = useSharedValue(1);
@@ -39,13 +45,41 @@ export default function BarCard({ name, vibe, neighborhood, onPress }) {
         onPressOut={handlePressOut}
         style={styles.card}
       >
-        <View style={styles.row}>
-          <Text style={styles.name}>{name}</Text>
-          <View style={styles.vibeTag}>
-            <Text style={styles.vibeText}>{vibe}</Text>
+        <View style={styles.topRow}>
+          <View style={styles.thumbWrap}>
+            <MaterialCommunityIcons
+              name={icon}
+              size={26}
+              color={colors.neonYellow}
+            />
+          </View>
+
+          <View style={styles.contentCol}>
+            <Text style={styles.name} numberOfLines={2}>
+              {name}
+            </Text>
+
+            <View style={styles.vibeTagInline}>
+              <Text style={styles.vibeText} numberOfLines={1}>
+                {vibe}
+              </Text>
+            </View>
+
+            <View style={styles.metaRow}>
+              {!!distance && <Text style={styles.metaText}>{distance}</Text>}
+              {!!distance && !!neighborhood && (
+                <Text style={styles.metaDot}>•</Text>
+              )}
+              {!!neighborhood && (
+                <Text style={styles.metaText}>{neighborhood}</Text>
+              )}
+            </View>
+
+            {!!category && <Text style={styles.category}>{category}</Text>}
           </View>
         </View>
-        <Text style={styles.neighborhood}>{neighborhood}</Text>
+
+        <View style={styles.bottomGlowLine} />
       </Pressable>
     </Animated.View>
   );
@@ -53,48 +87,97 @@ export default function BarCard({ name, vibe, neighborhood, onPress }) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "rgba(255,255,255,0.05)",
-    borderRadius: 18,
-    padding: 16, // 8px * 2
-    marginBottom: 16, // 8px * 2
+    backgroundColor: "rgba(255,255,255,0.06)",
+    borderRadius: 20,
+    padding: 18,
+    marginBottom: 16,
     borderWidth: 1,
-    borderColor: "rgba(255, 184, 92, 0.35)",
+    borderColor: "rgba(255, 184, 92, 0.28)",
     shadowColor: colors.glowYellow,
-    shadowOpacity: 0.9,
-    shadowRadius: 14,
-    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.26,
+    shadowRadius: 16,
+    shadowOffset: { width: 0, height: 8 },
+    minHeight: 134,
   },
 
-  row: {
+  topRow: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    alignItems: "flex-start",
+  },
+
+  thumbWrap: {
+    width: 56,
+    height: 56,
+    borderRadius: 14,
     alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(255,255,255,0.04)",
+    borderWidth: 1,
+    borderColor: "rgba(123, 223, 255, 0.25)",
+    marginRight: 12,
+  },
+
+  contentCol: {
+    flex: 1,
+    paddingRight: 2,
   },
 
   name: {
     ...typography.subheading,
-    flexShrink: 1,
+    fontSize: 22,
+    lineHeight: 30,
+    letterSpacing: 0.2,
   },
 
-  vibeTag: {
+  metaRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 8,
+  },
+
+  metaText: {
+    ...typography.caption,
+    fontSize: 14,
+    color: colors.muted,
+  },
+
+  metaDot: {
+    color: colors.navInactive,
+    marginHorizontal: 6,
+    fontSize: 12,
+  },
+
+  category: {
+    ...typography.caption,
+    color: colors.navInactive,
+    marginTop: 4,
+    fontSize: 13,
+  },
+
+  vibeTagInline: {
     backgroundColor: "rgba(255, 184, 92, 0.15)",
     borderRadius: 12,
-    paddingVertical: 8, // 8px * 1
-    paddingHorizontal: 12, // 8px * 1.5
+    paddingVertical: 7,
+    paddingHorizontal: 10,
     borderWidth: 1,
     borderColor: colors.neonYellow,
-    marginLeft: 8, // 8px
+    maxWidth: 220,
+    marginTop: 6,
+    alignSelf: "flex-start",
   },
 
   vibeText: {
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: "700",
     color: colors.neonYellow,
-    letterSpacing: 0.5,
+    letterSpacing: 0.3,
   },
 
-  neighborhood: {
-    ...typography.caption,
-    marginTop: 8, // 8px
+  bottomGlowLine: {
+    marginTop: 14,
+    height: 2,
+    width: "100%",
+    borderRadius: 99,
+    backgroundColor: "rgba(123, 223, 255, 0.22)",
   },
 });

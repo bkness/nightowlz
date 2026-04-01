@@ -31,99 +31,37 @@
 //   },
 // });
 
-import React, { useEffect, useRef } from "react";
-import { View, Text, StyleSheet, Animated } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import typography from "../../theme/typography";
-import colors from "../../theme/colors";
-
-function MiniLogo() {
-  const glow = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(glow, {
-          toValue: 1,
-          duration: 1200,
-          useNativeDriver: true,
-        }),
-        Animated.timing(glow, {
-          toValue: 0,
-          duration: 1200,
-          useNativeDriver: true,
-        }),
-      ]),
-    ).start();
-  }, []);
-
-  const opacity = glow.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0.5, 1],
-  });
-  const scale = glow.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0.9, 1.1],
-  });
-
-  return (
-    <Animated.View style={[styles.pill, { opacity, transform: [{ scale }] }]}>
-      <Ionicons name="beer" size={70} color={colors.neonYellow} />
-    </Animated.View>
-  );
-}
+import React from "react";
+import { View, StyleSheet } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import NightOwlzLogo from "../common/NightOwlzLogo";
 
 export default function Header({ compact = false }) {
-  return (
-    <View style={[styles.container, compact && styles.compact]}>
-      {/* Left: logo + tagline */}
-      <View>
-        <Text style={typography.logo}>BarFly</Text>
-        <Text style={typography.tagline}>Find Your Night</Text>
-      </View>
+  const insets = useSafeAreaInsets();
 
-      {/* Right: animated mini logo */}
-      <MiniLogo />
+  return (
+    <View
+      style={[
+        styles.container,
+        { paddingTop: Math.max(insets.top, 10) },
+        compact && styles.compact,
+      ]}
+    >
+      <NightOwlzLogo compact={compact} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    ...typography.headerContainer,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: 16, // 8px * 2
-  },
-  compact: {
-    marginTop: 16, // 8px * 2
-    marginBottom: 8, // 8px
-  },
-  pill: {
     alignItems: "center",
     justifyContent: "center",
-    width: 100,
-    height: 100,
-    borderRadius: 999,
-    borderWidth: 1.5,
-    borderColor: colors.neonYellow,
-    backgroundColor: colors.neonYellow + "15",
-    shadowColor: colors.glowYellow,
-    shadowOpacity: 0.9,
-    shadowRadius: 12,
-    shadowOffset: { width: 0, height: 0 },
-    marginTop: 16, // 8px * 2
+    paddingHorizontal: 16,
+    marginBottom: 12,
   },
-  pillText: {
-    ...typography.label,
-    color: colors.neonYellow,
-    fontWeight: "700",
-    fontSize: 13,
-    letterSpacing: 0.5,
-    textShadowColor: colors.glowYellow,
-    textShadowRadius: 8,
-    textShadowOffset: { width: 0, height: 0 },
+  compact: {
+    marginTop: 0,
+    marginBottom: 8,
   },
 });
 

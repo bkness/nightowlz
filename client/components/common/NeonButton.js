@@ -4,7 +4,6 @@ import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
-  interpolate,
 } from "react-native-reanimated";
 import colors from "../../theme/colors";
 import typography from "../../theme/typography";
@@ -55,23 +54,25 @@ export default function NeonButton({ title, onPress }) {
 
 const styles = StyleSheet.create({
   wrapper: {
-    marginVertical: 12,
+    marginVertical: 8,
   },
 
   animatedContainer: {
-    borderRadius: 14,
+    borderRadius: 16,
     shadowColor: colors.glowYellow,
-    shadowRadius: 18,
+    shadowRadius: 14,
     shadowOffset: { width: 0, height: 0 },
   },
 
   button: {
-    paddingVertical: 16,
-    borderRadius: 14,
+    minHeight: 52,
+    borderRadius: 16,
+    alignItems: "center",
+    justifyContent: "center",
 
     // Subtle border for definition
     borderWidth: 1,
-    borderColor: "rgba(255, 184, 92, 0.4)",
+    borderColor: "rgba(255, 184, 92, 0.34)",
   },
 
   text: {

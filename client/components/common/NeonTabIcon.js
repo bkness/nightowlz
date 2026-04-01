@@ -47,12 +47,15 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import colors from "../../theme/colors";
 import typography from "../../theme/typography";
 
 export default function NeonTabIcon({ name, label, focused, color }) {
+  const insets = useSafeAreaInsets();
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingBottom: Math.max(insets.bottom, 8) }]}>
       <Ionicons
         name={name}
         size={focused ? 40 : 30}
@@ -95,10 +98,9 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     justifyContent: "center",
-    paddingTop: 0,
-    marginTop: 70,
+    paddingTop: 8, // 8px
     minWidth: 93,
-    height: 54,
+    height: "auto",
   },
 
   glow: (color) => ({
@@ -107,15 +109,14 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 0, height: 0 },
   }),
   pill: {
-    paddingHorizontal: 10,
-    paddingVertical: 4,
+    paddingHorizontal: 12, // 8px * 1.5
+    paddingVertical: 8, // 8px
     borderRadius: 16,
     borderWidth: 2,
     alignSelf: "center",
-    // No width or maxWidth: pill fits label perfectly
     width: "100%",
-    maxWidth: 100, // prevent excessively long labels from overflowing
-    marginTop: 4,
+    maxWidth: 100,
+    marginTop: 8, // 8px
     marginBottom: 0,
     shadowColor: colors.neonBlue,
     shadowOpacity: 0.7,

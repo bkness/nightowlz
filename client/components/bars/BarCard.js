@@ -1,6 +1,10 @@
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import Animated from "react-native-reanimated";
+import Animated, {
+  useSharedValue,
+  withSpring,
+  useAnimatedStyle,
+} from "react-native-reanimated";
 import colors from "../../theme/colors";
 import typography from "../../theme/typography";
 import { useNavigation } from "@react-navigation/native";
@@ -11,29 +15,53 @@ export default function BarCard({ name, vibe, neighborhood, onPress }) {
   const navigation = useNavigation();
   const neonPulse = useNeonPulse();
 
+  // Press feedback animation
+  const scale = useSharedValue(1);
+  const opacity = useSharedValue(1);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+    opacity: opacity.value,
+  }));
+
+  const handlePressIn = () => {
+    scale.value = withSpring(0.98, { damping: 15, mass: 1 });
+    opacity.value = withSpring(0.9, { damping: 15, mass: 1 });
+  };
+
+  const handlePressOut = () => {
+    scale.value = withSpring(1, { damping: 15, mass: 1 });
+    opacity.value = withSpring(1, { damping: 15, mass: 1 });
+  };
+
   return (
-    <Pressable onPress={onPress} style={styles.card}>
-      <View style={styles.row}>
-        <Text style={styles.name}>{name}</Text>
-        <View style={styles.vibeTag}>
-          <Animated.Text style={[styles.vibeText, neonPulse]}>
-            {vibe}
-          </Animated.Text>
+    <Animated.View style={animatedStyle}>
+      <Pressable
+        onPress={onPress}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        style={styles.card}
+      >
+        <View style={styles.row}>
+          <Text style={styles.name}>{name}</Text>
+          <View style={styles.vibeTag}>
+            <Animated.Text style={[styles.vibeText, neonPulse]}>
+              {vibe}
+            </Animated.Text>
+          </View>
         </View>
-      </View>
-      <Text style={styles.neighborhood}>{neighborhood}</Text>
-    </Pressable>
+        <Text style={styles.neighborhood}>{neighborhood}</Text>
+      </Pressable>
+    </Animated.View>
   );
 }
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "rgba(255,255,255,0.05)", // subtle glass
+    backgroundColor: "rgba(255,255,255,0.05)",
     borderRadius: 18,
-    padding: 18,
-    marginBottom: 20,
-
-    // Neon border + glow
+    padding: 16, // 8px * 2
+    marginBottom: 16, // 8px * 2
     borderWidth: 1,
     borderColor: "rgba(255, 184, 92, 0.35)",
     shadowColor: colors.glowYellow,
@@ -56,10 +84,11 @@ const styles = StyleSheet.create({
   vibeTag: {
     backgroundColor: "rgba(255, 184, 92, 0.15)",
     borderRadius: 12,
-    paddingVertical: 4,
-    paddingHorizontal: 10,
+    paddingVertical: 8, // 8px * 1
+    paddingHorizontal: 12, // 8px * 1.5
     borderWidth: 1,
     borderColor: colors.neonYellow,
+    marginLeft: 8, // 8px
   },
 
   vibeText: {
@@ -71,6 +100,6 @@ const styles = StyleSheet.create({
 
   neighborhood: {
     ...typography.caption,
-    marginTop: 6,
+    marginTop: 8, // 8px
   },
 });

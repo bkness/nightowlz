@@ -95,11 +95,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 20,
+    paddingHorizontal: 16, // 8px * 2
   },
   compact: {
-    marginTop: 20,
-    marginBottom: 10,
+    marginTop: 16, // 8px * 2
+    marginBottom: 8, // 8px
   },
   pill: {
     alignItems: "center",
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.9,
     shadowRadius: 12,
     shadowOffset: { width: 0, height: 0 },
-    marginTop: 18,
+    marginTop: 16, // 8px * 2
   },
   pillText: {
     ...typography.label,

@@ -14,6 +14,7 @@ const typography = {
     fontSize: RFValue(42),
     color: colors.neonYellow,
     letterSpacing: 1,
+    lineHeight: RFValue(52),
     ...glow(colors.glowYellow, 12),
     paddingHorizontal: 12,
     paddingVertical: 4,
@@ -24,6 +25,7 @@ const typography = {
     fontFamily: "Lobster",
     fontSize: RFValue(20),
     color: colors.neonBlue,
+    lineHeight: RFValue(28),
     marginTop: -4,
     marginBottom: 12,
     ...glow(colors.glowBlue, 12),
@@ -34,17 +36,20 @@ const typography = {
     fontWeight: "800",
     color: colors.white,
     letterSpacing: 0.5,
+    lineHeight: RFValue(36),
   },
 
   subheading: {
     fontSize: RFValue(20),
     fontWeight: "700",
     color: colors.white,
+    lineHeight: RFValue(28),
   },
 
   body: {
     fontSize: RFValue(14),
     color: colors.white,
+    lineHeight: RFValue(22),
   },
 
   caption: {
@@ -52,6 +57,7 @@ const typography = {
     fontWeight: "500",
     letterSpacing: 0.2,
     color: colors.muted,
+    lineHeight: RFValue(18),
   },
 
   label: {
@@ -61,6 +67,7 @@ const typography = {
     marginTop: 4,
     letterSpacing: 0.1,
     textAlign: "center",
+    lineHeight: RFValue(16),
   },
 
   buttonLabel: {
@@ -69,6 +76,7 @@ const typography = {
     color: colors.background,
     letterSpacing: 0.8,
     textAlign: "center",
+    lineHeight: RFValue(24),
   },
 };
 

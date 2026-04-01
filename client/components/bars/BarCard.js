@@ -8,12 +8,9 @@ import Animated, {
 import colors from "../../theme/colors";
 import typography from "../../theme/typography";
 import { useNavigation } from "@react-navigation/native";
-import BarProfileScreen from "../../screens/BarProfile/BarProfileScreen";
-import useNeonPulse from "../../hooks/useNeonPulse";
 
 export default function BarCard({ name, vibe, neighborhood, onPress }) {
   const navigation = useNavigation();
-  const neonPulse = useNeonPulse();
 
   // Press feedback animation
   const scale = useSharedValue(1);
@@ -45,9 +42,7 @@ export default function BarCard({ name, vibe, neighborhood, onPress }) {
         <View style={styles.row}>
           <Text style={styles.name}>{name}</Text>
           <View style={styles.vibeTag}>
-            <Animated.Text style={[styles.vibeText, neonPulse]}>
-              {vibe}
-            </Animated.Text>
+            <Text style={styles.vibeText}>{vibe}</Text>
           </View>
         </View>
         <Text style={styles.neighborhood}>{neighborhood}</Text>

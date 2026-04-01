@@ -53,7 +53,7 @@ export default function SettingsScreen() {
             {
               color: colors.neonYellow,
               textShadowColor: colors.glowYellow,
-              textShadowRadius: 24,
+              textShadowRadius: 12,
               textShadowOffset: { width: 0, height: 0 },
             },
           ]}
@@ -67,7 +67,7 @@ export default function SettingsScreen() {
             {
               color: colors.neonBlue,
               textShadowColor: colors.glowBlue,
-              textShadowRadius: 12,
+              textShadowRadius: 8,
               textShadowOffset: { width: 0, height: 0 },
             },
           ]}
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     marginBottom: 32,
   },
   title: {
-    marginBottom: 4,
+    marginBottom: 6,
   },
   subtitle: {
     marginBottom: 0,

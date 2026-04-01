@@ -13,18 +13,18 @@ export default function DiscoverScreen() {
       <ScrollView style={{ paddingHorizontal: 20 }}>
         {/* Replace these with your BarCard components */}
         <BarCard
-          name="Belfry Brewery"
-          vibe="Trivia Night Tonight"
-          neighborhood="Old Town Cottonwood"
-        />
-        <BarCard
-          name="The Tipsy Cactus"
-          vibe="Live DJ - Friday 9PM"
+          name="Chaparral Bar"
+          vibe="DJ Night Tonight"
           neighborhood="Main Street"
         />
         <BarCard
-          name="Club Neon"
-          vibe="Karaoke Night"
+          name="Main Stage"
+          vibe="Live Music - Friday 9PM"
+          neighborhood="Main Street"
+        />
+        <BarCard
+          name="Kactus Kates"
+          vibe="Free JukeBox Night"
           neighborhood="Riverfront District"
         />
       </ScrollView>

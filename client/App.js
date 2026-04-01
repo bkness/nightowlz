@@ -1,8 +1,9 @@
 import { NavigationContainer } from "@react-navigation/native";
+import LoginScreen from "./screens/Auth/LoginScreen";
 import StackNavigator from "./navigation/StackNavigator";
 import { useFonts } from "expo-font";
-import { Text } from "react-native";
-import { ThemeProvider } from "./theme/ThemeProvider";
+import { ThemeProvider } from "./theme";
+import { AuthProvider } from "./context/AuthContext";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -15,10 +16,13 @@ export default function App() {
   }
 
   return (
-    <ThemeProvider>
-      <NavigationContainer>
-        <StackNavigator />
-      </NavigationContainer>
-    </ThemeProvider>
+    <AuthProvider>
+      <ThemeProvider>
+        <NavigationContainer>
+          {/* {user ? <StackNavigator /> : <LoginScreen />} */}
+          <StackNavigator />
+        </NavigationContainer>
+      </ThemeProvider>
+    </AuthProvider>
   );
 }

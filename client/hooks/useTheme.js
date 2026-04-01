@@ -1,13 +1,6 @@
-import { useColorScheme } from "react-native";
-import colors from "./colors";
-import gradients from "./gradients";
-import typography from "./typography";
+import { useContext } from "react";
+import { ThemeContext } from "../theme/themeProvider";
 
-export const useTheme = () => {
-  const scheme = useColorScheme(); // "light" or "dark"
-  return {
-    colors: colors[scheme],
-    gradients,
-    typography,
-  };
-};
+export default function useTheme() {
+  return useContext(ThemeContext);
+}

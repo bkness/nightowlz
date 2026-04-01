@@ -1,18 +1,8 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Switch,
-  TouchableOpacity,
-  Alert,
-} from "react-native";
-import NeonScreen from "../../components/common/NeonScreen";
-import { gradients } from "../../theme";
-import typography from "../../theme/typography";
-
-import { useTheme } from "../../theme/ThemeProvider";
-import NeonButton from "../../components/common/NeonButton";
+import React from "react";
+import { View, Text, StyleSheet, Switch, Alert } from "react-native";
+import { NeonScreen, NeonButton } from "../../components/common";
+import { gradients, typography, colors } from "../../theme";
+import { useTheme } from "../../hooks";
 
 function ThemeToggle() {
   const { theme, toggleTheme, colors } = useTheme();
@@ -22,8 +12,8 @@ function ThemeToggle() {
       <Switch
         value={theme === "dark"}
         onValueChange={toggleTheme}
-        thumbColor={theme === "dark" ? colors.neonYellow : colors.neonBlue}
-        trackColor={{ false: "#888", true: colors.glowYellow }}
+        thumbColor={theme === "dark" ? colors.neonOrange : colors.neonBlue}
+        trackColor={{ false: "#6d6483", true: colors.glowPurple }}
       />
     </View>
   );
@@ -40,45 +30,19 @@ function AppVersion() {
     </View>
   );
 }
-
 export default function SettingsScreen() {
-  const { colors } = useTheme();
   return (
     <NeonScreen gradient={gradients.settings}>
       <View style={styles.headerContainer}>
-        <Text
-          style={[
-            typography.logo,
-            styles.title,
-            {
-              color: colors.neonYellow,
-              textShadowColor: colors.glowYellow,
-              textShadowRadius: 12,
-              textShadowOffset: { width: 0, height: 0 },
-            },
-          ]}
-        >
-          Settings
-        </Text>
-        <Text
-          style={[
-            typography.tagline,
-            styles.subtitle,
-            {
-              color: colors.neonBlue,
-              textShadowColor: colors.glowBlue,
-              textShadowRadius: 8,
-              textShadowOffset: { width: 0, height: 0 },
-            },
-          ]}
-        >
+        <Text style={[typography.screenTitle, styles.title]}>Settings</Text>
+        <Text style={[typography.screenSubtitle, styles.subtitle]}>
           Notifications, preferences & more
         </Text>
       </View>
       <View style={styles.settingsList}>
         <ThemeToggle />
         <NeonButton
-          label="Coming Soon"
+          title="Coming Soon"
           onPress={() => Alert.alert("Feature coming soon!")}
           style={{ marginTop: 8 }}
         />
@@ -90,9 +54,7 @@ export default function SettingsScreen() {
 
 const styles = StyleSheet.create({
   headerContainer: {
-    alignItems: "center",
-    marginTop: 48,
-    marginBottom: 32,
+    ...typography.screenHeaderContainer,
   },
   title: {
     marginBottom: 6,
@@ -101,9 +63,14 @@ const styles = StyleSheet.create({
     marginBottom: 0,
   },
   settingsList: {
-    marginTop: 16,
+    marginTop: 10,
     paddingHorizontal: 24,
     gap: 24,
+    backgroundColor: colors.cardSoft,
+    borderRadius: 18,
+    borderWidth: 1,
+    borderColor: colors.border,
+    paddingVertical: 16,
   },
   settingRow: {
     flexDirection: "row",
@@ -113,5 +80,4 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "rgba(255,255,255,0.08)",
   },
-  // No logoutRow needed
 });

@@ -1,5 +1,5 @@
 // ThemeProvider.js
-import React, { createContext, useContext, useState, useMemo } from "react";
+import React, { createContext, useState } from "react";
 import { Appearance } from "react-native";
 import colors from "./colors";
 
@@ -21,9 +21,4 @@ export function ThemeProvider({ children }) {
       {children}
     </ThemeContext.Provider>
   );
-}
-
-// Optional: custom hook for easy access
-export function useTheme() {
-  return useContext(ThemeContext);
 }

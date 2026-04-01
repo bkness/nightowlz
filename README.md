@@ -110,6 +110,42 @@ EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
 EXPO_PUBLIC_FIREBASE_APP_ID=
 ```
 
+## Setup Instructions
+
+### 1. Environment Variables
+
+- Copy `.env.example` to `.env` in the root for client Firebase config and fill in your Firebase values.
+- Copy `server/.env.example` to `server/.env` and fill in your backend secrets (MongoDB URI, API keys, etc).
+
+### 2. Install Dependencies
+
+From the project root, run:
+
+```
+cd client && npm install
+cd ../server && npm install
+```
+
+### 3. Start the Server
+
+```
+cd server
+npm run dev
+```
+
+### 4. Start the Client (Expo)
+
+```
+cd ../client
+npm start
+```
+
+- Use the Expo QR code to open on your device, or run `npm run ios` / `npm run android` for simulators.
+
+### 5. Health Check
+
+- Visit `http://localhost:3001/health` to verify the server is running.
+
 ## Event Sync Jobs
 
 Event sync scripts run automatically using Node Cron to:

@@ -21,27 +21,18 @@ const BARS = [
     name: "Chaparral Bar",
     vibe: "DJ Night Tonight",
     neighborhood: "Main Street",
-    distance: "0.8 mi",
-    category: "Neon Lounge",
-    icon: "owl",
   },
   {
     id: 2,
     name: "Main Stage",
     vibe: "Live Music - Friday 9PM",
     neighborhood: "Main Street",
-    distance: "1.2 mi",
-    category: "Live Music",
-    icon: "music-clef-treble",
   },
   {
     id: 3,
     name: "Kactus Kates",
     vibe: "Free JukeBox Night",
     neighborhood: "Riverfront District",
-    distance: "2.4 mi",
-    category: "Late Night",
-    icon: "cactus",
   },
 ];
 
@@ -81,43 +72,45 @@ export default function DiscoverScreen() {
 
   return (
     <NeonScreen gradient={gradients.discover}>
-      <Header />
       {/* CONTENT */}
       <ScrollView
-        style={{ paddingHorizontal: 16, marginTop: 18 }}
+        style={{ paddingHorizontal: 10 }}
+        contentContainerStyle={{ paddingTop: 6, paddingBottom: 24 }}
         keyboardDismissMode="on-drag"
         scrollEventThrottle={16}
       >
+        <Header compact />
         {/* Search Input */}
-        <RNAnimated.View
-          style={[
-            styles.inputContainer,
-            {
-              shadowRadius,
-              borderColor: isFocused ? colors.neonYellow : colors.muted,
-              borderWidth: isFocused ? 1.5 : 1,
-            },
-          ]}
-        >
+        <View style={styles.searchWrapper}>
           <Ionicons
             name="search"
             size={18}
-            color={isFocused ? colors.neonYellow : colors.navInactive}
+            color={isFocused ? colors.neonYellow : colors.muted}
             style={styles.searchIcon}
           />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search by city..."
-            placeholderTextColor={colors.navInactive}
-            value={searchText}
-            onChangeText={setSearchText}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            keyboardType="default"
-            returnKeyType="done"
-          />
-        </RNAnimated.View>
-
+          <RNAnimated.View
+            style={[
+              styles.inputContainer,
+              {
+                shadowRadius,
+                borderColor: isFocused ? colors.neonYellow : colors.muted,
+                borderWidth: isFocused ? 1.5 : 1,
+              },
+            ]}
+          >
+            <TextInput
+              style={styles.searchInput}
+              placeholder="Search by city..."
+              placeholderTextColor={colors.muted}
+              value={searchText}
+              onChangeText={setSearchText}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+              keyboardType="default"
+              returnKeyType="done"
+            />
+          </RNAnimated.View>
+        </View>
         {/* Bar Cards */}
         {filteredBars.length > 0 ? (
           filteredBars.map((bar) => (
@@ -126,9 +119,6 @@ export default function DiscoverScreen() {
               name={bar.name}
               vibe={bar.vibe}
               neighborhood={bar.neighborhood}
-              distance={bar.distance}
-              category={bar.category}
-              icon={bar.icon}
             />
           ))
         ) : (
@@ -151,28 +141,37 @@ export default function DiscoverScreen() {
 }
 
 const styles = StyleSheet.create({
-  searchIcon: {
-    marginLeft: 14,
-    marginRight: 8,
+  logo: {
+    alignItems: "center",
+    marginTop: 40,
   },
-  inputContainer: {
+
+  searchWrapper: {
     flexDirection: "row",
     alignItems: "center",
-    height: 58,
-    borderRadius: 16,
-    backgroundColor: "rgba(13, 2, 23, 0.62)",
+    marginBottom: 20,
+  },
+  searchIcon: {
+    marginRight: 12,
+    marginLeft: 12,
+    zIndex: 10,
+  },
+  inputContainer: {
+    flex: 1,
+    height: 44,
+    borderRadius: 12,
+    backgroundColor: "rgba(13, 2, 23, 0.6)",
     borderColor: colors.muted,
     shadowColor: colors.neonYellow,
-    shadowOpacity: 0.22,
+    shadowOpacity: 0.3,
     shadowOffset: { width: 0, height: 0 },
-    marginTop: 50,
-    marginBottom: 20,
   },
   searchInput: {
     flex: 1,
-    paddingRight: 14,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
     color: colors.white,
-    fontSize: 18,
+    fontSize: 16,
   },
   emptyState: {
     alignItems: "center",

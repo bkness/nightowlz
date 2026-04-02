@@ -1,4 +1,4 @@
-export const colors = {
+const colors = {
   // Backgrounds
   background: "#05010A",
   surface: "#0D0217",

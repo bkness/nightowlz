@@ -17,7 +17,7 @@ const typography = {
     ...glow(colors.glowYellow, 12),
     paddingHorizontal: 12,
     paddingVertical: 4,
-    marginTop: 18,
+    // marginTop: 18,
   },
 
   tagline: {
@@ -34,7 +34,8 @@ const typography = {
     fontFamily: "Pacifico",
     fontSize: RFValue(38),
     lineHeight: RFValue(52),
-    letterSpacing: 0.5,
+    letterSpacing: 0.8,
+    marginTop: 60,
     paddingTop: 2,
     color: colors.neonYellow,
     textAlign: "center",

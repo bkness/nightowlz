@@ -56,7 +56,9 @@ export default function NeonScreen({ children, gradient }) {
           style={styles.midHaze}
         />
       </View>
-      <Animated.View style={fadeInStyle}>{children}</Animated.View>
+      <Animated.View style={[styles.content, fadeInStyle]}>
+        {children}
+      </Animated.View>
     </LinearGradient>
   );
 }
@@ -64,10 +66,14 @@ export default function NeonScreen({ children, gradient }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    width: "100%",
+    backgroundColor: "#0a0a0a",
   },
   ambientWrap: {
     ...StyleSheet.absoluteFillObject,
+  },
+  content: {
+    flex: 1,
   },
   bottomGlow: {
     position: "absolute",

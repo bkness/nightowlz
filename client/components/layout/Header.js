@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     overflow: "visible",
   },
   compact: {
-    marginTop: -15,
+    marginTop: -2,
     marginBottom: 14,
   },
 });

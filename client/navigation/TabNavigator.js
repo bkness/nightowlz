@@ -33,6 +33,10 @@ export default function TabNavigator() {
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
+        animationEnabled: false,
+        sceneContainerStyle: {
+          backgroundColor: "#0a0a0a",
+        },
         tabBarStyle: {
           position: "absolute",
           left: 24,

@@ -7,7 +7,7 @@ import {
   Animated as RNAnimated,
   TouchableOpacity,
 } from "react-native";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import NeonScreen from "../../components/common/NeonScreen";
 import { gradients, surfaces } from "../../theme";
@@ -44,59 +44,33 @@ export default function DiscoverScreen() {
   const [isFilterPanelVisible, setIsFilterPanelVisible] = useState(false);
   const glowAnimation = useRef(new RNAnimated.Value(0)).current;
 
-  const handleFocus = useCallback(() => {
+  const handleFocus = () => {
     setIsFocused(true);
     RNAnimated.timing(glowAnimation, {
       toValue: 1,
       duration: 200,
       useNativeDriver: false,
     }).start();
-  }, [glowAnimation]);
+  };
 
-  const handleBlur = useCallback(() => {
+  const handleBlur = () => {
     setIsFocused(false);
     RNAnimated.timing(glowAnimation, {
       toValue: 0,
       duration: 200,
       useNativeDriver: false,
     }).start();
-  }, [glowAnimation]);
-
-  const openFilterPanel = useCallback(() => {
-    setIsFilterPanelVisible(true);
-  }, []);
-
-  const closeFilterPanel = useCallback(() => {
-    setIsFilterPanelVisible(false);
-  }, []);
+  };
 
   const shadowRadius = glowAnimation.interpolate({
     inputRange: [0, 1],
     outputRange: [12, 20],
   });
 
-  const filteredBars = useMemo(() => {
-    const searchKey = searchText.trim().toLowerCase();
-    if (!searchKey) return BARS;
-
-    return BARS.filter(
-      (bar) =>
-        bar.name.toLowerCase().includes(searchKey) ||
-        bar.neighborhood.toLowerCase().includes(searchKey),
-    );
-  }, [searchText]);
-
-  const renderedBarCards = useMemo(
-    () =>
-      filteredBars.map((bar) => (
-        <BarCard
-          key={bar.id}
-          name={bar.name}
-          vibe={bar.vibe}
-          neighborhood={bar.neighborhood}
-        />
-      )),
-    [filteredBars],
+  const filteredBars = BARS.filter(
+    (bar) =>
+      bar.name.toLowerCase().includes(searchText.toLowerCase()) ||
+      bar.neighborhood.toLowerCase().includes(searchText.toLowerCase()),
   );
 
   return (
@@ -142,7 +116,7 @@ export default function DiscoverScreen() {
             />
           </RNAnimated.View>
           <TouchableOpacity
-            onPress={openFilterPanel}
+            onPress={() => setIsFilterPanelVisible(true)}
             style={styles.filterButton}
             activeOpacity={0.85}
           >
@@ -151,7 +125,14 @@ export default function DiscoverScreen() {
         </View>
         {/* Bar Cards */}
         {filteredBars.length > 0 ? (
-          renderedBarCards
+          filteredBars.map((bar) => (
+            <BarCard
+              key={bar.id}
+              name={bar.name}
+              vibe={bar.vibe}
+              neighborhood={bar.neighborhood}
+            />
+          ))
         ) : (
           <View style={styles.emptyState}>
             <Ionicons
@@ -169,7 +150,7 @@ export default function DiscoverScreen() {
       </ScrollView>
       <SlidingPanel
         isVisible={isFilterPanelVisible}
-        onClose={closeFilterPanel}
+        onClose={() => setIsFilterPanelVisible(false)}
         title="Search Filters"
         snapPoints={["30%", "52%"]}
       >

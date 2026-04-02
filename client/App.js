@@ -3,6 +3,7 @@ import StackNavigator from "./navigation/StackNavigator";
 import { useFonts } from "expo-font";
 // import { Text } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ThemeProvider } from "./theme/ThemeProvider";
 
 export default function App() {
@@ -17,11 +18,13 @@ export default function App() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <ThemeProvider>
-        <NavigationContainer>
-          <StackNavigator />
-        </NavigationContainer>
-      </ThemeProvider>
+      <SafeAreaProvider>
+        <ThemeProvider>
+          <NavigationContainer>
+            <StackNavigator />
+          </NavigationContainer>
+        </ThemeProvider>
+      </SafeAreaProvider>
     </GestureHandlerRootView>
   );
 }

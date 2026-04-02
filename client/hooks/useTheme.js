@@ -1,13 +1,4 @@
-import { useColorScheme } from "react-native";
-import colors from "./colors";
-import gradients from "./gradients";
-import typography from "./typography";
+// This file is deprecated. Use useTheme from ../theme/ThemeProvider instead.
+// The proper useTheme hook is now implemented in ThemeProvider.js and exported from there.
 
-export const useTheme = () => {
-  const scheme = useColorScheme(); // "light" or "dark"
-  return {
-    colors: colors[scheme],
-    gradients,
-    typography,
-  };
-};
+export { useTheme } from "../theme/ThemeProvider";

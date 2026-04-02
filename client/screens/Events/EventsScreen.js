@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { StyleSheet, ScrollView } from "react-native";
 import { gradients } from "../../theme";
 import NeonScreen from "../../components/common/NeonScreen";
 import ScreenTitleBlock from "../../components/common/ScreenTitleBlock";
@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: 20,
-    paddingTop: 44,
+    paddingTop: 6,
     paddingBottom: 32,
   },
   headerContainer: {

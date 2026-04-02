@@ -8,22 +8,39 @@ import Animated, {
 import colors from "../../theme/colors";
 import typography from "../../theme/typography";
 
-export default function NeonButton({ title, onPress }) {
+export default function NeonButton({
+  title,
+  onPress,
+  style,
+  textStyle,
+  disabled = false,
+}) {
   const scaleValue = useSharedValue(1);
   const shadowOpacityValue = useSharedValue(1);
 
   const handlePressIn = () => {
-    scaleValue.value = withSpring(0.96, {
-      damping: 15,
+    if (disabled) return;
+    scaleValue.value = withSpring(0.97, {
+      damping: 16,
+      stiffness: 220,
       mass: 1,
       overshootClamping: false,
     });
-    shadowOpacityValue.value = withSpring(0.7, { damping: 15, mass: 1 });
+    shadowOpacityValue.value = withSpring(0.74, {
+      damping: 16,
+      stiffness: 220,
+      mass: 1,
+    });
   };
 
   const handlePressOut = () => {
-    scaleValue.value = withSpring(1, { damping: 15, mass: 1 });
-    shadowOpacityValue.value = withSpring(1, { damping: 15, mass: 1 });
+    if (disabled) return;
+    scaleValue.value = withSpring(1, { damping: 16, stiffness: 220, mass: 1 });
+    shadowOpacityValue.value = withSpring(1, {
+      damping: 16,
+      stiffness: 220,
+      mass: 1,
+    });
   };
 
   const animatedButtonStyle = useAnimatedStyle(() => ({
@@ -34,18 +51,23 @@ export default function NeonButton({ title, onPress }) {
   return (
     <Pressable
       onPress={onPress}
+      disabled={disabled}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
-      style={styles.wrapper}
+      style={[styles.wrapper, style]}
     >
       <Animated.View style={[styles.animatedContainer, animatedButtonStyle]}>
         <LinearGradient
           colors={[colors.neonOrange, colors.neonYellow]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
-          style={styles.button}
+          style={[styles.button, disabled && styles.disabledButton]}
         >
-          <Text style={styles.text}>{title}</Text>
+          <Text
+            style={[styles.text, textStyle, disabled && styles.disabledText]}
+          >
+            {title}
+          </Text>
         </LinearGradient>
       </Animated.View>
     </Pressable>
@@ -77,5 +99,11 @@ const styles = StyleSheet.create({
 
   text: {
     ...typography.buttonLabel,
+  },
+  disabledButton: {
+    opacity: 0.6,
+  },
+  disabledText: {
+    opacity: 0.8,
   },
 });

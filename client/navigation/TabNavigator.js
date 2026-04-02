@@ -5,8 +5,9 @@ import { StyleSheet, View } from "react-native";
 import DiscoverScreen from "../screens/Discover/DiscoverScreen";
 import EventsScreen from "../screens/Events/EventsScreen";
 import MyBarsScreen from "../screens/MyBars/MyBarsScreen";
-import SettingsScreen from "../screens/Settings/SettingsScreen";
+import ProfileScreen from "../screens/Profile/ProfileScreen";
 import NeonTabIcon from "../components/common/NeonTabIcon";
+import NightOwlzIcon from "../components/common/NightOwlzIcon";
 import SwipeTabWrapper from "./SwipeTabWrapper";
 import { colors } from "../theme";
 
@@ -25,7 +26,7 @@ const withSwipe = (Component) => {
 const DiscoverWithSwipe = withSwipe(DiscoverScreen);
 const EventsWithSwipe = withSwipe(EventsScreen);
 const MyBarsWithSwipe = withSwipe(MyBarsScreen);
-const SettingsWithSwipe = withSwipe(SettingsScreen);
+const ProfileWithSwipe = withSwipe(ProfileScreen);
 
 export default function TabNavigator() {
   return (
@@ -130,14 +131,12 @@ export default function TabNavigator() {
         }}
       />
       <Tab.Screen
-        name="Settings"
-        component={SettingsWithSwipe}
+        name="Profile"
+        component={ProfileWithSwipe}
         options={{
           tabBarIcon: ({ focused }) => (
-            <NeonTabIcon
-              name="person"
-              label="Profile"
-              focused={focused}
+            <NightOwlzIcon
+              size={48}
               color={focused ? colors.neonYellow : colors.navInactive}
             />
           ),

@@ -22,20 +22,23 @@ function BarCard({
   // Press feedback animation
   const scale = useSharedValue(1);
   const opacity = useSharedValue(1);
+  const lift = useSharedValue(0);
 
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
+    transform: [{ translateY: lift.value }, { scale: scale.value }],
     opacity: opacity.value,
   }));
 
   const handlePressIn = () => {
-    scale.value = withSpring(0.98, { damping: 15, mass: 1 });
+    scale.value = withSpring(0.985, { damping: 18, stiffness: 220, mass: 1 });
     opacity.value = withSpring(0.9, { damping: 15, mass: 1 });
+    lift.value = withSpring(2, { damping: 18, stiffness: 220, mass: 1 });
   };
 
   const handlePressOut = () => {
-    scale.value = withSpring(1, { damping: 15, mass: 1 });
+    scale.value = withSpring(1, { damping: 18, stiffness: 220, mass: 1 });
     opacity.value = withSpring(1, { damping: 15, mass: 1 });
+    lift.value = withSpring(0, { damping: 18, stiffness: 220, mass: 1 });
   };
 
   return (

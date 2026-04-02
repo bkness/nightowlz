@@ -1,7 +1,14 @@
 import React from "react";
-import { View, Text, StyleSheet, Switch, Alert } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Switch,
+  Alert,
+  ScrollView,
+} from "react-native";
 import NeonScreen from "../../components/common/NeonScreen";
-import { gradients } from "../../theme";
+import { gradients, surfaces } from "../../theme";
 import typography from "../../theme/typography";
 
 import { useTheme } from "../../theme/ThemeProvider";
@@ -39,32 +46,44 @@ export default function SettingsScreen() {
   const { colors } = useTheme();
   return (
     <NeonScreen gradient={gradients.settings}>
-      <ScreenTitleBlock
-        title="Settings"
-        subtitle="Notifications, preferences & more"
-        colors={colors}
-        style={styles.headerContainer}
-      />
-      <View style={styles.settingsList}>
-        <ThemeToggle />
-        <NeonButton
-          label="Coming Soon"
-          onPress={() => Alert.alert("Feature coming soon!")}
-          style={{ marginTop: 8 }}
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <ScreenTitleBlock
+          title="Settings"
+          subtitle="Notifications, preferences & more"
+          colors={colors}
+          style={styles.headerContainer}
         />
-        <AppVersion />
-      </View>
+        <View style={styles.settingsList}>
+          <ThemeToggle />
+          <NeonButton
+            title="Coming Soon"
+            onPress={() => Alert.alert("Feature coming soon!")}
+            style={styles.comingSoonButton}
+          />
+          <AppVersion />
+        </View>
+      </ScrollView>
     </NeonScreen>
   );
 }
 
 const styles = StyleSheet.create({
+  scrollContent: {
+    paddingHorizontal: 20,
+    paddingBottom: 32,
+  },
   headerContainer: {
     marginTop: 0,
+    marginBottom: 20,
   },
   settingsList: {
-    marginTop: 16,
-    paddingHorizontal: 24,
+    ...surfaces.neonCard,
+    marginTop: 4,
+    paddingHorizontal: 18,
+    paddingVertical: 8,
     gap: 24,
   },
   settingRow: {
@@ -75,5 +94,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "rgba(255,255,255,0.08)",
   },
-  // No logoutRow needed
+  comingSoonButton: {
+    marginTop: -2,
+    marginBottom: -6,
+  },
 });

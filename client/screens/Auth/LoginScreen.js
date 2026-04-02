@@ -40,6 +40,8 @@ export default function LoginScreen({ navigation }) {
             placeholder="Email or username"
             placeholderTextColor={colors.muted}
             autoCapitalize="none"
+            autoCorrect={false}
+            returnKeyType="next"
             style={styles.input}
           />
           <TextInput
@@ -48,11 +50,14 @@ export default function LoginScreen({ navigation }) {
             placeholder="Password"
             placeholderTextColor={colors.muted}
             secureTextEntry
+            autoCorrect={false}
+            returnKeyType="done"
+            onSubmitEditing={handleLogin}
             style={styles.input}
           />
         </View>
 
-        <NeonButton title="Login" onPress={handleLogin} />
+        <NeonButton title="Login" onPress={handleLogin} disabled={!canSubmit} />
 
         {__DEV__ && (
           <NeonButton

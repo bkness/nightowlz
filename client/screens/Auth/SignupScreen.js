@@ -46,6 +46,8 @@ export default function SignUpScreen({ navigation }) {
             placeholder="Username"
             placeholderTextColor={colors.muted}
             autoCapitalize="none"
+            autoCorrect={false}
+            returnKeyType="next"
             style={styles.input}
           />
           <TextInput
@@ -54,7 +56,9 @@ export default function SignUpScreen({ navigation }) {
             placeholder="Email"
             placeholderTextColor={colors.muted}
             autoCapitalize="none"
+            autoCorrect={false}
             keyboardType="email-address"
+            returnKeyType="next"
             style={styles.input}
           />
           <TextInput
@@ -63,11 +67,14 @@ export default function SignUpScreen({ navigation }) {
             placeholder="Password"
             placeholderTextColor={colors.muted}
             secureTextEntry
+            autoCorrect={false}
+            returnKeyType="done"
+            onSubmitEditing={handleSignUp}
             style={styles.input}
           />
         </View>
 
-        <NeonButton title="Sign Up" onPress={handleSignUp} />
+        <NeonButton title="Sign Up" onPress={handleSignUp} disabled={!canSubmit} />
 
         {__DEV__ && (
           <NeonButton

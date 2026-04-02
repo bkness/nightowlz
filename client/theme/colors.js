@@ -1,7 +1,9 @@
-export const colors = {
+const colors = {
   // Backgrounds
   background: "#05010A",
   surface: "#0D0217",
+  navSurface: "rgba(15, 18, 28, 0.72)",
+  navBorder: "rgba(255, 184, 92, 0.28)",
 
   // Neon primaries
   neonYellow: "#FFB85C",
@@ -22,6 +24,7 @@ export const colors = {
   // Text
   white: "#FFFFFF",
   muted: "#A0A0A0",
+  navInactive: "#8993A4",
 };
 
 export default colors;

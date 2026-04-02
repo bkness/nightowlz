@@ -47,79 +47,75 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import colors from "../../theme/colors";
+import { colors } from "../../theme";
 import typography from "../../theme/typography";
 
-export default function NeonTabIcon({ name, label, focused, color }) {
+function NeonTabIcon({ name, label, focused, color }) {
   return (
     <View style={styles.container}>
       <Ionicons
         name={name}
-        size={focused ? 40 : 30}
+        size={focused ? 26 : 22}
         color={color}
         style={focused ? styles.glow(color) : null}
       />
-      {focused ? (
-        <View
-          style={[
-            styles.pill,
-            { borderColor: color, backgroundColor: color + "22" },
-          ]}
-        >
-          <Text
-            style={[
-              typography.label,
-              { color: colors.white, fontWeight: "700", fontSize: 16 },
-              styles.glow(color),
-            ]}
-          >
-            {label}
-          </Text>
-        </View>
-      ) : (
-        <Text
-          style={[
-            typography.label,
-            { color },
-            focused ? styles.glow(color) : null,
-          ]}
-        >
-          {label}
-        </Text>
-      )}
+      <Text
+        style={[
+          typography.label,
+          styles.label,
+          {
+            color,
+            fontWeight: focused ? "700" : "500",
+            opacity: focused ? 1 : 0.88,
+          },
+          focused ? styles.glow(color) : null,
+        ]}
+      >
+        {label}
+      </Text>
+      <View
+        style={[
+          styles.activeDot,
+          {
+            backgroundColor: focused ? color : "transparent",
+            borderColor: focused ? color : "transparent",
+          },
+        ]}
+      />
     </View>
   );
 }
+
+export default React.memo(NeonTabIcon);
 
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     justifyContent: "center",
-    paddingTop: 0,
-    marginTop: 70,
-    minWidth: 93,
-    height: 54,
+    minWidth: 85,
+    height: 64,
+    paddingTop: 2,
+    marginTop: 20,
   },
 
   glow: (color) => ({
     textShadowColor: color,
-    textShadowRadius: 5,
+    textShadowRadius: 3,
     textShadowOffset: { width: 0, height: 0 },
   }),
-  pill: {
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 16,
-    borderWidth: 2,
-    alignSelf: "center",
-    // No width or maxWidth: pill fits label perfectly
-    width: "100%",
-    maxWidth: 100, // prevent excessively long labels from overflowing
-    marginTop: 4,
-    marginBottom: 0,
-    shadowColor: colors.neonBlue,
-    shadowOpacity: 0.7,
-    shadowRadius: 8,
+  label: {
+    marginTop: 3,
+    letterSpacing: 0.2,
+  },
+  activeDot: {
+    width: 28,
+    height: 3,
+    borderRadius: 99,
+    marginTop: 5,
+    borderWidth: 0,
+    shadowColor: colors.glowYellow,
+    shadowOpacity: 0.45,
+    shadowRadius: 6,
     shadowOffset: { width: 0, height: 0 },
   },
 });

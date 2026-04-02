@@ -1,76 +1,184 @@
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import Animated from "react-native-reanimated";
-import colors from "../../theme/colors";
+import Animated, {
+  useSharedValue,
+  withSpring,
+  useAnimatedStyle,
+} from "react-native-reanimated";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import themeColors from "../../theme/colors";
+import surfaces from "../../theme/surfaces";
 import typography from "../../theme/typography";
-import { useNavigation } from "@react-navigation/native";
-import BarProfileScreen from "../../screens/BarProfile/BarProfileScreen";
-import useNeonPulse from "../../hooks/useNeonPulse";
 
-export default function BarCard({ name, vibe, neighborhood, onPress }) {
-  const navigation = useNavigation();
-  const neonPulse = useNeonPulse();
+function BarCard({
+  name,
+  vibe,
+  neighborhood,
+  onPress,
+  distance,
+  category,
+  icon = "owl",
+}) {
+  // Press feedback animation
+  const scale = useSharedValue(1);
+  const opacity = useSharedValue(1);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+    opacity: opacity.value,
+  }));
+
+  const handlePressIn = () => {
+    scale.value = withSpring(0.98, { damping: 15, mass: 1 });
+    opacity.value = withSpring(0.9, { damping: 15, mass: 1 });
+  };
+
+  const handlePressOut = () => {
+    scale.value = withSpring(1, { damping: 15, mass: 1 });
+    opacity.value = withSpring(1, { damping: 15, mass: 1 });
+  };
 
   return (
-    <Pressable onPress={onPress} style={styles.card}>
-      <View style={styles.row}>
-        <Text style={styles.name}>{name}</Text>
-        <View style={styles.vibeTag}>
-          <Animated.Text style={[styles.vibeText, neonPulse]}>
-            {vibe}
-          </Animated.Text>
+    <Animated.View style={animatedStyle}>
+      <Pressable
+        onPress={onPress}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        style={styles.card}
+      >
+        <View style={styles.topRow}>
+          <View style={styles.thumbWrap}>
+            <MaterialCommunityIcons
+              name={icon}
+              size={26}
+              color={themeColors.neonYellow}
+            />
+          </View>
+
+          <View style={styles.contentCol}>
+            <Text style={styles.name} numberOfLines={2}>
+              {name}
+            </Text>
+
+            <View style={styles.vibeTagInline}>
+              <Text style={styles.vibeText} numberOfLines={1}>
+                {vibe}
+              </Text>
+            </View>
+
+            <View style={styles.metaRow}>
+              {!!distance && <Text style={styles.metaText}>{distance}</Text>}
+              {!!distance && !!neighborhood && (
+                <Text style={styles.metaDot}>•</Text>
+              )}
+              {!!neighborhood && (
+                <Text style={styles.metaText}>{neighborhood}</Text>
+              )}
+            </View>
+
+            {!!category && <Text style={styles.category}>{category}</Text>}
+          </View>
         </View>
-      </View>
-      <Text style={styles.neighborhood}>{neighborhood}</Text>
-    </Pressable>
+
+        <View style={styles.bottomGlowLine} />
+      </Pressable>
+    </Animated.View>
   );
 }
 
+const areEqual = (prev, next) => {
+  return (
+    prev.name === next.name &&
+    prev.vibe === next.vibe &&
+    prev.neighborhood === next.neighborhood &&
+    prev.distance === next.distance &&
+    prev.category === next.category &&
+    prev.icon === next.icon &&
+    prev.onPress === next.onPress
+  );
+};
+
+export default React.memo(BarCard, areEqual);
+
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "rgba(255,255,255,0.05)", // subtle glass
-    borderRadius: 18,
+    ...surfaces.neonCard,
     padding: 18,
-    marginBottom: 20,
-
-    // Neon border + glow
-    borderWidth: 1,
-    borderColor: "rgba(255, 184, 92, 0.35)",
-    shadowColor: colors.glowYellow,
-    shadowOpacity: 0.9,
-    shadowRadius: 14,
-    shadowOffset: { width: 0, height: 0 },
+    marginBottom: 16,
+    minHeight: 134,
   },
 
-  row: {
+  topRow: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    alignItems: "flex-start",
+  },
+
+  thumbWrap: {
+    ...surfaces.subtleThumb,
+    width: 56,
+    height: 56,
+    borderRadius: 14,
     alignItems: "center",
+    justifyContent: "center",
+    marginRight: 12,
+  },
+
+  contentCol: {
+    flex: 1,
+    paddingRight: 2,
   },
 
   name: {
     ...typography.subheading,
-    flexShrink: 1,
+    fontSize: 22,
+    lineHeight: 30,
+    letterSpacing: 0.2,
   },
 
-  vibeTag: {
-    backgroundColor: "rgba(255, 184, 92, 0.15)",
-    borderRadius: 12,
-    paddingVertical: 4,
+  metaRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 8,
+  },
+
+  metaText: {
+    ...typography.caption,
+    fontSize: 14,
+    color: themeColors.muted,
+  },
+
+  metaDot: {
+    color: themeColors.navInactive,
+    marginHorizontal: 6,
+    fontSize: 12,
+  },
+
+  category: {
+    ...typography.caption,
+    color: themeColors.navInactive,
+    marginTop: 4,
+    fontSize: 13,
+  },
+
+  vibeTagInline: {
+    ...surfaces.chipAmber,
+    paddingVertical: 7,
     paddingHorizontal: 10,
-    borderWidth: 1,
-    borderColor: colors.neonYellow,
+    maxWidth: 220,
+    marginTop: 6,
+    alignSelf: "flex-start",
   },
 
   vibeText: {
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: "700",
-    color: colors.neonYellow,
-    letterSpacing: 0.5,
+    color: themeColors.neonYellow,
+    letterSpacing: 0.3,
   },
 
-  neighborhood: {
-    ...typography.caption,
-    marginTop: 6,
+  bottomGlowLine: {
+    ...surfaces.glowDividerBlue,
+    marginTop: 14,
+    width: "100%",
   },
 });

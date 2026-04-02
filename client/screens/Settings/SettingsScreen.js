@@ -1,18 +1,12 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Switch,
-  TouchableOpacity,
-  Alert,
-} from "react-native";
+import React from "react";
+import { View, Text, StyleSheet, Switch, Alert } from "react-native";
 import NeonScreen from "../../components/common/NeonScreen";
 import { gradients } from "../../theme";
 import typography from "../../theme/typography";
 
 import { useTheme } from "../../theme/ThemeProvider";
 import NeonButton from "../../components/common/NeonButton";
+import ScreenTitleBlock from "../../components/common/ScreenTitleBlock";
 
 function ThemeToggle() {
   const { theme, toggleTheme, colors } = useTheme();
@@ -45,36 +39,12 @@ export default function SettingsScreen() {
   const { colors } = useTheme();
   return (
     <NeonScreen gradient={gradients.settings}>
-      <View style={styles.headerContainer}>
-        <Text
-          style={[
-            typography.logo,
-            styles.title,
-            {
-              color: colors.neonYellow,
-              textShadowColor: colors.glowYellow,
-              textShadowRadius: 12,
-              textShadowOffset: { width: 0, height: 0 },
-            },
-          ]}
-        >
-          Settings
-        </Text>
-        <Text
-          style={[
-            typography.tagline,
-            styles.subtitle,
-            {
-              color: colors.neonBlue,
-              textShadowColor: colors.glowBlue,
-              textShadowRadius: 8,
-              textShadowOffset: { width: 0, height: 0 },
-            },
-          ]}
-        >
-          Notifications, preferences & more
-        </Text>
-      </View>
+      <ScreenTitleBlock
+        title="Settings"
+        subtitle="Notifications, preferences & more"
+        colors={colors}
+        style={styles.headerContainer}
+      />
       <View style={styles.settingsList}>
         <ThemeToggle />
         <NeonButton
@@ -90,15 +60,7 @@ export default function SettingsScreen() {
 
 const styles = StyleSheet.create({
   headerContainer: {
-    alignItems: "center",
-    marginTop: 48,
-    marginBottom: 32,
-  },
-  title: {
-    marginBottom: 6,
-  },
-  subtitle: {
-    marginBottom: 0,
+    marginTop: 0,
   },
   settingsList: {
     marginTop: 16,

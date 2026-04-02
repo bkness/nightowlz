@@ -1,43 +1,17 @@
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { gradients } from "../../theme";
 import NeonScreen from "../../components/common/NeonScreen";
-import typography from "../../theme/typography";
-import colors from "../../theme/colors";
+import ScreenTitleBlock from "../../components/common/ScreenTitleBlock";
 
 export default function EventsScreen() {
   return (
     <NeonScreen gradient={gradients.events}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <View style={styles.headerContainer}>
-          <Text
-            style={[
-              typography.logo,
-              styles.title,
-              {
-                color: colors.neonYellow,
-                textShadowColor: colors.glowYellow,
-                textShadowRadius: 12,
-                textShadowOffset: { width: 0, height: 0 },
-              },
-            ]}
-          >
-            Events
-          </Text>
-          <Text
-            style={[
-              typography.tagline,
-              styles.subtitle,
-              {
-                color: colors.neonBlue,
-                textShadowColor: colors.glowBlue,
-                textShadowRadius: 12,
-                textShadowOffset: { width: 0, height: 0 },
-              },
-            ]}
-          >
-            Live music, karaoke, trivia & more
-          </Text>
-        </View>
+        <ScreenTitleBlock
+          title="Events"
+          subtitle="Live music, karaoke, trivia & more"
+          style={styles.headerContainer}
+        />
         {/* Add event cards or content here */}
       </ScrollView>
     </NeonScreen>
@@ -48,17 +22,11 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: 20,
-    paddingTop: 48,
+    paddingTop: 44,
     paddingBottom: 32,
   },
   headerContainer: {
-    alignItems: "center",
+    marginTop: 0,
     marginBottom: 32,
-  },
-  title: {
-    marginBottom: 4,
-  },
-  subtitle: {
-    marginBottom: 0,
   },
 });

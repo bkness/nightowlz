@@ -50,7 +50,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../../theme";
 import typography from "../../theme/typography";
 
-export default function NeonTabIcon({ name, label, focused, color }) {
+function NeonTabIcon({ name, label, focused, color }) {
   return (
     <View style={styles.container}>
       <Ionicons
@@ -86,13 +86,16 @@ export default function NeonTabIcon({ name, label, focused, color }) {
   );
 }
 
+export default React.memo(NeonTabIcon);
+
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     justifyContent: "center",
-    minWidth: 72,
+    minWidth: 85,
     height: 64,
     paddingTop: 2,
+    marginTop: 20,
   },
 
   glow: (color) => ({
@@ -105,7 +108,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.2,
   },
   activeDot: {
-    width: 14,
+    width: 28,
     height: 3,
     borderRadius: 99,
     marginTop: 5,

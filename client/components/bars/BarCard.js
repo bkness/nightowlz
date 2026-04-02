@@ -6,10 +6,11 @@ import Animated, {
   useAnimatedStyle,
 } from "react-native-reanimated";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import colors from "../../theme/colors";
+import themeColors from "../../theme/colors";
+import surfaces from "../../theme/surfaces";
 import typography from "../../theme/typography";
 
-export default function BarCard({
+function BarCard({
   name,
   vibe,
   neighborhood,
@@ -50,7 +51,7 @@ export default function BarCard({
             <MaterialCommunityIcons
               name={icon}
               size={26}
-              color={colors.neonYellow}
+              color={themeColors.neonYellow}
             />
           </View>
 
@@ -85,18 +86,25 @@ export default function BarCard({
   );
 }
 
+const areEqual = (prev, next) => {
+  return (
+    prev.name === next.name &&
+    prev.vibe === next.vibe &&
+    prev.neighborhood === next.neighborhood &&
+    prev.distance === next.distance &&
+    prev.category === next.category &&
+    prev.icon === next.icon &&
+    prev.onPress === next.onPress
+  );
+};
+
+export default React.memo(BarCard, areEqual);
+
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "rgba(255,255,255,0.06)",
-    borderRadius: 20,
+    ...surfaces.neonCard,
     padding: 18,
     marginBottom: 16,
-    borderWidth: 1,
-    borderColor: "rgba(255, 184, 92, 0.28)",
-    shadowColor: colors.glowYellow,
-    shadowOpacity: 0.26,
-    shadowRadius: 16,
-    shadowOffset: { width: 0, height: 8 },
     minHeight: 134,
   },
 
@@ -106,14 +114,12 @@ const styles = StyleSheet.create({
   },
 
   thumbWrap: {
+    ...surfaces.subtleThumb,
     width: 56,
     height: 56,
     borderRadius: 14,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "rgba(255,255,255,0.04)",
-    borderWidth: 1,
-    borderColor: "rgba(123, 223, 255, 0.25)",
     marginRight: 12,
   },
 
@@ -138,29 +144,26 @@ const styles = StyleSheet.create({
   metaText: {
     ...typography.caption,
     fontSize: 14,
-    color: colors.muted,
+    color: themeColors.muted,
   },
 
   metaDot: {
-    color: colors.navInactive,
+    color: themeColors.navInactive,
     marginHorizontal: 6,
     fontSize: 12,
   },
 
   category: {
     ...typography.caption,
-    color: colors.navInactive,
+    color: themeColors.navInactive,
     marginTop: 4,
     fontSize: 13,
   },
 
   vibeTagInline: {
-    backgroundColor: "rgba(255, 184, 92, 0.15)",
-    borderRadius: 12,
+    ...surfaces.chipAmber,
     paddingVertical: 7,
     paddingHorizontal: 10,
-    borderWidth: 1,
-    borderColor: colors.neonYellow,
     maxWidth: 220,
     marginTop: 6,
     alignSelf: "flex-start",
@@ -169,15 +172,13 @@ const styles = StyleSheet.create({
   vibeText: {
     fontSize: 13,
     fontWeight: "700",
-    color: colors.neonYellow,
+    color: themeColors.neonYellow,
     letterSpacing: 0.3,
   },
 
   bottomGlowLine: {
+    ...surfaces.glowDividerBlue,
     marginTop: 14,
-    height: 2,
     width: "100%",
-    borderRadius: 99,
-    backgroundColor: "rgba(123, 223, 255, 0.22)",
   },
 });

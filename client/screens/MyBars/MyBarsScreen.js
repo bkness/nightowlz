@@ -7,6 +7,7 @@ import colors from "../../theme/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import typography from "../../theme/typography";
 import { useNavigation } from "@react-navigation/native";
+import ScreenTitleBlock from "../../components/common/ScreenTitleBlock";
 
 export default function MyBarsScreen() {
   const navigation = useNavigation();
@@ -20,36 +21,12 @@ export default function MyBarsScreen() {
 
   return (
     <NeonScreen gradient={gradients.myBars}>
-      <View style={styles.headerContainer}>
-        <Text
-          style={[
-            typography.logo,
-            styles.title,
-            {
-              color: themeColors.neonYellow,
-              textShadowColor: themeColors.glowYellow,
-              textShadowRadius: 12,
-              textShadowOffset: { width: 0, height: 0 },
-            },
-          ]}
-        >
-          My Bars
-        </Text>
-        <Text
-          style={[
-            typography.tagline,
-            styles.subtitle,
-            {
-              color: themeColors.neonBlue,
-              textShadowColor: themeColors.glowBlue,
-              textShadowRadius: 8,
-              textShadowOffset: { width: 0, height: 0 },
-            },
-          ]}
-        >
-          Your Saved Favorites
-        </Text>
-      </View>
+      <ScreenTitleBlock
+        title="My Bars"
+        subtitle="Your Saved Favorites"
+        colors={themeColors}
+        style={styles.headerContainer}
+      />
       {savedBars.length === 0 && (
         <View
           style={[
@@ -103,15 +80,7 @@ export default function MyBarsScreen() {
 
 const styles = StyleSheet.create({
   headerContainer: {
-    alignItems: "center",
-    marginTop: 40,
-    marginBottom: 32,
-  },
-  title: {
-    marginBottom: 8, // 8px
-  },
-  subtitle: {
-    marginBottom: 0,
+    marginTop: 0,
   },
   emptyCard: {
     alignSelf: "center",

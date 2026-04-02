@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { View, StyleSheet, Animated } from "react-native";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import colors from "../../theme/colors";
+import themeColors from "../../theme/colors";
 
 export default function BrandMark({
   size = 74,
@@ -54,7 +54,7 @@ export default function BrandMark({
       <MaterialCommunityIcons
         name="bird"
         size={wingSize}
-        color={colors.neonOrange}
+        color={themeColors.neonOrange}
       />
       <View
         style={[
@@ -63,19 +63,21 @@ export default function BrandMark({
             width: size,
             height: size,
             borderRadius: isPin ? 22 : 999,
-            borderColor: isBadge ? colors.neonBlue : colors.neonPurple,
+            borderColor: isBadge
+              ? themeColors.neonBlue
+              : themeColors.neonPurple,
             backgroundColor: isBadge
               ? "rgba(123, 223, 255, 0.16)"
               : "rgba(162, 89, 255, 0.2)",
           },
         ]}
       >
-        <Ionicons name="beer" size={beerSize} color={colors.neonOrange} />
+        <Ionicons name="beer" size={beerSize} color={themeColors.neonOrange} />
       </View>
       <MaterialCommunityIcons
         name="bird"
         size={wingSize}
-        color={colors.neonOrange}
+        color={themeColors.neonOrange}
         style={styles.rightWing}
       />
     </Animated.View>
@@ -92,7 +94,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 1.6,
-    shadowColor: colors.glowPurple,
+    shadowColor: themeColors.glowPurple,
     shadowOpacity: 0.76,
     shadowRadius: 16,
     shadowOffset: { width: 0, height: 0 },

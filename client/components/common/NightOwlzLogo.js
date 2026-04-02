@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import colors from "../../theme/colors";
+import themeColors from "../../theme/colors";
 
 export default function NightOwlzLogo({ compact = false }) {
   return (
@@ -10,13 +10,13 @@ export default function NightOwlzLogo({ compact = false }) {
         <Ionicons
           name="moon"
           size={26}
-          color={colors.neonBlue}
+          color={themeColors.neonBlue}
           style={styles.moon}
         />
         <MaterialCommunityIcons
           name="owl"
           size={22}
-          color={colors.neonYellow}
+          color={themeColors.neonYellow}
         />
       </View>
       <View>
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(7, 10, 22, 0.5)",
     alignItems: "center",
     justifyContent: "center",
-    shadowColor: colors.glowBlue,
+    shadowColor: themeColors.glowBlue,
     shadowOpacity: 0.5,
     shadowRadius: 10,
     shadowOffset: { width: 0, height: 0 },
@@ -61,13 +61,13 @@ const styles = StyleSheet.create({
     opacity: 0.95,
   },
   wordmark: {
-    color: colors.neonYellow,
+    color: themeColors.neonYellow,
     fontFamily: "Pacifico",
     fontSize: 30,
     lineHeight: 36,
     letterSpacing: 0.4,
     paddingTop: 2,
-    textShadowColor: colors.glowOrange,
+    textShadowColor: themeColors.glowOrange,
     textShadowRadius: 8,
     textShadowOffset: { width: 0, height: 0 },
   },
@@ -76,13 +76,13 @@ const styles = StyleSheet.create({
     lineHeight: 55,
   },
   tagline: {
-    color: colors.neonBlue,
+    color: themeColors.neonBlue,
     fontFamily: "Lobster",
     fontSize: 18,
     lineHeight: 22,
     letterSpacing: 0.2,
     marginTop: -1,
-    textShadowColor: colors.glowBlue,
+    textShadowColor: themeColors.glowBlue,
     textShadowRadius: 6,
     textShadowOffset: { width: 0, height: 0 },
   },

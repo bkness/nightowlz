@@ -5,15 +5,17 @@ import {
   TextInput,
   View,
   Animated as RNAnimated,
+  TouchableOpacity,
 } from "react-native";
-import { useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import NeonScreen from "../../components/common/NeonScreen";
-import { gradients } from "../../theme";
-import colors from "../../theme/colors";
+import { gradients, surfaces } from "../../theme";
+import themeColors from "../../theme/colors";
 import typography from "../../theme/typography";
 import BarCard from "../../components/bars/BarCard";
 import Header from "../../components/layout/Header";
+import SlidingPanel from "../../components/common/SlidingPanel";
 
 const BARS = [
   {
@@ -39,35 +41,62 @@ const BARS = [
 export default function DiscoverScreen() {
   const [searchText, setSearchText] = useState("");
   const [isFocused, setIsFocused] = useState(false);
+  const [isFilterPanelVisible, setIsFilterPanelVisible] = useState(false);
   const glowAnimation = useRef(new RNAnimated.Value(0)).current;
 
-  const handleFocus = () => {
+  const handleFocus = useCallback(() => {
     setIsFocused(true);
     RNAnimated.timing(glowAnimation, {
       toValue: 1,
       duration: 200,
       useNativeDriver: false,
     }).start();
-  };
+  }, [glowAnimation]);
 
-  const handleBlur = () => {
+  const handleBlur = useCallback(() => {
     setIsFocused(false);
     RNAnimated.timing(glowAnimation, {
       toValue: 0,
       duration: 200,
       useNativeDriver: false,
     }).start();
-  };
+  }, [glowAnimation]);
+
+  const openFilterPanel = useCallback(() => {
+    setIsFilterPanelVisible(true);
+  }, []);
+
+  const closeFilterPanel = useCallback(() => {
+    setIsFilterPanelVisible(false);
+  }, []);
 
   const shadowRadius = glowAnimation.interpolate({
     inputRange: [0, 1],
     outputRange: [12, 20],
   });
 
-  const filteredBars = BARS.filter(
-    (bar) =>
-      bar.name.toLowerCase().includes(searchText.toLowerCase()) ||
-      bar.neighborhood.toLowerCase().includes(searchText.toLowerCase()),
+  const filteredBars = useMemo(() => {
+    const searchKey = searchText.trim().toLowerCase();
+    if (!searchKey) return BARS;
+
+    return BARS.filter(
+      (bar) =>
+        bar.name.toLowerCase().includes(searchKey) ||
+        bar.neighborhood.toLowerCase().includes(searchKey),
+    );
+  }, [searchText]);
+
+  const renderedBarCards = useMemo(
+    () =>
+      filteredBars.map((bar) => (
+        <BarCard
+          key={bar.id}
+          name={bar.name}
+          vibe={bar.vibe}
+          neighborhood={bar.neighborhood}
+        />
+      )),
+    [filteredBars],
   );
 
   return (
@@ -85,7 +114,7 @@ export default function DiscoverScreen() {
           <Ionicons
             name="search"
             size={18}
-            color={isFocused ? colors.neonYellow : colors.muted}
+            color={isFocused ? themeColors.neonYellow : themeColors.muted}
             style={styles.searchIcon}
           />
           <RNAnimated.View
@@ -93,7 +122,9 @@ export default function DiscoverScreen() {
               styles.inputContainer,
               {
                 shadowRadius,
-                borderColor: isFocused ? colors.neonYellow : colors.muted,
+                borderColor: isFocused
+                  ? themeColors.neonYellow
+                  : themeColors.muted,
                 borderWidth: isFocused ? 1.5 : 1,
               },
             ]}
@@ -101,7 +132,7 @@ export default function DiscoverScreen() {
             <TextInput
               style={styles.searchInput}
               placeholder="Search by city..."
-              placeholderTextColor={colors.muted}
+              placeholderTextColor={themeColors.muted}
               value={searchText}
               onChangeText={setSearchText}
               onFocus={handleFocus}
@@ -110,23 +141,23 @@ export default function DiscoverScreen() {
               returnKeyType="done"
             />
           </RNAnimated.View>
+          <TouchableOpacity
+            onPress={openFilterPanel}
+            style={styles.filterButton}
+            activeOpacity={0.85}
+          >
+            <Ionicons name="options" size={18} color={themeColors.neonYellow} />
+          </TouchableOpacity>
         </View>
         {/* Bar Cards */}
         {filteredBars.length > 0 ? (
-          filteredBars.map((bar) => (
-            <BarCard
-              key={bar.id}
-              name={bar.name}
-              vibe={bar.vibe}
-              neighborhood={bar.neighborhood}
-            />
-          ))
+          renderedBarCards
         ) : (
           <View style={styles.emptyState}>
             <Ionicons
               name="search"
               size={48}
-              color={colors.muted}
+              color={themeColors.muted}
               style={{ marginBottom: 12 }}
             />
             <Text style={styles.emptyTitle}>No Bars Found</Text>
@@ -136,6 +167,19 @@ export default function DiscoverScreen() {
           </View>
         )}
       </ScrollView>
+      <SlidingPanel
+        isVisible={isFilterPanelVisible}
+        onClose={closeFilterPanel}
+        title="Search Filters"
+        snapPoints={["30%", "52%"]}
+      >
+        <Text style={styles.panelText}>
+          Starter panel for sort and filter controls.
+        </Text>
+        <Text style={styles.panelText}>
+          Add city, vibe, distance, or price chips here.
+        </Text>
+      </SlidingPanel>
     </NeonScreen>
   );
 }
@@ -157,21 +201,31 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   inputContainer: {
+    ...surfaces.glassField,
     flex: 1,
     height: 44,
-    borderRadius: 12,
-    backgroundColor: "rgba(13, 2, 23, 0.6)",
-    borderColor: colors.muted,
-    shadowColor: colors.neonYellow,
+    shadowColor: themeColors.neonYellow,
     shadowOpacity: 0.3,
     shadowOffset: { width: 0, height: 0 },
+  },
+  filterButton: {
+    ...surfaces.glassField,
+    marginLeft: 12,
+    width: 44,
+    height: 44,
+    alignItems: "center",
+    justifyContent: "center",
   },
   searchInput: {
     flex: 1,
     paddingHorizontal: 12,
     paddingVertical: 10,
-    color: colors.white,
+    color: themeColors.white,
     fontSize: 16,
+  },
+  panelText: {
+    ...typography.body,
+    color: themeColors.white,
   },
   emptyState: {
     alignItems: "center",

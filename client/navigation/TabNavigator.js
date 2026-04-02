@@ -7,9 +7,25 @@ import EventsScreen from "../screens/Events/EventsScreen";
 import MyBarsScreen from "../screens/MyBars/MyBarsScreen";
 import SettingsScreen from "../screens/Settings/SettingsScreen";
 import NeonTabIcon from "../components/common/NeonTabIcon";
+import SwipeTabWrapper from "./SwipeTabWrapper";
 import { colors } from "../theme";
 
 const Tab = createBottomTabNavigator();
+
+const withSwipe = (Component) => {
+  return function WrappedScreen(props) {
+    return (
+      <SwipeTabWrapper>
+        <Component {...props} />
+      </SwipeTabWrapper>
+    );
+  };
+};
+
+const DiscoverWithSwipe = withSwipe(DiscoverScreen);
+const EventsWithSwipe = withSwipe(EventsScreen);
+const MyBarsWithSwipe = withSwipe(MyBarsScreen);
+const SettingsWithSwipe = withSwipe(SettingsScreen);
 
 export default function TabNavigator() {
   return (
@@ -69,7 +85,7 @@ export default function TabNavigator() {
     >
       <Tab.Screen
         name="Discover"
-        component={DiscoverScreen}
+        component={DiscoverWithSwipe}
         options={{
           tabBarIcon: ({ focused }) => (
             <NeonTabIcon
@@ -83,7 +99,7 @@ export default function TabNavigator() {
       />
       <Tab.Screen
         name="Events"
-        component={EventsScreen}
+        component={EventsWithSwipe}
         options={{
           tabBarIcon: ({ focused }) => (
             <NeonTabIcon
@@ -97,7 +113,7 @@ export default function TabNavigator() {
       />
       <Tab.Screen
         name="MyBars"
-        component={MyBarsScreen}
+        component={MyBarsWithSwipe}
         options={{
           tabBarIcon: ({ focused }) => (
             <NeonTabIcon
@@ -111,7 +127,7 @@ export default function TabNavigator() {
       />
       <Tab.Screen
         name="Settings"
-        component={SettingsScreen}
+        component={SettingsWithSwipe}
         options={{
           tabBarIcon: ({ focused }) => (
             <NeonTabIcon

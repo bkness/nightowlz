@@ -57,11 +57,7 @@ export default function NightOwlzIcon({
           color={glowEnabled ? themeColors.neonBlue : color}
           style={styles.moon}
         />
-        <MaterialCommunityIcons
-          name="owl"
-          size={iconSize}
-          color={color}
-        />
+        <MaterialCommunityIcons name="owl" size={iconSize} color={color} />
       </View>
     </Animated.View>
   );

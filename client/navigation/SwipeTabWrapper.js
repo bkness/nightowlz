@@ -8,7 +8,7 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated";
 
-const TAB_ORDER = ["Discover", "Events", "MyBars", "Settings"];
+const TAB_ORDER = ["Discover", "Events", "MyBars", "MyProfile", "Settings"];
 const SWIPE_THRESHOLD = 70;
 const DRAG_RESISTANCE = 0.35;
 

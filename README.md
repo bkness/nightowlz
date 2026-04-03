@@ -156,3 +156,11 @@ npm run dev
 ## License
 
 Private - All rights reserved.
+
+## Internal Docs
+
+- `docs/QUICKSTART.md`
+- `docs/ARCHITECTURE.md`
+- `docs/AUTH_FLOW.md`
+- `docs/UI_SYSTEM.md`
+- `docs/TROUBLESHOOTING.md`

@@ -5,22 +5,23 @@ import NeonScreen from "../../components/common/NeonScreen";
 import NeonButton from "../../components/common/NeonButton";
 import { gradients, surfaces, typography } from "../../theme";
 import colors from "../../theme/colors";
+import { useAuth } from "../../context/AuthContext";
 
 export default function SignUpScreen({ navigation }) {
   const insets = useSafeAreaInsets();
+  const { login } = useAuth();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const canSubmit =
-    __DEV__ ||
-    (username.trim().length > 0 &&
-      email.trim().length > 0 &&
-      password.length > 0);
+  //   const canSubmit =
+  //     username.trim().length > 0 &&
+  //     email.trim().length > 0 &&
+  //     password.length > 0;
 
   const handleSignUp = () => {
-    if (!canSubmit) return;
-    navigation.replace("HomeTabs");
+    // if (!canSubmit) return;
+    login();
   };
 
   return (
@@ -46,8 +47,6 @@ export default function SignUpScreen({ navigation }) {
             placeholder="Username"
             placeholderTextColor={colors.muted}
             autoCapitalize="none"
-            autoCorrect={false}
-            returnKeyType="next"
             style={styles.input}
           />
           <TextInput
@@ -56,9 +55,7 @@ export default function SignUpScreen({ navigation }) {
             placeholder="Email"
             placeholderTextColor={colors.muted}
             autoCapitalize="none"
-            autoCorrect={false}
             keyboardType="email-address"
-            returnKeyType="next"
             style={styles.input}
           />
           <TextInput
@@ -67,21 +64,11 @@ export default function SignUpScreen({ navigation }) {
             placeholder="Password"
             placeholderTextColor={colors.muted}
             secureTextEntry
-            autoCorrect={false}
-            returnKeyType="done"
-            onSubmitEditing={handleSignUp}
             style={styles.input}
           />
         </View>
 
-        <NeonButton title="Sign Up" onPress={handleSignUp} disabled={!canSubmit} />
-
-        {__DEV__ && (
-          <NeonButton
-            title="Continue to App"
-            onPress={() => navigation.replace("HomeTabs")}
-          />
-        )}
+        <NeonButton title="Sign Up" onPress={handleSignUp} />
 
         <Pressable onPress={() => navigation.navigate("Login")}>
           <Text style={styles.switchText}>Already have an account? Login</Text>

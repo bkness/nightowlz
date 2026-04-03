@@ -11,10 +11,14 @@ import Animated, {
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import NightOwlzLogo from "../common/NightOwlzLogo";
+import { getSafeTopOffset } from "../../theme/layout";
 
 export default function Header({ compact = false }) {
   const insets = useSafeAreaInsets();
-  const topOffset = Math.max(insets.top + (compact ? 6 : 10), 22);
+  const topOffset = getSafeTopOffset(insets.top, {
+    basePadding: compact ? 4 : 8,
+    min: compact ? 18 : 20,
+  });
   const glowPulse = useSharedValue(0);
 
   useEffect(() => {

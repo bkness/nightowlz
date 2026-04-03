@@ -1,13 +1,14 @@
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { StyleSheet, ScrollView } from "react-native";
 import NeonScreen from "../../components/common/NeonScreen";
 import NeonButton from "../../components/common/NeonButton";
-import { gradients, surfaces } from "../../theme";
+import { gradients } from "../../theme";
 import { useTheme } from "../../theme/ThemeProvider";
 import colors from "../../theme/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import typography from "../../theme/typography";
 import { useNavigation } from "@react-navigation/native";
 import ScreenTitleBlock from "../../components/common/ScreenTitleBlock";
+import EmptyStateCard from "../../components/common/EmptyStateCard";
 
 export default function MyBarsScreen() {
   const navigation = useNavigation();
@@ -32,51 +33,32 @@ export default function MyBarsScreen() {
           style={styles.headerContainer}
         />
         {savedBars.length === 0 && (
-          <View
-            style={[
+          <EmptyStateCard
+            title="No bars saved yet!"
+            subtitle="Tap the star on a bar to add it here."
+            titleStyle={[typography.heading, { color: themeColors.white }]}
+            subtitleStyle={[styles.subtitle, { color: themeColors.muted }]}
+            cardStyle={[
               styles.emptyCard,
               {
                 borderColor: themeColors.neonYellow,
               },
             ]}
+            icon={
+              <MaterialCommunityIcons
+                name="star-outline"
+                size={48}
+                color={themeColors.neonYellow}
+                style={styles.icon}
+              />
+            }
           >
-            <MaterialCommunityIcons
-              name="star-outline"
-              size={48}
-              color={themeColors.neonYellow}
-              style={{
-                marginBottom: 16,
-                textShadowColor: themeColors.glowYellow,
-                textShadowRadius: 12,
-              }}
-            />
-            <Text
-              style={[
-                typography.heading,
-                { color: themeColors.white, textAlign: "center" },
-              ]}
-            >
-              No bars saved yet!
-            </Text>
-            <Text
-              style={[
-                typography.body,
-                {
-                  color: themeColors.muted,
-                  textAlign: "center",
-                  marginTop: 8,
-                  marginBottom: 24,
-                },
-              ]}
-            >
-              Tap the star on a bar to add it here.
-            </Text>
             <NeonButton
               title="Explore Bars"
               onPress={() => navigation.navigate("Discover")}
               style={styles.ctaButton}
             />
-          </View>
+          </EmptyStateCard>
         )}
       </ScrollView>
     </NeonScreen>
@@ -93,7 +75,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   emptyCard: {
-    ...surfaces.neonCard,
     alignSelf: "center",
     marginTop: 8,
     borderRadius: 20,
@@ -105,6 +86,16 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.18,
     shadowRadius: 24,
     shadowOffset: { width: 0, height: 8 },
+  },
+  icon: {
+    marginBottom: 16,
+    textShadowColor: colors.glowYellow,
+    textShadowRadius: 12,
+  },
+  subtitle: {
+    textAlign: "center",
+    marginTop: 8,
+    marginBottom: 24,
   },
   ctaButton: {
     alignSelf: "stretch",

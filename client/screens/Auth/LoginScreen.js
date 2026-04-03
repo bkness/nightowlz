@@ -5,18 +5,30 @@ import NeonScreen from "../../components/common/NeonScreen";
 import NeonButton from "../../components/common/NeonButton";
 import { gradients, surfaces, typography } from "../../theme";
 import colors from "../../theme/colors";
+import { useAuth } from "../../context/AuthContext";
 
 export default function LoginScreen({ navigation }) {
   const insets = useSafeAreaInsets();
+  const { login } = useAuth();
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
 
-  const canSubmit =
-    __DEV__ || (identifier.trim().length > 0 && password.length > 0);
+  const canSubmit = () => {
+    return identifier.trim().length > 0 && password.length > 0;
+  };
 
   const handleLogin = () => {
-    if (!canSubmit) return;
-    navigation.replace("HomeTabs");
+    if (!canSubmit()) {
+      console.error("Login failed: Email and password are required.");
+      return;
+    }
+
+    login();
+
+    setTimeout(() => {
+      setIdentifier("");
+      setPassword("");
+    }, 300);
   };
 
   return (
@@ -57,14 +69,11 @@ export default function LoginScreen({ navigation }) {
           />
         </View>
 
-        <NeonButton title="Login" onPress={handleLogin} disabled={!canSubmit} />
-
-        {__DEV__ && (
-          <NeonButton
-            title="Continue to App"
-            onPress={() => navigation.replace("HomeTabs")}
-          />
-        )}
+        <NeonButton
+          title="Login"
+          onPress={handleLogin}
+          disabled={!canSubmit()}
+        />
 
         <Pressable onPress={() => navigation.navigate("SignUp")}>
           <Text style={styles.switchText}>No account? Create one</Text>
@@ -73,7 +82,6 @@ export default function LoginScreen({ navigation }) {
     </NeonScreen>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

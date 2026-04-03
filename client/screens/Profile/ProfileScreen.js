@@ -1,12 +1,15 @@
 import React from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import NeonScreen from "../../components/common/NeonScreen";
+import NeonButton from "../../components/common/NeonButton";
 import ScreenTitleBlock from "../../components/common/ScreenTitleBlock";
 import NightOwlzIcon from "../../components/common/NightOwlzIcon";
 import { gradients, surfaces, typography } from "../../theme";
 import { useTheme } from "../../theme/ThemeProvider";
+import { useNavigation } from "@react-navigation/native";
 
 export default function ProfileScreen() {
+  const navigation = useNavigation();
   const { colors } = useTheme();
 
   return (
@@ -32,20 +35,20 @@ export default function ProfileScreen() {
               },
             ]}
           >
-            <NightOwlzIcon
-              size={56}
-              color={colors.neonYellow}
-              glowEnabled
-            />
+            <NightOwlzIcon size={56} color={colors.neonYellow} glowEnabled />
           </View>
 
           <Text style={[typography.subheading, styles.name]}>Night Owl</Text>
-          <Text style={[typography.caption, { color: colors.neonBlue }]}>@barfly-user</Text>
+          <Text style={[typography.caption, { color: colors.neonBlue }]}>
+            @barfly-user
+          </Text>
 
           <View style={styles.statsRow}>
             <View style={styles.statCard}>
               <Text style={[typography.heading, styles.statValue]}>12</Text>
-              <Text style={[typography.caption, styles.statLabel]}>Saved Bars</Text>
+              <Text style={[typography.caption, styles.statLabel]}>
+                Saved Bars
+              </Text>
             </View>
             <View style={styles.statCard}>
               <Text style={[typography.heading, styles.statValue]}>4</Text>
@@ -53,10 +56,17 @@ export default function ProfileScreen() {
             </View>
             <View style={styles.statCard}>
               <Text style={[typography.heading, styles.statValue]}>8</Text>
-              <Text style={[typography.caption, styles.statLabel]}>Check-ins</Text>
+              <Text style={[typography.caption, styles.statLabel]}>
+                Check-ins
+              </Text>
             </View>
           </View>
         </View>
+        <NeonButton
+          title="Settings"
+          onPress={() => navigation.navigate("SettingsScreen")}
+          style={styles.ctaButton}
+        />
       </ScrollView>
     </NeonScreen>
   );

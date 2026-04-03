@@ -1,8 +1,9 @@
-import { StyleSheet, ScrollView, View, Text } from "react-native";
+import { StyleSheet, ScrollView } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { gradients, surfaces, typography } from "../../theme";
+import { gradients } from "../../theme";
 import NeonScreen from "../../components/common/NeonScreen";
 import ScreenTitleBlock from "../../components/common/ScreenTitleBlock";
+import EmptyStateCard from "../../components/common/EmptyStateCard";
 import colors from "../../theme/colors";
 
 export default function EventsScreen() {
@@ -14,18 +15,20 @@ export default function EventsScreen() {
           subtitle="Live music, karaoke, trivia & more"
           style={styles.headerContainer}
         />
-        <View style={styles.emptyCard}>
-          <MaterialCommunityIcons
-            name="calendar-star"
-            size={44}
-            color={colors.neonYellow}
-            style={styles.icon}
-          />
-          <Text style={styles.title}>Fresh events are on deck</Text>
-          <Text style={styles.subtitle}>
-            We are wiring up real-time event drops for your favorite spots.
-          </Text>
-        </View>
+        <EmptyStateCard
+          title="Fresh events are on deck"
+          subtitle="We are wiring up real-time event drops for your favorite spots."
+          cardStyle={styles.emptyCard}
+          subtitleStyle={styles.subtitle}
+          icon={
+            <MaterialCommunityIcons
+              name="calendar-star"
+              size={44}
+              color={colors.neonYellow}
+              style={styles.icon}
+            />
+          }
+        />
       </ScrollView>
     </NeonScreen>
   );
@@ -43,23 +46,14 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   emptyCard: {
-    ...surfaces.neonCard,
-    padding: 24,
-    alignItems: "center",
+    marginTop: 0,
   },
   icon: {
     marginBottom: 12,
     textShadowColor: colors.glowYellow,
     textShadowRadius: 10,
   },
-  title: {
-    ...typography.subheading,
-    textAlign: "center",
-    marginBottom: 8,
-  },
   subtitle: {
-    ...typography.body,
     color: colors.muted,
-    textAlign: "center",
   },
 });

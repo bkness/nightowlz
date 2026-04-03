@@ -28,6 +28,27 @@ const EventsWithSwipe = withSwipe(EventsScreen);
 const MyBarsWithSwipe = withSwipe(MyBarsScreen);
 const ProfileWithSwipe = withSwipe(ProfileScreen);
 
+const tabs = [
+  {
+    name: "Discover",
+    component: DiscoverWithSwipe,
+    iconName: "search",
+    label: "Discover",
+  },
+  {
+    name: "Events",
+    component: EventsWithSwipe,
+    iconName: "calendar",
+    label: "Events",
+  },
+  {
+    name: "MyBars",
+    component: MyBarsWithSwipe,
+    iconName: "heart",
+    label: "Bars",
+  },
+];
+
 export default function TabNavigator() {
   return (
     <Tab.Navigator
@@ -88,48 +109,23 @@ export default function TabNavigator() {
         ),
       }}
     >
-      <Tab.Screen
-        name="Discover"
-        component={DiscoverWithSwipe}
-        options={{
-          tabBarIcon: ({ focused }) => (
-            <NeonTabIcon
-              name="search"
-              label="Discover"
-              focused={focused}
-              color={focused ? colors.neonYellow : colors.navInactive}
-            />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Events"
-        component={EventsWithSwipe}
-        options={{
-          tabBarIcon: ({ focused }) => (
-            <NeonTabIcon
-              name="calendar"
-              label="Events"
-              focused={focused}
-              color={focused ? colors.neonYellow : colors.navInactive}
-            />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="MyBars"
-        component={MyBarsWithSwipe}
-        options={{
-          tabBarIcon: ({ focused }) => (
-            <NeonTabIcon
-              name="heart"
-              label="Bars"
-              focused={focused}
-              color={focused ? colors.neonYellow : colors.navInactive}
-            />
-          ),
-        }}
-      />
+      {tabs.map((tab) => (
+        <Tab.Screen
+          key={tab.name}
+          name={tab.name}
+          component={tab.component}
+          options={{
+            tabBarIcon: ({ focused }) => (
+              <NeonTabIcon
+                name={tab.iconName}
+                label={tab.label}
+                focused={focused}
+                color={focused ? colors.neonYellow : colors.navInactive}
+              />
+            ),
+          }}
+        />
+      ))}
       <Tab.Screen
         name="Profile"
         component={ProfileWithSwipe}

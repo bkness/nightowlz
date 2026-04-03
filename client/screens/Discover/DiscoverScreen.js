@@ -77,10 +77,11 @@ export default function DiscoverScreen() {
     <NeonScreen gradient={gradients.discover}>
       {/* CONTENT */}
       <ScrollView
-        style={{ paddingHorizontal: 10 }}
-        contentContainerStyle={{ paddingTop: 6, paddingBottom: 24 }}
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
         keyboardDismissMode="on-drag"
         scrollEventThrottle={16}
+        showsVerticalScrollIndicator={false}
       >
         <Header compact />
         {/* Search Input */}
@@ -123,6 +124,7 @@ export default function DiscoverScreen() {
             <Ionicons name="options" size={18} color={themeColors.neonYellow} />
           </TouchableOpacity>
         </View>
+        <Text style={styles.sectionLabel}>Trending near you</Text>
         {/* Bar Cards */}
         {filteredBars.length > 0 ? (
           filteredBars.map((bar) => (
@@ -166,6 +168,13 @@ export default function DiscoverScreen() {
 }
 
 const styles = StyleSheet.create({
+  scrollView: {
+    paddingHorizontal: 12,
+  },
+  scrollContent: {
+    paddingTop: 0,
+    paddingBottom: 28,
+  },
   logo: {
     alignItems: "center",
     marginTop: 40,
@@ -174,7 +183,7 @@ const styles = StyleSheet.create({
   searchWrapper: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 20,
+    marginBottom: 14,
   },
   searchIcon: {
     marginRight: 12,
@@ -203,6 +212,13 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     color: themeColors.white,
     fontSize: 16,
+  },
+  sectionLabel: {
+    ...typography.label,
+    textAlign: "left",
+    marginLeft: 12,
+    marginBottom: 14,
+    color: themeColors.neonBlue,
   },
   panelText: {
     ...typography.body,

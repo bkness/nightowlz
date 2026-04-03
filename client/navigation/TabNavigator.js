@@ -5,8 +5,9 @@ import { StyleSheet, View } from "react-native";
 import DiscoverScreen from "../screens/Discover/DiscoverScreen";
 import EventsScreen from "../screens/Events/EventsScreen";
 import MyBarsScreen from "../screens/MyBars/MyBarsScreen";
-import SettingsScreen from "../screens/Settings/SettingsScreen";
+import ProfileScreen from "../screens/Profile/ProfileScreen";
 import NeonTabIcon from "../components/common/NeonTabIcon";
+import NightOwlzIcon from "../components/common/NightOwlzIcon";
 import SwipeTabWrapper from "./SwipeTabWrapper";
 import { colors } from "../theme";
 
@@ -25,7 +26,28 @@ const withSwipe = (Component) => {
 const DiscoverWithSwipe = withSwipe(DiscoverScreen);
 const EventsWithSwipe = withSwipe(EventsScreen);
 const MyBarsWithSwipe = withSwipe(MyBarsScreen);
-const SettingsWithSwipe = withSwipe(SettingsScreen);
+const ProfileWithSwipe = withSwipe(ProfileScreen);
+
+const tabs = [
+  {
+    name: "Discover",
+    component: DiscoverWithSwipe,
+    iconName: "search",
+    label: "Discover",
+  },
+  {
+    name: "Events",
+    component: EventsWithSwipe,
+    iconName: "calendar",
+    label: "Events",
+  },
+  {
+    name: "MyBars",
+    component: MyBarsWithSwipe,
+    iconName: "heart",
+    label: "Bars",
+  },
+];
 
 export default function TabNavigator() {
   return (
@@ -87,57 +109,30 @@ export default function TabNavigator() {
         ),
       }}
     >
+      {tabs.map((tab) => (
+        <Tab.Screen
+          key={tab.name}
+          name={tab.name}
+          component={tab.component}
+          options={{
+            tabBarIcon: ({ focused }) => (
+              <NeonTabIcon
+                name={tab.iconName}
+                label={tab.label}
+                focused={focused}
+                color={focused ? colors.neonYellow : colors.navInactive}
+              />
+            ),
+          }}
+        />
+      ))}
       <Tab.Screen
-        name="Discover"
-        component={DiscoverWithSwipe}
+        name="Profile"
+        component={ProfileWithSwipe}
         options={{
           tabBarIcon: ({ focused }) => (
-            <NeonTabIcon
-              name="search"
-              label="Discover"
-              focused={focused}
-              color={focused ? colors.neonYellow : colors.navInactive}
-            />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Events"
-        component={EventsWithSwipe}
-        options={{
-          tabBarIcon: ({ focused }) => (
-            <NeonTabIcon
-              name="calendar"
-              label="Events"
-              focused={focused}
-              color={focused ? colors.neonYellow : colors.navInactive}
-            />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="MyBars"
-        component={MyBarsWithSwipe}
-        options={{
-          tabBarIcon: ({ focused }) => (
-            <NeonTabIcon
-              name="heart"
-              label="Bars"
-              focused={focused}
-              color={focused ? colors.neonYellow : colors.navInactive}
-            />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Settings"
-        component={SettingsWithSwipe}
-        options={{
-          tabBarIcon: ({ focused }) => (
-            <NeonTabIcon
-              name="person"
-              label="Profile"
-              focused={focused}
+            <NightOwlzIcon
+              size={48}
               color={focused ? colors.neonYellow : colors.navInactive}
             />
           ),

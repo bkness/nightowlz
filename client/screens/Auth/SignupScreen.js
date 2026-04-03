@@ -5,22 +5,23 @@ import NeonScreen from "../../components/common/NeonScreen";
 import NeonButton from "../../components/common/NeonButton";
 import { gradients, surfaces, typography } from "../../theme";
 import colors from "../../theme/colors";
+import { useAuth } from "../../context/AuthContext";
 
 export default function SignUpScreen({ navigation }) {
   const insets = useSafeAreaInsets();
+  const { login } = useAuth();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const canSubmit =
-    __DEV__ ||
-    (username.trim().length > 0 &&
-      email.trim().length > 0 &&
-      password.length > 0);
+  //   const canSubmit =
+  //     username.trim().length > 0 &&
+  //     email.trim().length > 0 &&
+  //     password.length > 0;
 
   const handleSignUp = () => {
-    if (!canSubmit) return;
-    navigation.replace("HomeTabs");
+    // if (!canSubmit) return;
+    login();
   };
 
   return (
@@ -68,13 +69,6 @@ export default function SignUpScreen({ navigation }) {
         </View>
 
         <NeonButton title="Sign Up" onPress={handleSignUp} />
-
-        {__DEV__ && (
-          <NeonButton
-            title="Continue to App"
-            onPress={() => navigation.replace("HomeTabs")}
-          />
-        )}
 
         <Pressable onPress={() => navigation.navigate("Login")}>
           <Text style={styles.switchText}>Already have an account? Login</Text>

@@ -35,7 +35,7 @@ const typography = {
     fontSize: RFValue(38),
     lineHeight: RFValue(52),
     letterSpacing: 0.8,
-    marginTop: 60,
+    marginTop: 0,
     paddingTop: 2,
     color: colors.neonYellow,
     textAlign: "center",

@@ -1,18 +1,20 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Easing } from "react-native";
 import { colors } from "../theme";
+import { useAuth } from "../context/AuthContext";
 import TabNavigator from "./TabNavigator";
 import BarProfileScreen from "../screens/BarProfile/BarProfileScreen";
 import LoginScreen from "../screens/Auth/LoginScreen";
 import SignUpScreen from "../screens/Auth/SignupScreen";
+import SettingsScreen from "../screens/Settings/SettingsScreen";
 
 const Stack = createNativeStackNavigator();
-const INITIAL_ROUTE = __DEV__ ? "HomeTabs" : "Login";
 
 export default function StackNavigator() {
+  const { isLoggedIn } = useAuth();
+
   return (
     <Stack.Navigator
-      initialRouteName={INITIAL_ROUTE}
       screenOptions={{
         headerStyle: { backgroundColor: colors.background },
         contentStyle: { backgroundColor: colors.background },
@@ -22,29 +24,44 @@ export default function StackNavigator() {
         animationEasing: Easing.out(Easing.quad),
       }}
     >
-      <Stack.Screen
-        name="Login"
-        component={LoginScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="SignUp"
-        component={SignUpScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="HomeTabs"
-        component={TabNavigator}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="BarProfile"
-        component={BarProfileScreen}
-        options={{
-          title: "Bar Profile",
-          animation: "fade_from_bottom",
-        }}
-      />
+      {!isLoggedIn ? (
+        <>
+          <Stack.Screen
+            name="Login"
+            component={LoginScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="SignUp"
+            component={SignUpScreen}
+            options={{ headerShown: false }}
+          />
+        </>
+      ) : (
+        <>
+          <Stack.Screen
+            name="HomeTabs"
+            component={TabNavigator}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="BarProfile"
+            component={BarProfileScreen}
+            options={{
+              title: "Bar Profile",
+              animation: "fade_from_bottom",
+            }}
+          />
+          <Stack.Screen
+            name="SettingsScreen"
+            component={SettingsScreen}
+            options={{
+              title: "Settings",
+              animation: "fade_from_bottom",
+            }}
+          />
+        </>
+      )}
     </Stack.Navigator>
   );
 }

@@ -5,6 +5,7 @@ import { useFonts } from "expo-font";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ThemeProvider } from "./theme/ThemeProvider";
+import { AuthProvider } from "./context/AuthContext";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -19,11 +20,13 @@ export default function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
-        <ThemeProvider>
-          <NavigationContainer>
-            <StackNavigator />
-          </NavigationContainer>
-        </ThemeProvider>
+        <AuthProvider>
+          <ThemeProvider>
+            <NavigationContainer>
+              <StackNavigator />
+            </NavigationContainer>
+          </ThemeProvider>
+        </AuthProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

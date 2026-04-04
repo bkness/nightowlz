@@ -9,7 +9,10 @@ import colors from "../../theme/colors";
 export default function EventsScreen() {
   return (
     <NeonScreen gradient={gradients.events}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
         <ScreenTitleBlock
           title="Events"
           subtitle="Live music, karaoke, trivia & more"

@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, StyleSheet, Pressable } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import NeonScreen from "../../components/common/NeonScreen";
 import NeonButton from "../../components/common/NeonButton";
 import { gradients, surfaces, typography } from "../../theme";
 import colors from "../../theme/colors";
 import { useAuth } from "../../context/AuthContext";
+import useDevEscape from "../../hooks/useDevEscape";
+import useSafeScreenPadding from "../../hooks/useSafeScreenPadding";
 
 export default function LoginScreen({ navigation }) {
-  const insets = useSafeAreaInsets();
   const { login } = useAuth();
+  const handleDevEscape = useDevEscape();
+  const safePadding = useSafeScreenPadding();
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
 
@@ -36,13 +38,12 @@ export default function LoginScreen({ navigation }) {
       <View
         style={[
           styles.container,
-          {
-            paddingTop: Math.max(insets.top, 16),
-            paddingBottom: Math.max(insets.bottom, 16),
-          },
+          safePadding,
         ]}
       >
-        <Text style={styles.title}>Welcome Back</Text>
+        <Pressable onLongPress={handleDevEscape} delayLongPress={700}>
+          <Text style={styles.title}>Welcome Back</Text>
+        </Pressable>
         <Text style={styles.subtitle}>Sign in to keep your bars synced</Text>
 
         <View style={styles.form}>

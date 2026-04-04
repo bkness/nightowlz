@@ -27,7 +27,6 @@ export default function ScreenTitleBlock({
       <Text
         style={[
           typography.screenTitle,
-          { lineHeight: 12 },
           { color: colors.neonYellow },
         ]}
       >

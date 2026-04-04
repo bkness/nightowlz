@@ -25,6 +25,9 @@ export default function MyBarsScreen() {
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
+        bounces={false}
+        alwaysBounceVertical={false}
+        overScrollMode="never"
       >
         <ScreenTitleBlock
           title="My Bars"

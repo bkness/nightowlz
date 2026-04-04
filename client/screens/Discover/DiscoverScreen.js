@@ -82,6 +82,9 @@ export default function DiscoverScreen() {
         keyboardDismissMode="on-drag"
         scrollEventThrottle={16}
         showsVerticalScrollIndicator={false}
+        bounces={false}
+        alwaysBounceVertical={false}
+        overScrollMode="never"
       >
         <Header compact />
         {/* Search Input */}
@@ -175,11 +178,6 @@ const styles = StyleSheet.create({
     paddingTop: 0,
     paddingBottom: 28,
   },
-  logo: {
-    alignItems: "center",
-    marginTop: 40,
-  },
-
   searchWrapper: {
     flexDirection: "row",
     alignItems: "center",

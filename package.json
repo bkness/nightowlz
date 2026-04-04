@@ -1,7 +1,10 @@
 {
   "name": "barfly",
   "private": true,
-  "workspaces": [],
+  "workspaces": [
+    "client",
+    "server"
+  ],
   "scripts": {
     "start": "echo \"Run client or server individually\"",
     "client": "npm --workspace client run start",

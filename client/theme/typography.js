@@ -17,7 +17,6 @@ const typography = {
     ...glow(colors.glowYellow, 12),
     paddingHorizontal: 12,
     paddingVertical: 4,
-    // marginTop: 18,
   },
 
   tagline: {

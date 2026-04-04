@@ -1,26 +1,33 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, StyleSheet, Pressable } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import NeonScreen from "../../components/common/NeonScreen";
 import NeonButton from "../../components/common/NeonButton";
 import { gradients, surfaces, typography } from "../../theme";
 import colors from "../../theme/colors";
 import { useAuth } from "../../context/AuthContext";
+import useSafeScreenPadding from "../../hooks/useSafeScreenPadding";
 
 export default function SignUpScreen({ navigation }) {
-  const insets = useSafeAreaInsets();
   const { login } = useAuth();
+  const safePadding = useSafeScreenPadding();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  //   const canSubmit =
-  //     username.trim().length > 0 &&
-  //     email.trim().length > 0 &&
-  //     password.length > 0;
+  const canSubmit = () => {
+    return (
+      username.trim().length > 0 &&
+      email.trim().length > 0 &&
+      password.length > 0
+    );
+  };
 
   const handleSignUp = () => {
-    // if (!canSubmit) return;
+    if (!canSubmit()) {
+      console.error("Signup failed: Username, email, and password are required.");
+      return;
+    }
+
     login();
   };
 
@@ -29,10 +36,7 @@ export default function SignUpScreen({ navigation }) {
       <View
         style={[
           styles.container,
-          {
-            paddingTop: Math.max(insets.top, 16),
-            paddingBottom: Math.max(insets.bottom, 16),
-          },
+          safePadding,
         ]}
       >
         <Text style={styles.title}>Create Account</Text>
@@ -47,6 +51,8 @@ export default function SignUpScreen({ navigation }) {
             placeholder="Username"
             placeholderTextColor={colors.muted}
             autoCapitalize="none"
+            autoCorrect={false}
+            returnKeyType="next"
             style={styles.input}
           />
           <TextInput
@@ -56,6 +62,8 @@ export default function SignUpScreen({ navigation }) {
             placeholderTextColor={colors.muted}
             autoCapitalize="none"
             keyboardType="email-address"
+            autoCorrect={false}
+            returnKeyType="next"
             style={styles.input}
           />
           <TextInput
@@ -64,11 +72,18 @@ export default function SignUpScreen({ navigation }) {
             placeholder="Password"
             placeholderTextColor={colors.muted}
             secureTextEntry
+            autoCorrect={false}
+            returnKeyType="done"
+            onSubmitEditing={handleSignUp}
             style={styles.input}
           />
         </View>
 
-        <NeonButton title="Sign Up" onPress={handleSignUp} />
+        <NeonButton
+          title="Sign Up"
+          onPress={handleSignUp}
+          disabled={!canSubmit()}
+        />
 
         <Pressable onPress={() => navigation.navigate("Login")}>
           <Text style={styles.switchText}>Already have an account? Login</Text>

@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Easing } from "react-native";
 import { colors } from "../theme";
 import { useAuth } from "../context/AuthContext";
+
 import TabNavigator from "./TabNavigator";
 import BarProfileScreen from "../screens/BarProfile/BarProfileScreen";
 import LoginScreen from "../screens/Auth/LoginScreen";
@@ -19,6 +20,9 @@ export default function StackNavigator() {
         headerStyle: { backgroundColor: colors.background },
         contentStyle: { backgroundColor: colors.background },
         headerTintColor: colors.neonYellow,
+        gestureEnabled: true,
+        fullScreenGestureEnabled: true,
+        gestureDirection: "horizontal",
         animation: "slide_from_right",
         animationDuration: 350,
         animationEasing: Easing.out(Easing.quad),

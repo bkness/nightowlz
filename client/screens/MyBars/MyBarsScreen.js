@@ -12,12 +12,8 @@ import EmptyStateCard from "../../components/common/EmptyStateCard";
 
 export default function MyBarsScreen() {
   const navigation = useNavigation();
-  // Use theme context if available, otherwise fallback to static colors
-  let themeColors = colors;
-  try {
-    themeColors = useTheme().colors || colors;
-  } catch {}
-  // For now, always empty. Replace with your saved bars logic.
+  const theme = useTheme();
+  const themeColors = theme?.colors || colors;
   const savedBars = [];
 
   return (

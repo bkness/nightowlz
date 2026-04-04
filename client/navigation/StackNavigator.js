@@ -21,7 +21,6 @@ export default function StackNavigator() {
         contentStyle: { backgroundColor: colors.background },
         headerTintColor: colors.neonYellow,
         gestureEnabled: true,
-        fullScreenGestureEnabled: true,
         gestureDirection: "horizontal",
         animation: "slide_from_right",
         animationDuration: 350,
@@ -33,12 +32,20 @@ export default function StackNavigator() {
           <Stack.Screen
             name="Login"
             component={LoginScreen}
-            options={{ headerShown: false }}
+            options={{
+              headerShown: false,
+              animation: "fade",
+              gestureEnabled: false,
+            }}
           />
           <Stack.Screen
             name="SignUp"
             component={SignUpScreen}
-            options={{ headerShown: false }}
+            options={{
+              headerShown: false,
+              animation: "fade",
+              gestureEnabled: false,
+            }}
           />
         </>
       ) : (

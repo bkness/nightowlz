@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import { View, Text, TextInput, StyleSheet, Pressable, Keyboard, TouchableWithoutFeedback } from "react-native";
 import NeonScreen from "../../components/common/NeonScreen";
 import NeonButton from "../../components/common/NeonButton";
+import RoleToggle from "../../components/common/RoleToggle";
 import { gradients, surfaces, typography } from "../../theme";
 import colors from "../../theme/colors";
 import { useAuth } from "../../context/AuthContext";
@@ -80,44 +81,12 @@ export default function SignUpScreen({ navigation }) {
             Start building your BarFly favorites
           </Text>
 
-          <View style={styles.roleRow}>
-            <Pressable
-              onPress={() => setSelectedRole("user")}
-              style={[
-                styles.roleChip,
-                selectedRole === "user" && styles.roleChipActive,
-              ]}
-            >
-              <Text
-                style={[
-                  styles.roleText,
-                  selectedRole === "user" && styles.roleTextActive,
-                ]}
-              >
-                User
-              </Text>
-            </Pressable>
-            <Pressable
-              onPress={() => setSelectedRole("owner")}
-              style={[
-                styles.roleChip,
-                selectedRole === "owner" && styles.roleChipActive,
-              ]}
-            >
-              <Text
-                style={[
-                  styles.roleText,
-                  selectedRole === "owner" && styles.roleTextActive,
-                ]}
-              >
-                Owner
-              </Text>
-            </Pressable>
-          </View>
+          <RoleToggle value={selectedRole} onChange={setSelectedRole} />
 
           <View style={styles.form}>
             <TextInput
               ref={usernameRef}
+              value={username}
               onChangeText={setUsername}
               placeholder="Username"
               placeholderTextColor={colors.muted}
@@ -135,6 +104,7 @@ export default function SignUpScreen({ navigation }) {
             />
             <TextInput
               ref={emailRef}
+              value={email}
               onChangeText={setEmail}
               placeholder="Email"
               placeholderTextColor={colors.muted}
@@ -152,6 +122,7 @@ export default function SignUpScreen({ navigation }) {
             />
             <TextInput
               ref={passwordRef}
+              value={password}
               onChangeText={setPassword}
               placeholder="Password"
               placeholderTextColor={colors.muted}
@@ -193,60 +164,21 @@ const styles = StyleSheet.create({
     ...typography.screenTitle,
     marginBottom: 8,
   },
-  subtitle: {
-    ...typography.body,
-    color: colors.neonBlue,
-    textAlign: "center",
-    marginBottom: 24,
-  },
+  subtitle: { ...typography.formSubtitle },
   form: {
     gap: 12,
     marginBottom: 12,
   },
   input: {
-    ...surfaces.glassField,
-    color: colors.white,
-    height: 48,
-    paddingHorizontal: 14,
+    ...surfaces.formInput,
   },
   inputFocused: {
-    borderColor: colors.neonYellow,
-    shadowColor: colors.glowYellow,
-    shadowOpacity: 0.32,
-    shadowRadius: 12,
-    shadowOffset: { width: 0, height: 0 },
+    ...surfaces.formInputFocused,
   },
   switchText: {
     ...typography.caption,
     color: colors.neonYellow,
     textAlign: "center",
     marginTop: 10,
-  },
-  roleRow: {
-    flexDirection: "row",
-    gap: 10,
-    marginBottom: 14,
-    justifyContent: "center",
-  },
-  roleChip: {
-    ...surfaces.glassField,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    minWidth: 88,
-    alignItems: "center",
-  },
-  roleChipActive: {
-    borderColor: colors.neonYellow,
-    shadowColor: colors.glowYellow,
-    shadowOpacity: 0.22,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 0 },
-  },
-  roleText: {
-    ...typography.caption,
-    color: colors.muted,
-  },
-  roleTextActive: {
-    color: colors.neonYellow,
   },
 });

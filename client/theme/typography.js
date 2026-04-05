@@ -98,6 +98,14 @@ const typography = {
     textAlign: "center",
     lineHeight: RFValue(24),
   },
+
+  formSubtitle: {
+    fontSize: RFValue(14),
+    color: colors.neonBlue,
+    lineHeight: RFValue(22),
+    textAlign: "center",
+    marginBottom: 24,
+  },
 };
 
 export default typography;

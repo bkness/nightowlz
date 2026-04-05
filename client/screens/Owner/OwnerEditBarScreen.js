@@ -272,20 +272,11 @@ export default function OwnerEditBarScreen() {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        paddingHorizontal: 20,
-    },
     title: {
         ...typography.screenTitle,
         marginBottom: 8,
     },
-    subtitle: {
-        ...typography.body,
-        color: colors.neonBlue,
-        textAlign: 'center',
-        marginBottom: 24,
-    },
+    subtitle: { ...typography.formSubtitle },
     scrollContent: {
         flexGrow: 1,
         justifyContent: 'center',
@@ -301,17 +292,10 @@ const styles = StyleSheet.create({
         marginBottom: 4,
     },
     input: {
-        ...surfaces.glassField,
-        color: colors.white,
-        height: 48,
-        paddingHorizontal: 14,
+        ...surfaces.formInput,
     },
     inputFocused: {
-        borderColor: colors.neonYellow,
-        shadowColor: colors.glowYellow,
-        shadowOpacity: 0.32,
-        shadowRadius: 12,
-        shadowOffset: { width: 0, height: 0 },
+        ...surfaces.formInputFocused,
     },
     descriptionInput: {
         minHeight: 90,

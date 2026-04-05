@@ -11,7 +11,7 @@ import NightOwlzIcon from "../components/common/NightOwlzIcon";
 import SwipeTabWrapper from "./SwipeTabWrapper";
 import { colors } from "../theme";
 
-const TAB_ORDER = ["Discover", "Events", "MyBars", "Profile"];
+const TAB_ORDER = ["Discover", "Events", "MyBars"];
 const Tab = createBottomTabNavigator();
 
 const withSwipe = (Component) => {
@@ -27,7 +27,6 @@ const withSwipe = (Component) => {
 const DiscoverWithSwipe = withSwipe(DiscoverScreen);
 const EventsWithSwipe = withSwipe(EventsScreen);
 const MyBarsWithSwipe = withSwipe(MyBarsScreen);
-const ProfileWithSwipe = withSwipe(ProfileScreen);
 
 export default function TabNavigator() {
   return (
@@ -133,8 +132,8 @@ export default function TabNavigator() {
         }}
       />
       <Tab.Screen
-        name="Profile"
-        component={ProfileWithSwipe}
+        name="MyProfile"
+        component={ProfileScreen}
         options={{
           tabBarIcon: ({ focused }) => (
             <NightOwlzIcon

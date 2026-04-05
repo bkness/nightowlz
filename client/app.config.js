@@ -1,3 +1,4 @@
+import 'dotenv/config';
 export default {
   name: "BarFly",
   slug: "barfly-client",
@@ -30,5 +31,8 @@ export default {
 
   web: {
     favicon: "./assets/favicon.png",
+  },
+  extra: {
+    EXPO_PUBLIC_API_BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL,
   },
 };

@@ -11,7 +11,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { useEffect } from "react";
 
-export default function NeonScreen({ children, gradient }) {
+export default function NeonScreen({ children, gradient, liftDistance = 14 }) {
   const fadeInValue = useSharedValue(0);
   const ambientPulse = useSharedValue(0);
 
@@ -39,7 +39,7 @@ export default function NeonScreen({ children, gradient }) {
         translateY: interpolate(
           fadeInValue.value,
           [0, 1],
-          [14, 0],
+          [liftDistance, 0],
           Extrapolate.CLAMP,
         ),
       },

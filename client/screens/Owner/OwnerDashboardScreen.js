@@ -1,12 +1,13 @@
-import React from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
 import NeonScreen from "../../components/common/NeonScreen";
 import NeonButton from "../../components/common/NeonButton";
 import ScreenTitleBlock from "../../components/common/ScreenTitleBlock";
 import { gradients, surfaces, typography } from "../../theme";
 import { useTheme } from "../../theme/ThemeProvider";
 import { useAuth } from "../../context/AuthContext";
+import { api } from "../../utils/api";
 
 const QUICK_ACTIONS = [
     {
@@ -23,19 +24,90 @@ const QUICK_ACTIONS = [
     },
 ];
 
+function formatLastUpdated(updatedAt) {
+    if (!updatedAt) return "Last updated: not yet";
+
+    const date = new Date(updatedAt);
+    if (Number.isNaN(date.getTime())) return "Last updated: unknown";
+
+    return `Last updated: ${date.toLocaleString()}`;
+}
+
 export default function OwnerDashboardScreen() {
     const navigation = useNavigation();
+    const route = useRoute();
     const { colors } = useTheme();
-    const { role, user } = useAuth();
+    const { role, user, token } = useAuth();
     const isOwner = role === "owner";
+    const initialBarId = route.params?.barId || null;
+    const [ownerBar, setOwnerBar] = useState(null);
     const displayName = user?.username?.trim() || "Bar Owner";
     const handle = user?.username?.trim()
         ? `@${user.username.trim().toLowerCase()}`
         : "@owner";
 
+    useFocusEffect(
+        useCallback(() => {
+            let active = true;
+
+            async function loadOwnerBar() {
+                if (!user?.id) return;
+
+                try {
+                    const { data } = await api.get(`/bars/owner/${user.id}`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    });
+
+                    if (active) {
+                        setOwnerBar(data || null);
+                    }
+                } catch (_error) {
+                    if (active) {
+                        setOwnerBar(null);
+                    }
+                }
+            }
+
+            loadOwnerBar();
+
+            return () => {
+                active = false;
+            };
+        }, [token, user?.id]),
+    );
+
+    const activeBarId = ownerBar?._id || initialBarId || null;
+
+    const actions = useMemo(() => {
+        return QUICK_ACTIONS.map((action) => {
+            if (action.title !== "Edit Bar Info") return action;
+
+            if (ownerBar?.name) {
+                const locationText = ownerBar.location ? ` - ${ownerBar.location}` : "";
+                return {
+                    ...action,
+                    description: `${ownerBar.name}${locationText}`,
+                    meta: formatLastUpdated(ownerBar.updatedAt),
+                };
+            }
+
+            return {
+                ...action,
+                description: "Add your venue details to start your owner profile.",
+                meta: formatLastUpdated(null),
+            };
+        });
+    }, [ownerBar]);
+
     const handleActionPress = (title) => {
         if (title === "Edit Bar Info") {
-            navigation.navigate("OwnerEditBar");
+            if (activeBarId) {
+                navigation.navigate("OwnerEditBar", { barId: activeBarId });
+            } else {
+                navigation.navigate("OwnerEditBar");
+            }
             return;
         }
 
@@ -108,7 +180,7 @@ export default function OwnerDashboardScreen() {
                             </View>
                         </View>
                         <View style={styles.actionsWrap}>
-                            {QUICK_ACTIONS.map((action) => (
+                            {actions.map((action) => (
                                 <Pressable
                                     key={action.title}
                                     onPress={() => handleActionPress(action.title)}
@@ -127,6 +199,11 @@ export default function OwnerDashboardScreen() {
                                     <Text style={[typography.body, styles.actionCopy]}>
                                         {action.description}
                                     </Text>
+                                    {action.meta ? (
+                                        <Text style={[typography.caption, styles.actionMeta]}>
+                                            {action.meta}
+                                        </Text>
+                                    ) : null}
                                 </Pressable>
                             ))}
                         </View>
@@ -237,6 +314,10 @@ const styles = StyleSheet.create({
     },
     actionCopy: {
         color: "#D7DEF5",
+    },
+    actionMeta: {
+        marginTop: 8,
+        color: "#9AB1E4",
     },
     primaryButton: {
         marginTop: 18,

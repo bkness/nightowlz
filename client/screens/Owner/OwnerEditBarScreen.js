@@ -22,7 +22,7 @@ export default function OwnerEditBarScreen() {
     const navigation = useNavigation();
     const safePadding = useSafeScreenPadding();
     const route = useRoute();
-    const { token } = useAuth();
+    const { token, user } = useAuth();
 
     const barId = route.params?.barId;
 
@@ -48,6 +48,7 @@ export default function OwnerEditBarScreen() {
     const canSave = useMemo(() => {
         return form.name.trim().length > 1 && form.location.trim().length > 3 && !saving;
     }, [form, saving]);
+
 
     const updateField = (key, value) => {
         setForm((prev) => ({ ...prev, [key]: value }));
@@ -105,7 +106,10 @@ export default function OwnerEditBarScreen() {
                     },
                 });
             } else {
-                await api.post('/bars', form, {
+                await api.post('/bars', {
+                    ...form,
+                    ownerId: user?.id,
+                }, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },

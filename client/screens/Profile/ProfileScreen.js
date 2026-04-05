@@ -12,8 +12,12 @@ import { useAuth } from "../../context/AuthContext";
 export default function ProfileScreen() {
   const navigation = useNavigation();
   const { colors } = useTheme();
-  const { role } = useAuth();
+  const { role, user } = useAuth();
   const roleLabel = (role || "user").toUpperCase();
+  const displayName = user?.username?.trim() || "Night Owl";
+  const handle = user?.username?.trim()
+    ? `@${user.username.trim().toLowerCase()}`
+    : "@barfly-user";
 
   return (
     <NeonScreen gradient={gradients.settings}>
@@ -44,9 +48,9 @@ export default function ProfileScreen() {
             <NightOwlzIcon size={56} color={colors.neonYellow} glowEnabled />
           </View>
 
-          <Text style={[typography.subheading, styles.name]}>Night Owl</Text>
+          <Text style={[typography.subheading, styles.name]}>{displayName}</Text>
           <Text style={[typography.caption, { color: colors.neonBlue }]}>
-            @barfly-user
+            {handle}
           </Text>
           <View style={[styles.roleBadge, { borderColor: colors.neonYellow }]}>
             <Text style={[styles.roleBadgeText, { color: colors.neonYellow }]}>

@@ -29,23 +29,9 @@ export default function SignUpScreen({ navigation }) {
     );
   };
 
-  const getSignUpErrorMessage = (error) => {
-    const status = error?.response?.status;
-    const serverMessage = error?.response?.data?.message;
-
-    if (serverMessage) return serverMessage;
-    if (status === 409) return "That username or email is already in use.";
-    if (status === 400) return "Please check your info. Password must be at least 8 characters.";
-    if (error?.message === "Network Error") {
-      return "Cannot reach server. Confirm backend is running and your phone is on the same Wi-Fi.";
-    }
-
-    return "An unexpected error occurred. Please try again.";
-  };
-
   const handleSignUp = async () => {
     if (!canSubmit()) {
-      alert("Signup failed: Username, email, and password are required.");
+      console.error("Signup failed: Username, email, and password are required.");
       return;
     }
 
@@ -63,7 +49,10 @@ export default function SignUpScreen({ navigation }) {
         "Signup request failed:",
         error?.response?.data?.message || error.message,
       );
-      alert("Signup failed: " + getSignUpErrorMessage(error));
+      alert(
+        "Signup failed: " +
+        (error?.response?.data?.message || "An unexpected error occurred."),
+      );
       return;
     }
   };
@@ -129,7 +118,6 @@ export default function SignUpScreen({ navigation }) {
           <View style={styles.form}>
             <TextInput
               ref={usernameRef}
-              value={username}
               onChangeText={setUsername}
               placeholder="Username"
               placeholderTextColor={colors.muted}
@@ -147,7 +135,6 @@ export default function SignUpScreen({ navigation }) {
             />
             <TextInput
               ref={emailRef}
-              value={email}
               onChangeText={setEmail}
               placeholder="Email"
               placeholderTextColor={colors.muted}
@@ -165,7 +152,6 @@ export default function SignUpScreen({ navigation }) {
             />
             <TextInput
               ref={passwordRef}
-              value={password}
               onChangeText={setPassword}
               placeholder="Password"
               placeholderTextColor={colors.muted}

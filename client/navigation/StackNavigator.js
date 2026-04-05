@@ -8,6 +8,8 @@ import BarProfileScreen from "../screens/BarProfile/BarProfileScreen";
 import LoginScreen from "../screens/Auth/LoginScreen";
 import SignUpScreen from "../screens/Auth/SignupScreen";
 import SettingsScreen from "../screens/Settings/SettingsScreen";
+import OwnerDashboardScreen from "../screens/Owner/OwnerDashboardScreen";
+import OwnerEditBarScreen from "../screens/Owner/OwnerEditBarScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -68,6 +70,22 @@ export default function StackNavigator() {
             component={SettingsScreen}
             options={{
               title: "Settings",
+              animation: "fade_from_bottom",
+            }}
+          />
+          <Stack.Screen
+            name="OwnerDashboard"
+            component={OwnerDashboardScreen}
+            options={{
+              title: "Owner Dashboard",
+              animation: "fade_from_bottom",
+            }}
+          />
+          <Stack.Screen
+            name="OwnerEditBar"
+            component={OwnerEditBarScreen}
+            options={{
+              title: "Edit Bar",
               animation: "fade_from_bottom",
             }}
           />

@@ -14,7 +14,7 @@ export default function ProfileScreen() {
   const { colors } = useTheme();
   const { role, user } = useAuth();
   const roleLabel = (role || "user").toUpperCase();
-  const displayName = user?.username?.trim() || "Night Owl";
+  const displayName = user?.username?.trim() || "Night Owlz";
   const handle = user?.username?.trim()
     ? `@${user.username.trim().toLowerCase()}`
     : "@barfly-user";
@@ -82,6 +82,14 @@ export default function ProfileScreen() {
           onPress={() => navigation.navigate("SettingsScreen")}
           style={styles.ctaButton}
         />
+        {role === "owner" ? (
+          <NeonButton
+            title="Owner Dashboar"
+            onPress={() => navigation.navigate("OwnerDashboard")}
+            style={styles.comingSoonButton}
+          />
+        ) : null}
+        <Text style={[typography.caption, styles.statLabel]}>Manage bar tools and events</Text>
         {__DEV__ && (
           <NeonButton
             title="Bar Profile Preview"
@@ -90,7 +98,7 @@ export default function ProfileScreen() {
           />
         )}
       </ScrollView>
-    </NeonScreen>
+    </NeonScreen >
   );
 }
 

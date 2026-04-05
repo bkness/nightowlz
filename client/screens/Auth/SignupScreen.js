@@ -129,6 +129,7 @@ export default function SignUpScreen({ navigation }) {
           <View style={styles.form}>
             <TextInput
               ref={usernameRef}
+              value={username}
               onChangeText={setUsername}
               placeholder="Username"
               placeholderTextColor={colors.muted}
@@ -146,6 +147,7 @@ export default function SignUpScreen({ navigation }) {
             />
             <TextInput
               ref={emailRef}
+              value={email}
               onChangeText={setEmail}
               placeholder="Email"
               placeholderTextColor={colors.muted}
@@ -163,6 +165,7 @@ export default function SignUpScreen({ navigation }) {
             />
             <TextInput
               ref={passwordRef}
+              value={password}
               onChangeText={setPassword}
               placeholder="Password"
               placeholderTextColor={colors.muted}

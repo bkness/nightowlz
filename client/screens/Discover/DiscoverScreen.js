@@ -221,6 +221,7 @@ const styles = StyleSheet.create({
   panelText: {
     ...typography.body,
     color: themeColors.white,
+
   },
   emptyState: {
     alignItems: "center",

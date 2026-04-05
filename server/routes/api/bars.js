@@ -1,6 +1,7 @@
 const express = require("express");
 const axios = require("axios");
 const Bar = require("../../models/Bar");
+const { verifyToken } = require("../../middleware/auth");
 
 const router = express.Router();
 
@@ -129,7 +130,7 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", verifyToken, async (req, res) => {
     try {
         const {
             name,
@@ -166,7 +167,7 @@ router.post("/", async (req, res) => {
     }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", verifyToken, async (req, res) => {
     try {
         const {
             name,

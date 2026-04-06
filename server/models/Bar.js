@@ -40,6 +40,11 @@ const barSchema = new mongoose.Schema({
         maxlength: 50,
     },
 
+    coordinates: {
+        lat: { type: Number, default: null },
+        lng: { type: Number, default: null },
+    },
+
     ownerId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',

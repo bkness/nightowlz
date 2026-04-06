@@ -96,112 +96,64 @@ router.get("/search", async (req, res) => {
     }
 });
 
-router.get("/owner/:ownerId", async (req, res) => {
+// --- App bar CRUD (MongoDB) ---
+
+// GET /api/bars — all registered bars (public)
+router.get("/", async (_req, res) => {
     try {
-        const bar = await Bar.findOne({ ownerId: req.params.ownerId }).sort({ updatedAt: -1 });
-
-        if (!bar) {
-            return res.status(404).json({ message: "No bar found for this owner." });
-        }
-
-        return res.json(bar);
-    } catch (error) {
-        return res.status(500).json({
-            message: "Failed to load owner bar.",
-            error: error.message,
-        });
+        const bars = await Bar.find().sort({ createdAt: -1 }).lean();
+        res.json(bars);
+    } catch (err) {
+        res.status(500).json({ message: "Failed to fetch bars." });
     }
 });
 
+// GET /api/bars/:id
 router.get("/:id", async (req, res) => {
     try {
-        const bar = await Bar.findById(req.params.id);
-
-        if (!bar) {
-            return res.status(404).json({ message: "Bar not found." });
-        }
-
-        return res.json(bar);
-    } catch (error) {
-        return res.status(500).json({
-            message: "Failed to load bar.",
-            error: error.message,
-        });
+        const bar = await Bar.findById(req.params.id).lean();
+        if (!bar) return res.status(404).json({ message: "Bar not found." });
+        res.json(bar);
+    } catch (err) {
+        res.status(500).json({ message: "Failed to fetch bar." });
     }
 });
 
+// POST /api/bars — create (owner only)
 router.post("/", verifyToken, async (req, res) => {
     try {
-        const {
+        const { name, location, description, phone, website, openingHours, coordinates } = req.body;
+        const bar = await Bar.create({
             name,
             location,
             description,
             phone,
             website,
             openingHours,
-            ownerId,
-        } = req.body;
-
-        if (!name?.trim() || !location?.trim() || !ownerId) {
-            return res.status(400).json({
-                message: "Name, location, and ownerId are required.",
-            });
-        }
-
-        const bar = await Bar.create({
-            name: name.trim(),
-            location: location.trim(),
-            description: description?.trim() || "",
-            phone: phone?.trim() || "",
-            website: website?.trim() || "",
-            openingHours: openingHours?.trim() || "",
-            ownerId,
+            coordinates: coordinates || { lat: null, lng: null },
+            ownerId: req.user.id,
         });
-
-        return res.status(201).json(bar);
-    } catch (error) {
-        return res.status(500).json({
-            message: "Failed to create bar.",
-            error: error.message,
-        });
+        res.status(201).json(bar);
+    } catch (err) {
+        res.status(400).json({ message: err.message });
     }
 });
 
+// PUT /api/bars/:id — update (owner only)
 router.put("/:id", verifyToken, async (req, res) => {
     try {
-        const {
-            name,
-            location,
-            description,
-            phone,
-            website,
-            openingHours,
-        } = req.body;
-
-        const updates = {
-            name: typeof name === "string" ? name.trim() : name,
-            location: typeof location === "string" ? location.trim() : location,
-            description: typeof description === "string" ? description.trim() : description,
-            phone: typeof phone === "string" ? phone.trim() : phone,
-            website: typeof website === "string" ? website.trim() : website,
-            openingHours: typeof openingHours === "string" ? openingHours.trim() : openingHours,
-        };
-
-        const bar = await Bar.findByIdAndUpdate(req.params.id, updates, {
-            new: true,
-            runValidators: true,
-        });
-
-        if (!bar) {
-            return res.status(404).json({ message: "Bar not found." });
+        const bar = await Bar.findById(req.params.id);
+        if (!bar) return res.status(404).json({ message: "Bar not found." });
+        if (bar.ownerId.toString() !== req.user.id) {
+            return res.status(403).json({ message: "Not authorized." });
         }
-
-        return res.json(bar);
-    } catch (error) {
-        return res.status(500).json({
-            message: "Failed to update bar.",
-            error: error.message,
-        });
+        const { name, location, description, phone, website, openingHours, coordinates } = req.body;
+        Object.assign(bar, { name, location, description, phone, website, openingHours });
+        if (coordinates) bar.coordinates = coordinates;
+        await bar.save();
+        res.json(bar);
+    } catch (err) {
+        res.status(400).json({ message: err.message });
     }
 });
 

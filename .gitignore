@@ -33,6 +33,7 @@ ios/*.xcuserstate
 .env.*
 *.keystore
 *.jks
+*.p8
 
 # VSCode
 .vscode/

@@ -17,6 +17,7 @@ function BarCard({
   onPress,
   distance,
   category,
+  sourceLabel,
   icon = "owl",
 }) {
   // Press feedback animation
@@ -80,6 +81,8 @@ function BarCard({
             </View>
 
             {!!category && <Text style={styles.category}>{category}</Text>}
+
+            {!!sourceLabel && <Text style={styles.sourceLabel}>{sourceLabel}</Text>}
           </View>
         </View>
 
@@ -96,6 +99,7 @@ const areEqual = (prev, next) => {
     prev.neighborhood === next.neighborhood &&
     prev.distance === next.distance &&
     prev.category === next.category &&
+    prev.sourceLabel === next.sourceLabel &&
     prev.icon === next.icon &&
     prev.onPress === next.onPress
   );
@@ -161,6 +165,16 @@ const styles = StyleSheet.create({
     color: themeColors.navInactive,
     marginTop: 4,
     fontSize: 13,
+  },
+
+  sourceLabel: {
+    ...typography.caption,
+    color: themeColors.neonBlue,
+    marginTop: 6,
+    fontSize: 12,
+    fontWeight: "700",
+    textTransform: "uppercase",
+    letterSpacing: 0.4,
   },
 
   vibeTagInline: {

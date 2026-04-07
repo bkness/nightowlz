@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import NeonScreen from "../../components/common/NeonScreen";
@@ -20,6 +20,24 @@ import Header from "../../components/layout/Header";
 import SlidingPanel from "../../components/common/SlidingPanel";
 import { api } from "../../utils/api";
 
+const SEARCH_MODE_OPTIONS = [
+  { id: "bars", label: "Bars" },
+  { id: "nightlife", label: "Nightlife" },
+];
+
+function formatDistance(distanceMeters) {
+  if (typeof distanceMeters !== "number") return "";
+  if (distanceMeters < 1000) return `${distanceMeters} m away`;
+  const miles = distanceMeters / 1609.34;
+  return `${miles.toFixed(miles < 10 ? 1 : 0)} mi away`;
+}
+
+function formatSourceLabel(source) {
+  if (source === "apple-maps") return "Apple Maps";
+  if (source === "openstreetmap-overpass") return "Fallback Result";
+  return "";
+}
+
 export default function DiscoverScreen() {
   const navigation = useNavigation();
   const [searchText, setSearchText] = useState("");
@@ -27,8 +45,34 @@ export default function DiscoverScreen() {
   const [isFilterPanelVisible, setIsFilterPanelVisible] = useState(false);
   const [bars, setBars] = useState([]);
   const [searching, setSearching] = useState(false);
+  const [searchModes, setSearchModes] = useState(["bars", "nightlife"]);
+  const [resultSource, setResultSource] = useState("");
   const searchTimeout = useRef(null);
+  const latestSearchTextRef = useRef("");
   const glowAnimation = useRef(new RNAnimated.Value(0)).current;
+
+  const runSearch = async (query, modes) => {
+    if (query.trim().length < 2) {
+      setBars([]);
+      setResultSource("");
+      return;
+    }
+
+    setSearching(true);
+    try {
+      const { data } = await api.get("/maps/nightlife", {
+        params: { q: query.trim(), modes: modes.join(",") },
+      });
+      setBars(data.bars || []);
+      setResultSource(data.source || "");
+    } catch (err) {
+      console.error("Discover search error:", err?.response?.data || err?.message || err);
+      setBars([]);
+      setResultSource("");
+    } finally {
+      setSearching(false);
+    }
+  };
 
   const handleFocus = () => {
     setIsFocused(true);
@@ -50,24 +94,37 @@ export default function DiscoverScreen() {
 
   const handleSearch = (text) => {
     setSearchText(text);
+    latestSearchTextRef.current = text;
     if (searchTimeout.current) clearTimeout(searchTimeout.current);
     if (text.trim().length < 2) {
       setBars([]);
+      setResultSource("");
       return;
     }
-    searchTimeout.current = setTimeout(async () => {
-      setSearching(true);
-      try {
-        const { data } = await api.get("/maps/nightlife", { params: { q: text.trim() } });
-        setBars(data.bars || []);
-      } catch (err) {
-        console.error("Discover search error:", err?.response?.data || err?.message || err);
-        setBars([]);
-      } finally {
-        setSearching(false);
-      }
+    searchTimeout.current = setTimeout(() => {
+      runSearch(text, searchModes);
     }, 600);
   };
+
+  const toggleMode = (modeId) => {
+    setSearchModes((currentModes) => {
+      const nextModes = currentModes.includes(modeId)
+        ? currentModes.filter((mode) => mode !== modeId)
+        : [...currentModes, modeId];
+
+      if (nextModes.length === 0) {
+        return currentModes;
+      }
+
+      return nextModes;
+    });
+  };
+
+  useEffect(() => {
+    if (latestSearchTextRef.current.trim().length >= 2) {
+      runSearch(latestSearchTextRef.current, searchModes);
+    }
+  }, [searchModes]);
 
   return (
     <NeonScreen gradient={gradients.discover}>
@@ -122,12 +179,36 @@ export default function DiscoverScreen() {
           </TouchableOpacity>
         </View>
 
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.chipRow}
+        >
+          {SEARCH_MODE_OPTIONS.map((option) => {
+            const isActive = searchModes.includes(option.id);
+            return (
+              <TouchableOpacity
+                key={option.id}
+                activeOpacity={0.85}
+                onPress={() => toggleMode(option.id)}
+                style={[styles.modeChip, isActive ? styles.modeChipActive : styles.modeChipInactive]}
+              >
+                <Text style={[styles.modeChipText, isActive ? styles.modeChipTextActive : styles.modeChipTextInactive]}>
+                  {option.label}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </ScrollView>
+
         {searching ? (
           <ActivityIndicator color={themeColors.neonYellow} style={{ marginTop: 40 }} />
         ) : (
           <>
             {bars.length > 0 && (
-              <Text style={styles.sectionLabel}>{bars.length} bars found</Text>
+              <Text style={styles.sectionLabel}>
+                {bars.length} spots found{resultSource === "apple-maps" ? " via Apple Maps" : resultSource === "openstreetmap-overpass" ? " via OpenStreetMap fallback" : ""}
+              </Text>
             )}
             {bars.length > 0 ? (
               bars.map((bar) => (
@@ -136,7 +217,9 @@ export default function DiscoverScreen() {
                   name={bar.name}
                   vibe={bar.openingHours || bar.vibe || bar.category || ""}
                   neighborhood={bar.neighborhood || ""}
+                  distance={formatDistance(bar.distanceMeters)}
                   category={bar.category}
+                  sourceLabel={formatSourceLabel(bar.source)}
                   onPress={() =>
                     navigation.navigate("BarProfile", {
                       bar: {
@@ -148,6 +231,10 @@ export default function DiscoverScreen() {
                         openingHours: bar.openingHours || "",
                         phone: bar.phone || "",
                         website: bar.website || "",
+                        addressLines: bar.addressLines || [],
+                        locality: bar.locality || "",
+                        state: bar.state || "",
+                        distanceMeters: bar.distanceMeters ?? null,
                         lat: bar.lat,
                         lon: bar.lon,
                         source: bar.source,
@@ -179,10 +266,10 @@ export default function DiscoverScreen() {
         snapPoints={["30%", "52%"]}
       >
         <Text style={styles.panelText}>
-          Starter panel for sort and filter controls.
+          Pick one or more search modes above to blend bars and nightlife.
         </Text>
         <Text style={styles.panelText}>
-          Add city, vibe, distance, or price chips here.
+          Apple Maps runs first and Overpass fills in if Apple search is unavailable.
         </Text>
       </SlidingPanel>
     </NeonScreen>
@@ -200,7 +287,7 @@ const styles = StyleSheet.create({
   searchWrapper: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 14,
+    marginBottom: 10,
   },
   searchIcon: {
     marginRight: 12,
@@ -236,6 +323,36 @@ const styles = StyleSheet.create({
     marginLeft: 12,
     marginBottom: 14,
     color: themeColors.neonBlue,
+  },
+  chipRow: {
+    paddingHorizontal: 12,
+    paddingBottom: 14,
+    gap: 10,
+  },
+  modeChip: {
+    borderRadius: 999,
+    paddingHorizontal: 14,
+    paddingVertical: 9,
+    borderWidth: 1,
+  },
+  modeChipActive: {
+    backgroundColor: themeColors.neonYellow,
+    borderColor: themeColors.neonYellow,
+  },
+  modeChipInactive: {
+    backgroundColor: "rgba(255,255,255,0.04)",
+    borderColor: themeColors.muted,
+  },
+  modeChipText: {
+    ...typography.caption,
+    fontSize: 13,
+    fontWeight: "700",
+  },
+  modeChipTextActive: {
+    color: themeColors.black,
+  },
+  modeChipTextInactive: {
+    color: themeColors.white,
   },
   panelText: {
     ...typography.body,

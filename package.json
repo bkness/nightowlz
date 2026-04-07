@@ -8,7 +8,10 @@
   "scripts": {
     "start": "echo \"Run client or server individually\"",
     "client": "npm --workspace client run start",
-    "server": "npm --workspace server run dev"
+    "server": "npm --workspace server run dev",
+    "client:tunnel": "npm --workspace client run start:tunnel",
+    "guest": "node scripts/start-guest-dev.js",
+    "home": "node scripts/start-home-dev.js"
   },
   "devDependencies": {
     "@react-native-community/cli": "^20.1.3",

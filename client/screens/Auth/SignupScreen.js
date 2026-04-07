@@ -78,7 +78,7 @@ export default function SignUpScreen({ navigation }) {
         <View style={[styles.container, safePadding]}>
           <Text style={styles.title}>Create Account</Text>
           <Text style={styles.subtitle}>
-            Start building your BarFly favorites
+            Start building your Night Owlz favorites
           </Text>
 
           <RoleToggle value={selectedRole} onChange={setSelectedRole} />

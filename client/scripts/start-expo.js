@@ -1,6 +1,8 @@
 const net = require("net");
 const { spawn } = require("child_process");
 
+const extraArgs = process.argv.slice(2);
+
 const START_PORT = Number(process.env.EXPO_START_PORT || 8081);
 const MAX_PORT = Number(process.env.EXPO_MAX_PORT || 8100);
 
@@ -39,7 +41,7 @@ async function main() {
 
   const child = spawn(
     process.platform === "win32" ? "npx.cmd" : "npx",
-    ["expo", "start", "--port", String(port)],
+    ["expo", "start", "--port", String(port), ...extraArgs],
     {
       stdio: "inherit",
       env: {

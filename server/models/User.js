@@ -25,7 +25,6 @@ const userSchema = new mongoose.Schema({
     enum: ["user", "owner"],
     default: "user",
   },
-  savedBars: [{ type: String }],
 }, { timestamps: true });
 
 module.exports = mongoose.model("User", userSchema);

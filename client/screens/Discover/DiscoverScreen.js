@@ -22,7 +22,9 @@ import { api } from "../../utils/api";
 
 const SEARCH_MODE_OPTIONS = [
   { id: "bars", label: "Bars" },
-  { id: "nightlife", label: "Nightlife" },
+  { id: "clubs", label: "Clubs" },
+  { id: "live_music", label: "Live Music" },
+  { id: "entertainment", label: "Entertainment" },
 ];
 
 function formatDistance(distanceMeters) {
@@ -45,7 +47,7 @@ export default function DiscoverScreen() {
   const [isFilterPanelVisible, setIsFilterPanelVisible] = useState(false);
   const [bars, setBars] = useState([]);
   const [searching, setSearching] = useState(false);
-  const [searchModes, setSearchModes] = useState(["bars", "nightlife"]);
+  const [searchModes, setSearchModes] = useState(["bars", "clubs", "live_music", "entertainment"]);
   const [resultSource, setResultSource] = useState("");
   const searchTimeout = useRef(null);
   const latestSearchTextRef = useRef("");
@@ -60,7 +62,7 @@ export default function DiscoverScreen() {
 
     setSearching(true);
     try {
-      const { data } = await api.get("/maps/nightlife", {
+      const { data } = await api.get("/maps/places", {
         params: { q: query.trim(), modes: modes.join(",") },
       });
       setBars(data.bars || []);
@@ -128,6 +130,7 @@ export default function DiscoverScreen() {
 
   return (
     <NeonScreen gradient={gradients.discover}>
+      <Header compact />
       {/* CONTENT */}
       <ScrollView
         style={styles.scrollView}
@@ -139,7 +142,6 @@ export default function DiscoverScreen() {
         alwaysBounceVertical={false}
         overScrollMode="never"
       >
-        <Header compact />
         {/* Search + Map toggle row */}
         <View style={styles.searchWrapper}>
           <Ionicons
@@ -179,11 +181,7 @@ export default function DiscoverScreen() {
           </TouchableOpacity>
         </View>
 
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.chipRow}
-        >
+        <View style={styles.chipRow}>
           {SEARCH_MODE_OPTIONS.map((option) => {
             const isActive = searchModes.includes(option.id);
             return (
@@ -199,7 +197,7 @@ export default function DiscoverScreen() {
               </TouchableOpacity>
             );
           })}
-        </ScrollView>
+        </View>
 
         {searching ? (
           <ActivityIndicator color={themeColors.neonYellow} style={{ marginTop: 40 }} />
@@ -266,7 +264,7 @@ export default function DiscoverScreen() {
         snapPoints={["30%", "52%"]}
       >
         <Text style={styles.panelText}>
-          Pick one or more search modes above to blend bars and nightlife.
+          Pick one or more search modes above to blend drinks, dancing, music, and entertainment.
         </Text>
         <Text style={styles.panelText}>
           Apple Maps runs first and Overpass fills in if Apple search is unavailable.
@@ -281,7 +279,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   scrollContent: {
-    paddingTop: 0,
+    paddingTop: 18,
     paddingBottom: 28,
   },
   searchWrapper: {
@@ -325,15 +323,22 @@ const styles = StyleSheet.create({
     color: themeColors.neonBlue,
   },
   chipRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
     paddingHorizontal: 12,
     paddingBottom: 14,
     gap: 10,
   },
   modeChip: {
+    width: "48%",
+    minHeight: 44,
     borderRadius: 999,
     paddingHorizontal: 14,
     paddingVertical: 9,
     borderWidth: 1,
+    alignItems: "center",
+    justifyContent: "center",
   },
   modeChipActive: {
     backgroundColor: themeColors.neonYellow,
@@ -345,8 +350,9 @@ const styles = StyleSheet.create({
   },
   modeChipText: {
     ...typography.caption,
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: "700",
+    textAlign: "center",
   },
   modeChipTextActive: {
     color: themeColors.black,

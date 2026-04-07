@@ -10,6 +10,12 @@ import useDevEscape from "../../hooks/useDevEscape";
 import useSafeScreenPadding from "../../hooks/useSafeScreenPadding";
 import { api } from "../../utils/api";
 
+const glow = (color, radius = 12) => ({
+  textShadowColor: color,
+  textShadowOffset: { width: 0, height: 0 },
+  textShadowRadius: radius,
+});
+
 export default function LoginScreen({ navigation }) {
   const { setSession } = useAuth();
   const handleDevEscape = useDevEscape();
@@ -155,8 +161,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   title: {
-    ...typography.screenTitle,
-    marginBottom: 8,
+    fontFamily: "Pacifico",
+    fontSize: 38,
+    lineHeight: 40,
+    letterSpacing: 0.8,
+    marginTop: 0,
+    padding: 8,
+    paddingTop: 2,
+    color: colors.neonYellow,
+    textAlign: "center",
+    ...glow(colors.glowYellow, 12),
   },
   subtitle: { ...typography.formSubtitle },
   form: {

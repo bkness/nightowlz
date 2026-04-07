@@ -32,9 +32,10 @@ const typography = {
   screenTitle: {
     fontFamily: "Pacifico",
     fontSize: RFValue(38),
-    lineHeight: RFValue(52),
+    lineHeight: RFValue(82),
     letterSpacing: 0.8,
     marginTop: 0,
+    padding: 8,
     paddingTop: 2,
     color: colors.neonYellow,
     textAlign: "center",
@@ -46,6 +47,7 @@ const typography = {
     fontSize: RFValue(18),
     lineHeight: RFValue(24),
     letterSpacing: 0.2,
+    marginTop: -12,
     color: colors.neonBlue,
     textAlign: "center",
     ...glow(colors.glowBlue, 10),
@@ -106,6 +108,7 @@ const typography = {
     textAlign: "center",
     marginBottom: 24,
   },
+
 };
 
 export default typography;

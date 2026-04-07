@@ -79,7 +79,7 @@ export default function ProfileScreen() {
         </View>
         <NeonButton
           title="Settings"
-          onPress={() => navigation.navigate("SettingsScreen")}
+          onPress={() => navigation.navigate("SettingsModal")}
           style={styles.ctaButton}
         />
         {role === "owner" ? (

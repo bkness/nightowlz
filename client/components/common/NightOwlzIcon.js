@@ -1,12 +1,13 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Image } from "react-native";
 import Animated, {
   useAnimatedStyle,
   interpolate,
   Extrapolate,
 } from "react-native-reanimated";
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import themeColors from "../../theme/colors";
+
+const OWL_MARK = require("../../assets/images/Niceeee.png");
 
 /**
  * Icon-only version of NightOwlzLogo
@@ -17,11 +18,12 @@ export default function NightOwlzIcon({
   color = themeColors.neonYellow,
   glowColor = themeColors.glowBlue,
   glowEnabled = false,
+  focused = true,
   glowAnimation = null, // Optional shared value from parent for pulse effect
 }) {
-  const iconSize = size * 0.65; // Owl/moon relative to ring
   const ringSize = size;
   const ringRadius = size / 2;
+  const markSize = size * 0.86;
 
   const animatedStyle = useAnimatedStyle(() => {
     if (!glowAnimation) return { opacity: 1 };
@@ -45,19 +47,27 @@ export default function NightOwlzIcon({
             width: ringSize,
             height: ringSize,
             borderRadius: ringRadius,
-            shadowColor: glowEnabled ? glowColor : "transparent",
-            shadowOpacity: glowEnabled ? 0.5 : 0,
+            borderColor: glowEnabled ? "rgba(123, 223, 255, 0.62)" : "rgba(123, 223, 255, 0.28)",
+            shadowColor: glowEnabled ? glowColor : color,
+            shadowOpacity: glowEnabled ? 0.5 : focused ? 0.3 : 0.12,
             shadowRadius: size * 0.4,
           },
         ]}
       >
-        <Ionicons
-          name="moon"
-          size={iconSize * 0.85}
-          color={glowEnabled ? themeColors.neonBlue : color}
-          style={styles.moon}
+        <Image
+          source={OWL_MARK}
+          resizeMode="contain"
+          style={[
+            styles.mark,
+            {
+              width: markSize,
+              height: markSize,
+              opacity: glowEnabled || focused ? 1 : 0.56,
+            },
+          ]}
+          accessibilityRole="image"
+          accessibilityLabel="Night Owlz icon"
         />
-        <MaterialCommunityIcons name="owl" size={iconSize} color={color} />
       </View>
     </Animated.View>
   );
@@ -66,16 +76,12 @@ export default function NightOwlzIcon({
 const styles = StyleSheet.create({
   ring: {
     borderWidth: 1,
-    borderColor: "rgba(123, 223, 255, 0.45)",
-    backgroundColor: "rgba(7, 10, 22, 0.5)",
+    backgroundColor: "rgba(7, 10, 22, 0.4)",
     alignItems: "center",
     justifyContent: "center",
     shadowOffset: { width: 0, height: 0 },
   },
-  moon: {
-    position: "absolute",
-    left: "15%",
-    top: "8%",
-    opacity: 0.95,
+  mark: {
+    marginTop: -0.5,
   },
 });

@@ -1,57 +1,36 @@
-import React, { useEffect } from "react";
-import { StyleSheet } from "react-native";
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withRepeat,
-  withSequence,
-  withTiming,
-  interpolate,
-  Extrapolate,
-} from "react-native-reanimated";
+import React from "react";
+import { StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import NightOwlzLogo from "../common/NightOwlzLogo";
 import { getSafeTopOffset } from "../../theme/layout";
 
+const HEADER_TOKENS = {
+  compactBasePadding: 12,
+  basePadding: 40,
+  compactMinInset: 20,
+  minInset: 30,
+};
+
 export default function Header({ compact = false }) {
   const insets = useSafeAreaInsets();
   const topOffset = getSafeTopOffset(insets.top, {
-    basePadding: compact ? 4 : 8,
-    min: compact ? 18 : 20,
+    basePadding: compact ? HEADER_TOKENS.compactBasePadding : HEADER_TOKENS.basePadding,
+    min: compact ? HEADER_TOKENS.compactMinInset : HEADER_TOKENS.minInset,
   });
-  const glowPulse = useSharedValue(0);
-
-  useEffect(() => {
-    glowPulse.value = withRepeat(
-      withSequence(
-        withTiming(1, { duration: 1600 }),
-        withTiming(0, { duration: 1600 }),
-      ),
-      -1,
-      false,
-    );
-  }, [glowPulse]);
-
-  const pulseStyle = useAnimatedStyle(() => ({
-    shadowOpacity: interpolate(
-      glowPulse.value,
-      [0, 1],
-      [0.3, 0.7],
-      Extrapolate.CLAMP,
-    ),
-  }));
 
   return (
-    <Animated.View
+    <View
       style={[
-        pulseStyle,
         styles.container,
-        { paddingTop: topOffset },
+        {
+          paddingTop: topOffset,
+          overflow: "visible",
+        },
         compact && styles.compact,
       ]}
     >
       <NightOwlzLogo compact={compact} />
-    </Animated.View>
+    </View>
   );
 }
 
@@ -62,12 +41,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     marginBottom: 12,
     overflow: "visible",
-    shadowColor: "rgba(123, 223, 255, 0.3)",
-    shadowRadius: 12,
-    shadowOffset: { width: 0, height: 0 },
   },
   compact: {
-    marginTop: 0,
     marginBottom: 12,
   },
 });

@@ -1,12 +1,42 @@
 const express = require("express");
 const router = express.Router();
+const jwt = require("jsonwebtoken");
 const SavedBar = require("../../models/SavedBar");
 const { verifyToken } = require("../../middleware/auth");
 
+function resolveUserId(req) {
+    const authHeader = req.headers.authorization || "";
+
+    if (authHeader) {
+        if (!authHeader.startsWith("Bearer ")) {
+            return { error: "Authorization token required." };
+        }
+
+        if (!process.env.JWT_SECRET) {
+            return { error: "Server misconfiguration: JWT_SECRET not set.", status: 500 };
+        }
+
+        try {
+            const token = authHeader.slice(7);
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            return { userId: decoded.id };
+        } catch {
+            return { error: "Invalid or expired token." };
+        }
+    }
+
+    return { userId: req.query.userId || null };
+}
+
 // GET /api/saved-bars?userId=X
 router.get("/", async (req, res) => {
-    const { userId } = req.query;
+    const { userId, error, status = 401 } = resolveUserId(req);
+    if (error) {
+        return res.status(status).json({ message: error });
+    }
+
     if (!userId) return res.json({ bars: [] });
+
     try {
         const bars = await SavedBar.find({ userId }).sort({ createdAt: -1 }).lean();
         res.json({ bars });

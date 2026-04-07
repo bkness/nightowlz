@@ -18,7 +18,6 @@ function toPublicUser(user) {
     username: user.username,
     email: user.email,
     role: user.role,
-    savedBars: user.savedBars,
   };
 }
 
@@ -48,7 +47,7 @@ router.post("/register", async (req, res) => {
       return res.status(400).json({ message: "Username, email, and password are required." });
     }
 
-    if (cleanPassword.length < 8) {
+    if (cleanPassword.length < 1) { // CHANGE BACK TO 6-8 OR SO 1 FOR DEVELOPMENT
       return res.status(400).json({ message: "Password must be at least 8 characters." });
     }
 
@@ -102,7 +101,7 @@ router.post("/login", async (req, res) => {
       return res.status(403).json({ message: "Role does not match this account." });
     }
 
-    const valid = await bcrypt.compare(password, user.password);
+    const valid = await bcrypt.compare(cleanPassword, user.password);
     if (!valid) return res.status(401).json({ message: "Invalid password" });
 
     const token = signToken(user);
@@ -111,5 +110,7 @@ router.post("/login", async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 });
+
+
 
 module.exports = router;

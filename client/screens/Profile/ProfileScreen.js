@@ -17,7 +17,7 @@ export default function ProfileScreen() {
   const displayName = user?.username?.trim() || "Night Owlz";
   const handle = user?.username?.trim()
     ? `@${user.username.trim().toLowerCase()}`
-    : "@barfly-user";
+    : "@nightowlz-user";
 
   return (
     <NeonScreen gradient={gradients.settings}>
@@ -84,7 +84,7 @@ export default function ProfileScreen() {
         />
         {role === "owner" ? (
           <NeonButton
-            title="Owner Dashboar"
+            title="Owner Dashboard"
             onPress={() => navigation.navigate("OwnerDashboard")}
             style={styles.comingSoonButton}
           />
@@ -120,14 +120,8 @@ const styles = StyleSheet.create({
   avatar: {
     width: 94,
     height: 94,
-    borderRadius: 47,
-    borderWidth: 1.5,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.06)",
-    shadowOpacity: 0.24,
-    shadowRadius: 16,
-    shadowOffset: { width: 0, height: 8 },
   },
   name: {
     marginTop: 14,

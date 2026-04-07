@@ -1,7 +1,7 @@
 import 'dotenv/config';
 export default {
-  name: "BarFly",
-  slug: "barfly-client",
+  name: "Night Owlz",
+  slug: "night-owlz-client",
   version: "1.0.0",
   orientation: "portrait",
   icon: "./assets/icon.png",

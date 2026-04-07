@@ -137,7 +137,8 @@ export default function MainTabs() {
         options={{
           tabBarIcon: ({ focused }) => (
             <NightOwlzIcon
-              size={48}
+              size={focused ? 56 : 48}
+              focused={focused}
               color={focused ? colors.neonYellow : colors.navInactive}
             />
           ),

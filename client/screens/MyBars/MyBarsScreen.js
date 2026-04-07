@@ -16,7 +16,7 @@ import { useAuth } from "../../context/AuthContext";
 
 export default function MyBarsScreen() {
   const navigation = useNavigation();
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const userId = user?.id || user?._id || null;
   const theme = useTheme();
   const themeColors = theme?.colors || colors;
@@ -28,7 +28,8 @@ export default function MyBarsScreen() {
     setLoading(true);
     try {
       const { data } = await api.get("/saved-bars", {
-        params: userId ? { userId } : {},
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+        params: token ? undefined : userId ? { userId } : {},
       });
       setSavedBars(data.bars || []);
     } catch (error) {
@@ -36,18 +37,18 @@ export default function MyBarsScreen() {
     } finally {
       setLoading(false);
     }
-  }, [userId]);
+  }, [token, userId]);
 
   const removeSavedBar = useCallback(async (barId) => {
     try {
       const { data } = await api.delete(`/saved-bars/${barId}`, {
-        params: userId ? { userId } : {},
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       });
       setSavedBars(data.bars || []);
     } catch (error) {
       console.log("Failed to remove saved bar", error?.message);
     }
-  }, [userId]);
+  }, [token]);
 
   useEffect(() => {
     loadSavedBars();

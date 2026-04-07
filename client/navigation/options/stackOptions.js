@@ -1,6 +1,12 @@
 import { Easing } from "react-native";
 import { colors } from "../../theme";
 
+export const authStackOptions = {
+  headerShown: false,
+  animation: "fade",
+  gestureEnabled: false,
+};
+
 export const baseStackScreenOptions = {
   headerStyle: { backgroundColor: colors.background },
   contentStyle: { backgroundColor: colors.background },
@@ -10,12 +16,6 @@ export const baseStackScreenOptions = {
   animation: "fade_from_bottom",
   animationDuration: 350,
   animationEasing: Easing.out(Easing.quad),
-};
-
-export const authScreenOptions = {
-  headerShown: false,
-  animation: "fade",
-  gestureEnabled: false,
 };
 
 export const transparentModalScreenOptions = {

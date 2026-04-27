@@ -114,6 +114,8 @@ export default function MyBarsScreen() {
                 onToggleSave={() => removeSavedBar(bar.barId)}
                 onPress={() =>
                   navigation.navigate("BarProfile", {
+                    isSaved: true,
+                    fromMyBars: true,
                     bar: {
                       barId: bar.barId,
                       name: bar.name,

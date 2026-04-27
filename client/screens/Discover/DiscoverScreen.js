@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { useEffect, useRef, useState } from "react";
+import { useAuth } from "../../context/AuthContext";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import NeonScreen from "../../components/common/NeonScreen";
@@ -42,6 +43,7 @@ function formatSourceLabel(source) {
 
 export default function DiscoverScreen() {
   const navigation = useNavigation();
+  const { token } = useAuth();
   const [searchText, setSearchText] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [isFilterPanelVisible, setIsFilterPanelVisible] = useState(false);
@@ -49,6 +51,8 @@ export default function DiscoverScreen() {
   const [searching, setSearching] = useState(false);
   const [searchModes, setSearchModes] = useState(["bars", "clubs", "live_music", "entertainment"]);
   const [resultSource, setResultSource] = useState("");
+  const [savedBarIds, setSavedBarIds] = useState(new Set());
+  const [visibleCount, setVisibleCount] = useState(30);
   const searchTimeout = useRef(null);
   const latestSearchTextRef = useRef("");
   const glowAnimation = useRef(new RNAnimated.Value(0)).current;
@@ -61,6 +65,7 @@ export default function DiscoverScreen() {
     }
 
     setSearching(true);
+    setVisibleCount(30);
     try {
       const { data } = await api.get("/maps/places", {
         params: { q: query.trim(), modes: modes.join(",") },
@@ -127,6 +132,16 @@ export default function DiscoverScreen() {
       runSearch(latestSearchTextRef.current, searchModes);
     }
   }, [searchModes]);
+
+  useEffect(() => {
+    if (!token) return;
+    api.get("/saved-bars", { headers: { Authorization: `Bearer ${token}` } })
+      .then(({ data }) => {
+        const ids = new Set((data.bars || []).map((b) => String(b.barId)));
+        setSavedBarIds(ids);
+      })
+      .catch(() => {});
+  }, [token]);
 
   return (
     <NeonScreen gradient={gradients.discover}>
@@ -209,7 +224,7 @@ export default function DiscoverScreen() {
               </Text>
             )}
             {bars.length > 0 ? (
-              bars.map((bar) => (
+              bars.slice(0, visibleCount).map((bar) => (
                 <BarCard
                   key={bar.barId}
                   name={bar.name}
@@ -220,6 +235,7 @@ export default function DiscoverScreen() {
                   sourceLabel={formatSourceLabel(bar.source)}
                   onPress={() =>
                     navigation.navigate("BarProfile", {
+                      isSaved: savedBarIds.has(String(bar.barId)),
                       bar: {
                         barId: String(bar.barId),
                         name: bar.name,
@@ -241,7 +257,18 @@ export default function DiscoverScreen() {
                   }
                 />
               ))
-            ) : searchText.length >= 2 ? (
+            }
+            {bars.length > visibleCount && (
+              <TouchableOpacity
+                onPress={() => setVisibleCount((c) => c + 20)}
+                style={{ alignItems: "center", paddingVertical: 16 }}
+              >
+                <Text style={{ color: themeColors.neonYellow, fontSize: 15, fontWeight: "600" }}>
+                  Show More ({bars.length - visibleCount} remaining)
+                </Text>
+              </TouchableOpacity>
+            )}
+            {bars.length > 0 ? null : searchText.length >= 2 ? (
               <View style={styles.emptyState}>
                 <Ionicons name="search" size={48} color={themeColors.muted} style={{ marginBottom: 12 }} />
                 <Text style={styles.emptyTitle}>No Bars Found</Text>

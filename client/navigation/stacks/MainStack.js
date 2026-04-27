@@ -38,6 +38,7 @@ export default function MainStack() {
                 component={BarProfileScreen}
                 options={{
                     title: "Bar Profile",
+                    headerBackTitle: "Back",
                     animation: "fade_from_bottom",
                 }}
             />
@@ -46,6 +47,7 @@ export default function MainStack() {
                 component={MyBarsScreen}
                 options={{
                     title: "My Bars",
+                    headerBackTitle: "Back",
                     animation: "fade_from_bottom",
                 }}
             />

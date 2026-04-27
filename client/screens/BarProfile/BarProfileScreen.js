@@ -28,6 +28,7 @@ export default function BarProfileScreen({ route, navigation }) {
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const isSaved = route.params?.isSaved || false;
+  const fromMyBars = route.params?.fromMyBars || false;
 
   const hasMap = typeof bar.lat === "number" && typeof bar.lon === "number";
 
@@ -54,7 +55,7 @@ export default function BarProfileScreen({ route, navigation }) {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       Alert.alert("Saved!", `${bar.name} added to My Bars.`);
-      navigation.navigate("MyBars");
+      navigation.navigate("HomeTabs", { screen: "MyBars" });
     } catch (err) {
       const msg = err.response?.data?.message || err.message || "Could not save bar.";
       console.error("Save error:", msg);
@@ -73,7 +74,7 @@ export default function BarProfileScreen({ route, navigation }) {
     try {
       await api.delete(`/saved-bars/${bar.barId}`, { headers: { Authorization: `Bearer ${token}` }, });
       Alert.alert("Removed", `${bar.name} from My Bars.`);
-      navigation.navigate("MyBars");
+      navigation.navigate("HomeTabs", { screen: "MyBars" });
     } catch (err) {
       const msg = err.response?.data?.message || err.message || "Could not remove bar.";
       console.error("Delete error:", msg);
@@ -160,7 +161,16 @@ export default function BarProfileScreen({ route, navigation }) {
           <ActivityIndicator color={colors.neonYellow} style={{ marginVertical: 16 }} />
         ) : (
           <>
-            {(isSaved ? null : <NeonButton title="Save to My Bars" onPress={handleSave} />) || (isSaved && <NeonButton title="Remove From My Bars" onPress={handleDelete} />)}   
+            {isSaved ? (
+              <>
+                {!fromMyBars && (
+                  <NeonButton title="Saved ✓  —  View My Bars" onPress={() => navigation.navigate("HomeTabs", { screen: "MyBars" })} />
+                )}
+                <NeonButton title="Remove From My Bars" onPress={handleDelete} />
+              </>
+            ) : (
+              <NeonButton title="Save to My Bars" onPress={handleSave} />
+            )}
           </>
         )}
 

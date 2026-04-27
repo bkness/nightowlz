@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { View, Text, TextInput, StyleSheet, Pressable, Keyboard, TouchableWithoutFeedback } from "react-native";
+import { View, Text, TextInput, StyleSheet, Pressable, Keyboard, TouchableWithoutFeedback, Alert } from "react-native";
 import NeonScreen from "../../components/common/NeonScreen";
 import NeonButton from "../../components/common/NeonButton";
 import RoleToggle from "../../components/common/RoleToggle";
@@ -9,12 +9,6 @@ import { useAuth } from "../../context/AuthContext";
 import useDevEscape from "../../hooks/useDevEscape";
 import useSafeScreenPadding from "../../hooks/useSafeScreenPadding";
 import { api } from "../../utils/api";
-
-const glow = (color, radius = 12) => ({
-  textShadowColor: color,
-  textShadowOffset: { width: 0, height: 0 },
-  textShadowRadius: radius,
-});
 
 export default function LoginScreen({ navigation }) {
   const { setSession } = useAuth();
@@ -48,7 +42,7 @@ export default function LoginScreen({ navigation }) {
 
   const handleLogin = async () => {
     if (!canSubmit()) {
-      alert("Login failed: Email and password are required.");
+      Alert.alert("Login Failed", "Email and password are required.");
       return;
     }
 
@@ -65,7 +59,7 @@ export default function LoginScreen({ navigation }) {
         "Login request failed:",
         error?.response?.data?.message || error.message,
       );
-      alert("Login failed: " + getLoginErrorMessage(error));
+      Alert.alert("Login Failed", getLoginErrorMessage(error));
       return;
     }
 
@@ -161,16 +155,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   title: {
-    fontFamily: "Pacifico",
-    fontSize: 38,
-    lineHeight: 40,
-    letterSpacing: 0.8,
-    marginTop: 0,
-    padding: 8,
-    paddingTop: 2,
-    color: colors.neonYellow,
-    textAlign: "center",
-    ...glow(colors.glowYellow, 12),
+    ...typography.screenTitle,
+    marginBottom: 8,
   },
   subtitle: { ...typography.formSubtitle },
   form: {

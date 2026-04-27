@@ -224,51 +224,52 @@ export default function DiscoverScreen() {
               </Text>
             )}
             {bars.length > 0 ? (
-              bars.slice(0, visibleCount).map((bar) => (
-                <BarCard
-                  key={bar.barId}
-                  name={bar.name}
-                  vibe={bar.openingHours || bar.vibe || bar.category || ""}
-                  neighborhood={bar.neighborhood || ""}
-                  distance={formatDistance(bar.distanceMeters)}
-                  category={bar.category}
-                  sourceLabel={formatSourceLabel(bar.source)}
-                  onPress={() =>
-                    navigation.navigate("BarProfile", {
-                      isSaved: savedBarIds.has(String(bar.barId)),
-                      bar: {
-                        barId: String(bar.barId),
-                        name: bar.name,
-                        neighborhood: bar.neighborhood || "",
-                        vibe: bar.vibe || bar.category || "",
-                        category: bar.category,
-                        openingHours: bar.openingHours || "",
-                        phone: bar.phone || "",
-                        website: bar.website || "",
-                        addressLines: bar.addressLines || [],
-                        locality: bar.locality || "",
-                        state: bar.state || "",
-                        distanceMeters: bar.distanceMeters ?? null,
-                        lat: bar.lat,
-                        lon: bar.lon,
-                        source: bar.source,
-                      },
-                    })
-                  }
-                />
-              ))
-            }
-            {bars.length > visibleCount && (
-              <TouchableOpacity
-                onPress={() => setVisibleCount((c) => c + 20)}
-                style={{ alignItems: "center", paddingVertical: 16 }}
-              >
-                <Text style={{ color: themeColors.neonYellow, fontSize: 15, fontWeight: "600" }}>
-                  Show More ({bars.length - visibleCount} remaining)
-                </Text>
-              </TouchableOpacity>
-            )}
-            {bars.length > 0 ? null : searchText.length >= 2 ? (
+              <>
+                {bars.slice(0, visibleCount).map((bar) => (
+                  <BarCard
+                    key={bar.barId}
+                    name={bar.name}
+                    vibe={bar.openingHours || bar.vibe || bar.category || ""}
+                    neighborhood={bar.neighborhood || ""}
+                    distance={formatDistance(bar.distanceMeters)}
+                    category={bar.category}
+                    sourceLabel={formatSourceLabel(bar.source)}
+                    onPress={() =>
+                      navigation.navigate("BarProfile", {
+                        isSaved: savedBarIds.has(String(bar.barId)),
+                        bar: {
+                          barId: String(bar.barId),
+                          name: bar.name,
+                          neighborhood: bar.neighborhood || "",
+                          vibe: bar.vibe || bar.category || "",
+                          category: bar.category,
+                          openingHours: bar.openingHours || "",
+                          phone: bar.phone || "",
+                          website: bar.website || "",
+                          addressLines: bar.addressLines || [],
+                          locality: bar.locality || "",
+                          state: bar.state || "",
+                          distanceMeters: bar.distanceMeters ?? null,
+                          lat: bar.lat,
+                          lon: bar.lon,
+                          source: bar.source,
+                        },
+                      })
+                    }
+                  />
+                ))}
+                {bars.length > visibleCount && (
+                  <TouchableOpacity
+                    onPress={() => setVisibleCount((c) => c + 20)}
+                    style={{ alignItems: "center", paddingVertical: 16 }}
+                  >
+                    <Text style={{ color: themeColors.neonYellow, fontSize: 15, fontWeight: "600" }}>
+                      Show More ({bars.length - visibleCount} remaining)
+                    </Text>
+                  </TouchableOpacity>
+                )}
+              </>
+            ) : searchText.length >= 2 ? (
               <View style={styles.emptyState}>
                 <Ionicons name="search" size={48} color={themeColors.muted} style={{ marginBottom: 12 }} />
                 <Text style={styles.emptyTitle}>No Bars Found</Text>

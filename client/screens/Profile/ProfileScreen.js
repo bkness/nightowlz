@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import NeonScreen from "../../components/common/NeonScreen";
 import NeonButton from "../../components/common/NeonButton";
@@ -8,16 +8,25 @@ import { gradients, surfaces, typography } from "../../theme";
 import { useTheme } from "../../theme/ThemeProvider";
 import { useNavigation } from "@react-navigation/native";
 import { useAuth } from "../../context/AuthContext";
+import { api } from "../../utils/api";
 
 export default function ProfileScreen() {
   const navigation = useNavigation();
   const { colors } = useTheme();
-  const { role, user } = useAuth();
+  const { role, user, token } = useAuth();
   const roleLabel = (role || "user").toUpperCase();
   const displayName = user?.username?.trim() || "Night Owlz";
   const handle = user?.username?.trim()
     ? `@${user.username.trim().toLowerCase()}`
     : "@nightowlz-user";
+  const [savedBarCount, setSavedBarCount] = useState(null);
+
+  useEffect(() => {
+    if (!token) return;
+    api.get("/saved-bars", { headers: { Authorization: `Bearer ${token}` } })
+      .then(({ data }) => setSavedBarCount((data.bars || []).length))
+      .catch(() => setSavedBarCount(0));
+  }, [token]);
 
   return (
     <NeonScreen gradient={gradients.settings}>
@@ -60,17 +69,19 @@ export default function ProfileScreen() {
 
           <View style={styles.statsRow}>
             <View style={styles.statCard}>
-              <Text style={[typography.heading, styles.statValue]}>12</Text>
+              <Text style={[typography.heading, styles.statValue]}>
+                {savedBarCount ?? "—"}
+              </Text>
               <Text style={[typography.caption, styles.statLabel]}>
                 Saved Bars
               </Text>
             </View>
             <View style={styles.statCard}>
-              <Text style={[typography.heading, styles.statValue]}>4</Text>
+              <Text style={[typography.heading, styles.statValue]}>—</Text>
               <Text style={[typography.caption, styles.statLabel]}>Events</Text>
             </View>
             <View style={styles.statCard}>
-              <Text style={[typography.heading, styles.statValue]}>8</Text>
+              <Text style={[typography.heading, styles.statValue]}>—</Text>
               <Text style={[typography.caption, styles.statLabel]}>
                 Check-ins
               </Text>
@@ -89,14 +100,6 @@ export default function ProfileScreen() {
             style={styles.comingSoonButton}
           />
         ) : null}
-        <Text style={[typography.caption, styles.statLabel]}>Manage bar tools and events</Text>
-        {__DEV__ && (
-          <NeonButton
-            title="Bar Profile Preview"
-            onPress={() => navigation.navigate("BarProfile")}
-            style={styles.comingSoonButton}
-          />
-        )}
       </ScrollView>
     </NeonScreen >
   );

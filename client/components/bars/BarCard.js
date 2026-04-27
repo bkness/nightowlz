@@ -1,5 +1,5 @@
 import React from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Animated, {
   useSharedValue,
   withSpring,
@@ -19,6 +19,9 @@ function BarCard({
   category,
   sourceLabel,
   icon = "owl",
+  showSaveAction = false,
+  isSaved = false,
+  onToggleSave,
 }) {
   // Press feedback animation
   const scale = useSharedValue(1);
@@ -84,6 +87,20 @@ function BarCard({
 
             {!!sourceLabel && <Text style={styles.sourceLabel}>{sourceLabel}</Text>}
           </View>
+
+          {showSaveAction && (
+            <TouchableOpacity
+              onPress={onToggleSave}
+              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+              style={styles.heartButton}
+            >
+              <MaterialCommunityIcons
+                name={isSaved ? "heart" : "heart-outline"}
+                size={22}
+                color={isSaved ? themeColors.neonYellow : themeColors.muted}
+              />
+            </TouchableOpacity>
+          )}
         </View>
 
         <View style={styles.bottomGlowLine} />
@@ -101,6 +118,9 @@ const areEqual = (prev, next) => {
     prev.category === next.category &&
     prev.sourceLabel === next.sourceLabel &&
     prev.icon === next.icon &&
+    prev.isSaved === next.isSaved &&
+    prev.showSaveAction === next.showSaveAction &&
+    prev.onToggleSave === next.onToggleSave &&
     prev.onPress === next.onPress
   );
 };
@@ -197,5 +217,11 @@ const styles = StyleSheet.create({
     ...surfaces.glowDividerBlue,
     marginTop: 14,
     width: "100%",
+  },
+
+  heartButton: {
+    padding: 4,
+    marginLeft: 8,
+    alignSelf: "flex-start",
   },
 });

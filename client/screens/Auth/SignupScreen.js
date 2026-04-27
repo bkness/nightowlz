@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { View, Text, TextInput, StyleSheet, Pressable, Keyboard, TouchableWithoutFeedback } from "react-native";
+import { View, Text, TextInput, StyleSheet, Pressable, Keyboard, TouchableWithoutFeedback, Alert } from "react-native";
 import NeonScreen from "../../components/common/NeonScreen";
 import NeonButton from "../../components/common/NeonButton";
 import RoleToggle from "../../components/common/RoleToggle";
@@ -50,9 +50,9 @@ export default function SignUpScreen({ navigation }) {
         "Signup request failed:",
         error?.response?.data?.message || error.message,
       );
-      alert(
-        "Signup failed: " +
-        (error?.response?.data?.message || "An unexpected error occurred."),
+      Alert.alert(
+        "Signup Failed",
+        error?.response?.data?.message || "An unexpected error occurred.",
       );
       return;
     }

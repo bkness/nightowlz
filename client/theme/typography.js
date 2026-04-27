@@ -32,11 +32,11 @@ const typography = {
   screenTitle: {
     fontFamily: "Pacifico",
     fontSize: RFValue(38),
-    lineHeight: RFValue(82),
+    lineHeight: RFValue(52),
     letterSpacing: 0.8,
     marginTop: 0,
     padding: 8,
-    paddingTop: 2,
+    paddingTop: 10,
     color: colors.neonYellow,
     textAlign: "center",
     ...glow(colors.glowYellow, 12),

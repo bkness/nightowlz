@@ -47,7 +47,12 @@ router.post("/register", async (req, res) => {
       return res.status(400).json({ message: "Username, email, and password are required." });
     }
 
-    if (cleanPassword.length < 1) { // CHANGE BACK TO 6-8 OR SO 1 FOR DEVELOPMENT
+    const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!EMAIL_RE.test(cleanEmail)) {
+      return res.status(400).json({ message: "Please enter a valid email address." });
+    }
+
+    if (cleanPassword.length < 8) {
       return res.status(400).json({ message: "Password must be at least 8 characters." });
     }
 

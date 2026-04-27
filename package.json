@@ -24,7 +24,10 @@
     "react-native-reanimated": "^3.19.5"
   },
   "overrides": {
-    "@xmldom/xmldom": "^0.9.8",
-    "fast-xml-parser": "^4.5.3"
+    "@xmldom/xmldom": "^0.9.9",
+    "fast-xml-parser": "^4.5.3",
+    "protobufjs": "^7.5.5",
+    "follow-redirects": "^1.15.9",
+    "postcss": "^8.4.49"
   }
 }

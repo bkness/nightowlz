@@ -115,6 +115,11 @@ npm run client    # starts Expo
 
 ---
 
+## Live
+
+Server: [https://nightowlz.onrender.com](https://nightowlz.onrender.com)  
+Mobile client: TestFlight build in progress.
+
 ## Screenshots
 
 > Coming soon — TestFlight build in progress.
@@ -134,3 +139,7 @@ npm run client    # starts Expo
 ## License
 
 Private — All rights reserved © bkness
+
+## Contact
+
+Brandon Kelly — [GitHub](https://github.com/bkness) · kbrandon863@gmail.com

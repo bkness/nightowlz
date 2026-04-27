@@ -391,9 +391,16 @@ function writeCachedNightlifeResult(cacheKey, payload) {
 }
 
 function getAppleMapsConfig() {
-    const { APPLE_MAPS_PRIVATE_KEY_PATH, APPLE_MAPS_TEAM_ID, APPLE_MAPS_KEY_ID } = process.env;
-    if (!APPLE_MAPS_PRIVATE_KEY_PATH || !APPLE_MAPS_TEAM_ID || !APPLE_MAPS_KEY_ID) {
-        throw new Error("Apple Maps env is incomplete (APPLE_MAPS_PRIVATE_KEY_PATH, APPLE_MAPS_TEAM_ID, APPLE_MAPS_KEY_ID)");
+    const { APPLE_MAPS_PRIVATE_KEY, APPLE_MAPS_PRIVATE_KEY_PATH, APPLE_MAPS_TEAM_ID, APPLE_MAPS_KEY_ID } = process.env;
+    if (!APPLE_MAPS_TEAM_ID || !APPLE_MAPS_KEY_ID) {
+        throw new Error("Apple Maps env is incomplete (APPLE_MAPS_TEAM_ID, APPLE_MAPS_KEY_ID required)");
+    }
+    if (!APPLE_MAPS_PRIVATE_KEY && !APPLE_MAPS_PRIVATE_KEY_PATH) {
+        throw new Error("Apple Maps env is incomplete (APPLE_MAPS_PRIVATE_KEY or APPLE_MAPS_PRIVATE_KEY_PATH required)");
+    }
+
+    if (APPLE_MAPS_PRIVATE_KEY) {
+        return { key: APPLE_MAPS_PRIVATE_KEY.replace(/\\n/g, "\n"), teamId: APPLE_MAPS_TEAM_ID, keyId: APPLE_MAPS_KEY_ID };
     }
 
     const resolvedKeyPath = path.resolve(APPLE_MAPS_PRIVATE_KEY_PATH);
@@ -401,11 +408,7 @@ function getAppleMapsConfig() {
         throw new Error(`Apple Maps private key file not found at ${resolvedKeyPath}`);
     }
 
-    return {
-        keyPath: resolvedKeyPath,
-        teamId: APPLE_MAPS_TEAM_ID,
-        keyId: APPLE_MAPS_KEY_ID,
-    };
+    return { keyPath: resolvedKeyPath, teamId: APPLE_MAPS_TEAM_ID, keyId: APPLE_MAPS_KEY_ID };
 }
 
 async function appleMapsGet(accessToken, endpoint, params, timeout = 9000) {
@@ -444,7 +447,7 @@ async function getAccessToken() {
 
     tokenRequestPromise = (async () => {
         const config = getAppleMapsConfig();
-        const key = fs.readFileSync(config.keyPath);
+        const key = config.key || fs.readFileSync(config.keyPath);
         const mapsAuthToken = jwt.sign(
             { iss: config.teamId, iat: now, exp: now + 1800 },
             key,

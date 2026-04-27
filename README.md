@@ -1,166 +1,136 @@
-# BarFly - Find Your Night
+# Night Owlz — Find Your Night
 
-BarFly is a nightlife discovery platform that helps users find bars, breweries, and events happening around them. It aggregates events from Facebook, Google, and Eventbrite, then notifies users when their saved bars post new events.
+A React Native nightlife discovery app for finding bars, clubs, and live music near you. Search any city, save your favorites, and explore from your phone.
 
-## Tech Stack
+> Built as a solo full-stack mobile project — React Native + Expo on the frontend, Node/Express + MongoDB on the backend, Apple Maps powering real-time venue discovery.
 
-### Mobile App (client)
-
-- React Native (Expo)
-- React Navigation
-- Firebase (Auth + Push Notifications)
-- Axios
-
-### Backend (server)
-
-- Node.js + Express
-- MongoDB + Mongoose
-- Facebook Graph API
-- Google Places API
-- Eventbrite API
-- Node Cron (event sync jobs)
-
-## Project Structure
-
-```text
-BarFly/
-├── client/                # React Native app
-│   ├── App.js
-│   ├── app.config.js
-│   ├── assets/
-│   │   ├── icons/
-│   │   ├── images/
-│   │   └── splash.png
-│   ├── components/
-│   ├── navigation/
-│   ├── screens/
-│   ├── theme/
-│   └── utils/
-├── server/                # Node backend
-│   ├── routes/
-│   ├── controllers/
-│   ├── models/
-│   ├── jobs/
-│   └── server.js
-└── README.md
-```
-
-## Installation
-
-1. Clone the repo
-
-```bash
-git clone https://github.com/YOURNAME/barfly.git
-cd barfly
-```
-
-2. Install client dependencies
-
-```bash
-cd client
-npm install
-```
-
-3. Install server dependencies
-
-```bash
-cd ../server
-npm install
-```
-
-4. Start MongoDB (macOS)
-
-```bash
-brew services start mongodb-community
-```
-
-5. Run the backend
-
-```bash
-npm run dev
-```
-
-6. Run the mobile app
-
-```bash
-cd ../client
-expo start
-```
-
-## Environment Variables
-
-Create a `.env` file in `server`:
-
-```env
-MONGO_URI=
-FACEBOOK_APP_ID=
-FACEBOOK_APP_SECRET=
-GOOGLE_API_KEY=
-EVENTBRITE_TOKEN=
-FIREBASE_SERVER_KEY=
-```
-
-Create a `.env` file in `client`:
-
-```env
-EXPO_PUBLIC_FIREBASE_API_KEY=
-EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN=
-EXPO_PUBLIC_FIREBASE_PROJECT_ID=
-EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
-EXPO_PUBLIC_FIREBASE_APP_ID=
-```
-
-## Event Sync Jobs
-
-Event sync scripts run automatically using Node Cron to:
-
-- Pull Facebook events
-- Pull Google events
-- Pull Eventbrite events
-- Update MongoDB
-- Trigger push notifications for saved bars
+---
 
 ## Features
 
-- Bar locator (map + list)
-- Bar profiles
-- Event aggregation
-- Save bars to My Bars
-- Push notifications
-- Search + filters
-- Modern neon nightlife UI
+- **City search** — find bars and venues anywhere via Apple Maps with OpenStreetMap fallback
+- **Category filters** — toggle between Bars, Clubs, Live Music, and Entertainment
+- **Bar profiles** — opening hours, address, phone, website, and an in-app map view
+- **Save to My Bars** — heart any bar to your personal collection (JWT-authenticated)
+- **My Bars** — your saved shortlist with one-tap remove
+- **Profile** — live saved bar count pulled from your account
+- **Settings modal** — frosted glass overlay with theme toggle
+- **Smooth animations** — press feedback, spring physics, and neon glow effects throughout
+- **Role-based auth** — user and owner accounts with separate flows
 
-## Development Commands
+---
 
-### Root (server + client)
+## Tech Stack
 
-```bash
-cd BarFly
-npm start
+### Mobile (`client`)
+
+| | |
+|---|---|
+| Framework | React Native 0.83 · Expo ~55 |
+| Navigation | React Navigation 7 (bottom tabs + native stack) |
+| Animations | React Native Reanimated 4 |
+| Maps | react-native-maps |
+| UI | Expo Linear Gradient · Expo Blur · custom neon design system |
+| Fonts | Pacifico · Lobster (via Expo Google Fonts) |
+| HTTP | Axios |
+
+### Backend (`server`)
+
+| | |
+|---|---|
+| Runtime | Node.js · Express |
+| Database | MongoDB · Mongoose |
+| Auth | JWT (7-day tokens) · bcrypt |
+| Maps API | Apple MapKit JS — venue search + enrichment |
+| Fallback | OpenStreetMap Overpass API |
+| Deploy | Render |
+
+---
+
+## Project Structure
+
+```
+nightowlz/
+├── client/
+│   ├── components/
+│   │   ├── bars/          # BarCard
+│   │   ├── common/        # NeonButton, NeonScreen, SlidingPanel, etc.
+│   │   └── layout/        # Header
+│   ├── navigation/        # Tab navigator + stack config
+│   ├── screens/
+│   │   ├── Auth/          # Login · Signup
+│   │   ├── BarProfile/    # Venue detail, map, save/remove
+│   │   ├── Discover/      # Search + category filters
+│   │   ├── Events/        # Coming soon
+│   │   ├── MyBars/        # Saved collection
+│   │   ├── Profile/       # User stats + settings
+│   │   └── Settings/      # Modal overlay
+│   ├── theme/             # Colors, typography, surfaces, gradients
+│   └── utils/             # Axios instance
+└── server/
+    ├── models/            # User · SavedBar · Bar
+    ├── routes/api/        # auth · saved-bars · maps · bars
+    └── middleware/        # JWT auth
 ```
 
-### Client
+---
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 20+
+- Expo CLI (`npm install -g expo-cli`)
+- MongoDB Atlas account
+- Apple Developer account (for MapKit JS token)
+
+### Install
 
 ```bash
-cd client
-expo start
+git clone https://github.com/bkness/nightowlz.git
+cd nightowlz
+npm install          # installs workspace root deps
+cd client && npm install
+cd ../server && npm install
 ```
 
-### Server
+### Environment — `server/.env`
+
+```env
+MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/nightowlz
+JWT_SECRET=your-32-byte-hex-secret
+PORT=3001
+APPLE_MAPS_TEAM_ID=your-team-id
+APPLE_MAPS_KEY_ID=your-key-id
+APPLE_MAPS_PRIVATE_KEY_PATH=./config/AuthKey_KEYID.p8
+```
+
+### Run
 
 ```bash
-cd server
-npm run dev
+# From repo root
+npm run server    # starts Express on :3001
+npm run client    # starts Expo
 ```
+
+---
+
+## Screenshots
+
+> Coming soon — TestFlight build in progress.
+
+---
+
+## Roadmap
+
+- [ ] Events tab — real-time event listings per venue
+- [ ] Owner dashboard — bar owners promote events directly
+- [ ] Push notifications — alerts when saved bars post events
+- [ ] Discovery modal cards — animated sheet instead of stack push
+- [ ] App Store release
+
+---
 
 ## License
 
-Private - All rights reserved.
-
-## Internal Docs
-
-- `docs/QUICKSTART.md`
-- `docs/ARCHITECTURE.md`
-- `docs/AUTH_FLOW.md`
-- `docs/UI_SYSTEM.md`
-- `docs/TROUBLESHOOTING.md`
+Private — All rights reserved © bkness

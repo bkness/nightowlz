@@ -89,9 +89,6 @@ export default function MyBarsScreen() {
               <View style={styles.collectionChip}>
                 <Text style={[styles.collectionChipText, { color: themeColors.neonYellow }]}>Personal shortlist</Text>
               </View>
-              <View style={styles.collectionChipBlue}>
-                <Text style={[styles.collectionChipTextBlue, { color: themeColors.neonBlue }]}>Tap heart to remove</Text>
-              </View>
             </View>
           </View>
         )}
@@ -109,9 +106,6 @@ export default function MyBarsScreen() {
                 vibe={bar.vibe}
                 neighborhood={bar.neighborhood}
                 category={bar.category}
-                isSaved
-                showSaveAction
-                onToggleSave={() => removeSavedBar(bar.barId)}
                 onPress={() =>
                   navigation.navigate("BarProfile", {
                     isSaved: true,
@@ -136,9 +130,7 @@ export default function MyBarsScreen() {
         {!loading && savedBars.length === 0 && (
           <EmptyStateCard
             title="No bars saved yet!"
-            subtitle="Tap the star on a bar to add it here."
             titleStyle={[typography.heading, { color: themeColors.white }]}
-            subtitleStyle={[styles.subtitle, { color: themeColors.muted }]}
             cardStyle={[
               styles.emptyCard,
               {

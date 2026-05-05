@@ -8,10 +8,10 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import NeonScreen from "../../components/common/NeonScreen";
 import { gradients, surfaces } from "../../theme";
 import themeColors from "../../theme/colors";
@@ -133,15 +133,17 @@ export default function DiscoverScreen() {
     }
   }, [searchModes]);
 
-  useEffect(() => {
-    if (!token) return;
-    api.get("/saved-bars", { headers: { Authorization: `Bearer ${token}` } })
-      .then(({ data }) => {
-        const ids = new Set((data.bars || []).map((b) => String(b.barId)));
-        setSavedBarIds(ids);
-      })
-      .catch(() => {});
-  }, [token]);
+  useFocusEffect(
+    useCallback(() => {
+      if (!token) return;
+      api.get("/saved-bars", { headers: { Authorization: `Bearer ${token}` } })
+        .then(({ data }) => {
+          const ids = new Set((data.bars || []).map((b) => String(b.barId)));
+          setSavedBarIds(ids);
+        })
+        .catch(() => {});
+    }, [token])
+  );
 
   return (
     <NeonScreen gradient={gradients.discover}>

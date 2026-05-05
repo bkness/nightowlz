@@ -27,7 +27,7 @@ export default function BarProfileScreen({ route, navigation }) {
   const bar = route.params?.bar || { name: "Unknown Bar", neighborhood: "TBD", vibe: "" };
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
-  const isSaved = route.params?.isSaved || false;
+  const [isSaved, setIsSaved] = useState(route.params?.isSaved || false);
   const fromMyBars = route.params?.fromMyBars || false;
 
   const hasMap = typeof bar.lat === "number" && typeof bar.lon === "number";
@@ -54,8 +54,8 @@ export default function BarProfileScreen({ route, navigation }) {
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
+      setIsSaved(true);
       Alert.alert("Saved!", `${bar.name} added to My Bars.`);
-      navigation.navigate("HomeTabs", { screen: "MyBars" });
     } catch (err) {
       const msg = err.response?.data?.message || err.message || "Could not save bar.";
       console.error("Save error:", msg);
@@ -73,8 +73,8 @@ export default function BarProfileScreen({ route, navigation }) {
     setDeleting(true);
     try {
       await api.delete(`/saved-bars/${bar.barId}`, { headers: { Authorization: `Bearer ${token}` }, });
-      Alert.alert("Removed", `${bar.name} from My Bars.`);
-      navigation.navigate("HomeTabs", { screen: "MyBars" });
+      setIsSaved(false);
+      Alert.alert("Removed", `${bar.name} removed from My Bars.`);
     } catch (err) {
       const msg = err.response?.data?.message || err.message || "Could not remove bar.";
       console.error("Delete error:", msg);
@@ -159,19 +159,10 @@ export default function BarProfileScreen({ route, navigation }) {
 
         {(saving || deleting) ? (
           <ActivityIndicator color={colors.neonYellow} style={{ marginVertical: 16 }} />
+        ) : isSaved ? (
+          <NeonButton title="Remove From My Bars" onPress={handleDelete} />
         ) : (
-          <>
-            {isSaved ? (
-              <>
-                {!fromMyBars && (
-                  <NeonButton title="Saved ✓  —  View My Bars" onPress={() => navigation.navigate("HomeTabs", { screen: "MyBars" })} />
-                )}
-                <NeonButton title="Remove From My Bars" onPress={handleDelete} />
-              </>
-            ) : (
-              <NeonButton title="Save to My Bars" onPress={handleSave} />
-            )}
-          </>
+          <NeonButton title="Save to My Bars" onPress={handleSave} />
         )}
 
         <View style={styles.buttonRow}>

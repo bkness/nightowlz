@@ -74,16 +74,16 @@ function BarCard({
             </View>
 
             <View style={styles.metaRow}>
-              {!!distance && <Text style={styles.metaText}>{distance}</Text>}
+              {!!distance && (
+                <Text style={styles.metaText} numberOfLines={1}>{distance}</Text>
+              )}
               {!!distance && !!neighborhood && (
                 <Text style={styles.metaDot}>•</Text>
               )}
               {!!neighborhood && (
-                <Text style={styles.metaText}>{neighborhood}</Text>
+                <Text style={[styles.metaText, styles.metaNeighborhood]} numberOfLines={1}>{neighborhood}</Text>
               )}
             </View>
-
-            {!!category && <Text style={styles.category}>{category}</Text>}
 
             {!!sourceLabel && <Text style={styles.sourceLabel}>{sourceLabel}</Text>}
           </View>
@@ -172,6 +172,12 @@ const styles = StyleSheet.create({
     ...typography.caption,
     fontSize: 14,
     color: themeColors.muted,
+    flexShrink: 0,
+  },
+
+  metaNeighborhood: {
+    flex: 1,
+    flexShrink: 1,
   },
 
   metaDot: {

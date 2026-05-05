@@ -25,9 +25,9 @@
   },
   "overrides": {
     "@xmldom/xmldom": "^0.9.9",
-    "fast-xml-parser": "^4.5.3",
+    "fast-xml-parser": "^5.7.0",
     "protobufjs": "^7.5.5",
     "follow-redirects": "^1.15.9",
-    "postcss": "^8.4.49"
+    "postcss": "^8.5.10"
   }
 }

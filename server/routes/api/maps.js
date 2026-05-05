@@ -189,6 +189,13 @@ async function enrichApplePlaces(accessToken, places) {
     return enriched;
 }
 
+const CATEGORY_DISPLAY_LABELS = {
+    bars: "Bar",
+    clubs: "Club / Lounge",
+    live_music: "Live Music",
+    entertainment: "Entertainment",
+};
+
 function mapPlaceCategory(rawCategory = "") {
     const category = normalizeCategoryKey(rawCategory);
 
@@ -208,7 +215,7 @@ function mapPlaceCategory(rawCategory = "") {
         return "entertainment";
     }
 
-    return "bars";
+    return null;
 }
 
 function pushLatencySample(samples, value) {
@@ -480,11 +487,13 @@ function normalizeApplePlace(place, originCoordinate) {
     const addressLines = normalizeAddressLines(place.formattedAddressLines || []);
     const rawCategory = place.poiCategory || "";
 
+    const mappedCategory = mapPlaceCategory(rawCategory);
+
     return {
         barId: place.id || `${latitude},${longitude}`,
         name: place.name || "Unknown",
-        category: mapPlaceCategory(rawCategory),
-        vibe: rawCategory,
+        category: mappedCategory || "bars",
+        vibe: CATEGORY_DISPLAY_LABELS[mappedCategory] || rawCategory,
         neighborhood: addressLines.join(", "),
         addressLines,
         locality: place.structuredAddress?.locality || "",
@@ -720,7 +729,8 @@ router.get("/places", async (req, res) => {
             }
         }
 
-        const localResults = filterToLocalResults(deduped, coordinate, geoResult?.displayMapRegion);
+        const modeFiltered = deduped.filter((place) => modes.includes(place.category));
+        const localResults = filterToLocalResults(modeFiltered.length > 0 ? modeFiltered : deduped, coordinate, geoResult?.displayMapRegion);
         const finalizedResults = localResults.length > 0 ? localResults : deduped;
 
         finalizedResults.sort((left, right) => {

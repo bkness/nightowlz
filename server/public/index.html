@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Night Owlz — Find Your Night</title>
+  <meta name="description" content="Discover bars, clubs, and live music near you. Night Owlz is a nightlife discovery app for iOS." />
+  <meta property="og:title" content="Night Owlz — Find Your Night" />
+  <meta property="og:description" content="Discover bars, clubs, and live music near you." />
+  <meta property="og:image" content="/screenshots/discover.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0d0b1e;
+      --bg2:       #13112b;
+      --orange:    #f5a623;
+      --orange2:   #e8961a;
+      --cyan:      #00e5c8;
+      --purple:    #7c3aed;
+      --text:      #e8e0f0;
+      --muted:     #8b80a8;
+      --card:      rgba(255,255,255,0.04);
+      --border:    rgba(245,166,35,0.18);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 32px;
+      background: rgba(13,11,30,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .nav-logo img {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+    }
+
+    .nav-logo span {
+      font-family: 'Pacifico', cursive;
+      font-size: 1.2rem;
+      color: var(--orange);
+      text-shadow: 0 0 12px rgba(245,166,35,0.5);
+    }
+
+    .nav-cta {
+      background: var(--orange);
+      color: #1a0f00;
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 8px 20px;
+      border-radius: 100px;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .nav-cta:hover { background: var(--orange2); transform: translateY(-1px); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(124,58,237,0.25) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 400px;
+      height: 300px;
+      background: radial-gradient(ellipse, rgba(245,166,35,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-logo {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      border: 2px solid rgba(245,166,35,0.3);
+      margin-bottom: 24px;
+      box-shadow: 0 0 40px rgba(124,58,237,0.4);
+    }
+
+    .hero h1 {
+      font-family: 'Pacifico', cursive;
+      font-size: clamp(3rem, 8vw, 5.5rem);
+      color: var(--orange);
+      text-shadow: 0 0 30px rgba(245,166,35,0.5), 0 0 60px rgba(245,166,35,0.2);
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-tagline {
+      font-family: 'Pacifico', cursive;
+      font-size: clamp(1rem, 3vw, 1.4rem);
+      color: var(--cyan);
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-desc {
+      max-width: 520px;
+      font-size: 1.05rem;
+      color: var(--muted);
+      margin-bottom: 40px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, var(--orange), var(--orange2));
+      color: #1a0f00;
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 14px 32px;
+      border-radius: 100px;
+      text-decoration: none;
+      transition: transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 4px 24px rgba(245,166,35,0.35);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(245,166,35,0.5);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      color: var(--orange);
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 13px 28px;
+      border-radius: 100px;
+      text-decoration: none;
+      border: 1.5px solid rgba(245,166,35,0.4);
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--orange);
+      background: rgba(245,166,35,0.06);
+    }
+
+    /* ── SCREENSHOTS ── */
+    .screenshots {
+      padding: 80px 24px;
+      text-align: center;
+    }
+
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      font-family: 'Pacifico', cursive;
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      color: var(--orange);
+      text-shadow: 0 0 20px rgba(245,166,35,0.3);
+      margin-bottom: 48px;
+    }
+
+    .phones {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      align-items: flex-end;
+    }
+
+    .phone {
+      position: relative;
+      width: 200px;
+      flex-shrink: 0;
+    }
+
+    .phone.featured { width: 230px; transform: translateY(-20px); }
+
+    .phone-frame {
+      background: #1a1a2e;
+      border-radius: 36px;
+      border: 2px solid rgba(255,255,255,0.1);
+      overflow: hidden;
+      box-shadow:
+        0 20px 60px rgba(0,0,0,0.6),
+        0 0 0 1px rgba(255,255,255,0.05),
+        inset 0 0 0 1px rgba(255,255,255,0.03);
+      aspect-ratio: 9/19.5;
+    }
+
+    .phone-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .phone-label {
+      margin-top: 12px;
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    /* ── FEATURES ── */
+    .features {
+      padding: 80px 24px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      margin-top: 48px;
+    }
+
+    .feature-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px 24px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .feature-card:hover {
+      border-color: rgba(245,166,35,0.4);
+      transform: translateY(-3px);
+    }
+
+    .feature-icon {
+      font-size: 2rem;
+      margin-bottom: 14px;
+    }
+
+    .feature-card h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--orange);
+      margin-bottom: 8px;
+    }
+
+    .feature-card p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ── TECH ── */
+    .tech {
+      padding: 60px 24px;
+      text-align: center;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .tech p {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .tech-tags {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .tech-tag {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 100px;
+      padding: 5px 14px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 32px 24px;
+      text-align: center;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    footer p {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    footer a {
+      color: var(--orange);
+      text-decoration: none;
+    }
+
+    footer a:hover { text-decoration: underline; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      nav { padding: 14px 20px; }
+      .phone { width: 140px; }
+      .phone.featured { width: 160px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="nav-logo" href="#">
+      <img src="/screenshots/icon.png" alt="Night Owlz" onerror="this.style.display='none'" />
+      <span>Night Owlz</span>
+    </a>
+    <a class="nav-cta" href="#testflight">Get the App</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <img class="hero-logo" src="/screenshots/icon.png" alt="Night Owlz" onerror="this.style.display='none'" />
+    <h1>Night Owlz</h1>
+    <p class="hero-tagline">Find your night</p>
+    <p class="hero-desc">
+      Discover bars, clubs, and live music near you. Search any city,
+      save your favorite spots, and find what's happening tonight.
+    </p>
+    <div class="hero-actions">
+      <a class="btn-primary" id="testflight" href="#testflight">
+        🍎 Download on TestFlight
+      </a>
+      <a class="btn-secondary" href="https://github.com/bkness/nightowlz" target="_blank" rel="noopener">
+        View on GitHub
+      </a>
+    </div>
+  </section>
+
+  <!-- SCREENSHOTS -->
+  <section class="screenshots">
+    <p class="section-label">The App</p>
+    <h2 class="section-title">Everything you need for a night out</h2>
+    <div class="phones">
+      <div class="phone">
+        <div class="phone-frame">
+          <img src="/screenshots/login.png" alt="Login screen" onerror="this.closest('.phone').style.display='none'" />
+        </div>
+        <p class="phone-label">Sign In</p>
+      </div>
+      <div class="phone featured">
+        <div class="phone-frame">
+          <img src="/screenshots/discover.png" alt="Discover screen" onerror="this.closest('.phone').style.display='none'" />
+        </div>
+        <p class="phone-label">Discover</p>
+      </div>
+      <div class="phone">
+        <div class="phone-frame">
+          <img src="/screenshots/mybars.png" alt="My Bars screen" onerror="this.closest('.phone').style.display='none'" />
+        </div>
+        <p class="phone-label">My Bars</p>
+      </div>
+      <div class="phone">
+        <div class="phone-frame">
+          <img src="/screenshots/barprofile.png" alt="Bar Profile screen" onerror="this.closest('.phone').style.display='none'" />
+        </div>
+        <p class="phone-label">Bar Profile</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features">
+    <p class="section-label" style="text-align:center">Features</p>
+    <h2 class="section-title" style="text-align:center">Built for the night</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🔍</div>
+        <h3>Search Any City</h3>
+        <p>Find bars, clubs, live music, and entertainment in any city. Powered by OpenStreetMap Overpass API.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🗺️</div>
+        <h3>Apple Maps Integration</h3>
+        <p>Every venue has a live map view and one-tap directions via Apple Maps.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🧡</div>
+        <h3>Save Your Favorites</h3>
+        <p>Build your personal shortlist of go-to spots. Your bars sync to your account across sessions.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🦉</div>
+        <h3>User &amp; Owner Accounts</h3>
+        <p>Sign up as a nightlife fan or a venue owner. JWT auth keeps everything secure.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📅</div>
+        <h3>Events — Coming Soon</h3>
+        <p>Real-time event drops for live music, karaoke, trivia, and more at your saved spots.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌙</div>
+        <h3>Dark Mode Native</h3>
+        <p>Designed for the night. Dark-first UI built in React Native with a custom neon theme system.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TECH STACK -->
+  <section class="tech">
+    <p>Built with</p>
+    <div class="tech-tags">
+      <span class="tech-tag">React Native</span>
+      <span class="tech-tag">Expo</span>
+      <span class="tech-tag">Node.js</span>
+      <span class="tech-tag">Express</span>
+      <span class="tech-tag">MongoDB</span>
+      <span class="tech-tag">Apple MapKit JS</span>
+      <span class="tech-tag">OpenStreetMap</span>
+      <span class="tech-tag">JWT</span>
+      <span class="tech-tag">bcrypt</span>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>
+      Built by <a href="https://weballtech.com" target="_blank" rel="noopener">Brandon Kelly</a>
+      &nbsp;·&nbsp;
+      <a href="https://github.com/bkness/nightowlz" target="_blank" rel="noopener">GitHub</a>
+    </p>
+  </footer>
+
+</body>
+</html>

@@ -47,7 +47,11 @@ const SEARCH_MODE_TERMS = {
         "live music venue",
         "music venue",
         "concert hall",
+        "concert venue",
         "amphitheater",
+        "amphitheatre",
+        "arena",
+        "performing arts venue",
         "jazz club",
         "rock club",
         "dueling piano bar",
@@ -207,7 +211,7 @@ function mapPlaceCategory(rawCategory = "") {
         return "clubs";
     }
 
-    if (["music_venue", "musicvenue", "concert_hall", "amphitheater", "jazz_club", "live_music_venue", "rock_club", "live_music"].includes(category)) {
+    if (["music_venue", "musicvenue", "concert_hall", "concert_venue", "amphitheater", "amphitheatre", "arena", "performing_arts_venue", "performing_arts", "jazz_club", "live_music_venue", "rock_club", "live_music", "stadium"].includes(category)) {
         return "live_music";
     }
 
@@ -557,8 +561,8 @@ async function fetchOverpassNightlife(lat, lon, modes) {
         amenityTerms.push("nightclub", "night_club", "dance_club", "danceclub", "dj");
     }
     if (modes.includes("live_music")) {
-        amenityTerms.push("music_venue", "bar", "pub", "live_music_venue", "performance_space");
-        tourismTerms.push("music_venue", "amphitheater", "concert_hall", "live_music_venue", "performance_space");
+        amenityTerms.push("music_venue", "bar", "pub", "live_music_venue", "performance_space", "concert_hall");
+        tourismTerms.push("music_venue", "amphitheatre", "amphitheater", "concert_hall", "concert_venue", "arena", "live_music_venue", "performance_space", "performing_arts");
     }
     if (modes.includes("entertainment")) {
         amenityTerms.push("karaoke_bar", "bar", "pub", "bowling_alley");

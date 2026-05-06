@@ -733,8 +733,7 @@ router.get("/places", async (req, res) => {
             }
         }
 
-        const modeFiltered = deduped.filter((place) => modes.includes(place.category));
-        const localResults = filterToLocalResults(modeFiltered.length > 0 ? modeFiltered : deduped, coordinate, geoResult?.displayMapRegion);
+        const localResults = filterToLocalResults(deduped, coordinate, geoResult?.displayMapRegion);
         const finalizedResults = localResults.length > 0 ? localResults : deduped;
 
         finalizedResults.sort((left, right) => {

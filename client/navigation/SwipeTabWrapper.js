@@ -3,6 +3,7 @@ import { View } from "react-native";
 import { useIsFocused, useNavigation, useRoute } from "@react-navigation/native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated from "react-native-reanimated";
+import { swipeTabState } from "./swipeTabState";
 
 const SWIPE_THRESHOLD = 70;
 const SWIPE_LOCK_MS = 260;
@@ -34,6 +35,7 @@ export default function SwipeTabWrapper({ children, tabOrder = [] }) {
     .activeOffsetX([-15, 15])
     .failOffsetY([-12, 12])
     .onEnd((event) => {
+      if (!swipeTabState.enabled) return;
       if (!isFocused) return;
       if (isTransitioningRef.current) return;
 

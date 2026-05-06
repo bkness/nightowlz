@@ -1,13 +1,13 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { BlurView } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
-import { StyleSheet, View } from "react-native";
+import { Dimensions, StyleSheet, View } from "react-native";
+
+const SCREEN_WIDTH = Dimensions.get("window").width;
 import DiscoverScreen from "../../screens/Discover/DiscoverScreen";
 import EventsScreen from "../../screens/Events/EventsScreen";
 import MyBarsScreen from "../../screens/MyBars/MyBarsScreen";
-import ProfileScreen from "../../screens/Profile/ProfileScreen";
 import NeonTabIcon from "../../components/common/NeonTabIcon";
-import NightOwlzIcon from "../../components/common/NightOwlzIcon";
 import SwipeTabWrapper from "../SwipeTabWrapper";
 import { colors } from "../../theme";
 
@@ -42,7 +42,7 @@ export default function MainTabs() {
         tabBarStyle: {
           position: "absolute",
           left: 24,
-          right: 24,
+          width: SCREEN_WIDTH - 118,
           bottom: 14,
           height: 88,
           borderRadius: 28,
@@ -125,19 +125,6 @@ export default function MainTabs() {
             <NeonTabIcon
               name="heart"
               label="Bars"
-              focused={focused}
-              color={focused ? colors.neonYellow : colors.navInactive}
-            />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="MyProfile"
-        component={ProfileScreen}
-        options={{
-          tabBarIcon: ({ focused }) => (
-            <NightOwlzIcon
-              size={focused ? 56 : 48}
               focused={focused}
               color={focused ? colors.neonYellow : colors.navInactive}
             />

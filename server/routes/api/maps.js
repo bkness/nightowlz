@@ -709,7 +709,7 @@ router.get("/places", async (req, res) => {
                             userLocation: `${coordinate.latitude},${coordinate.longitude}`,
                         }),
                     lang: "en-US",
-                    limit: 20,
+                    limit: 25,
                     resultTypeFilter: "Poi",
                 },
                 9000

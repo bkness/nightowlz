@@ -15,7 +15,7 @@ export default function SlidingPanel({
   children,
 }) {
   const insets = useSafeAreaInsets();
-  const animatedIndex = useSharedValue(-1);
+  const animatedIndex = useSharedValue(isVisible ? 0 : -1);
   const animatedPosition = useSharedValue(0);
 
   useEffect(() => {
@@ -27,6 +27,7 @@ export default function SlidingPanel({
       animatedIndex={animatedIndex}
       animatedPosition={animatedPosition}
       snapPoints={snapPoints}
+      initialSnapIndex={isVisible ? 0 : -1}
       enablePanDownToClose
       onClose={onClose}
       backgroundStyle={styles.sheetBackground}

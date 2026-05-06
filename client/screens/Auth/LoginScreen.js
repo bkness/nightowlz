@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import { View, Text, TextInput, StyleSheet, Pressable, Keyboard, TouchableWithoutFeedback, Alert } from "react-native";
+import Animated, { FadeIn } from "react-native-reanimated";
 import NeonScreen from "../../components/common/NeonScreen";
 import NeonButton from "../../components/common/NeonButton";
 import RoleToggle from "../../components/common/RoleToggle";
@@ -80,11 +81,9 @@ export default function LoginScreen({ navigation }) {
   return (
     <NeonScreen gradient={gradients.discover} liftDistance={0}>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <View
-          style={[
-            styles.container,
-            safePadding,
-          ]}
+        <Animated.View
+          entering={FadeIn.duration(700)}
+          style={[styles.container, safePadding]}
         >
           {__DEV__ ? (
             <Pressable onLongPress={handleDevEscape} delayLongPress={700}>
@@ -143,7 +142,7 @@ export default function LoginScreen({ navigation }) {
           <Pressable onPress={handleGoToSignUp} disabled={isRouting}>
             <Text style={styles.switchText}>No account? Create one</Text>
           </Pressable>
-        </View>
+        </Animated.View>
       </TouchableWithoutFeedback>
     </NeonScreen>
   );

@@ -22,10 +22,7 @@ export default function Header({ compact = false }) {
     <View
       style={[
         styles.container,
-        {
-          paddingTop: topOffset,
-          overflow: "visible",
-        },
+        { paddingTop: topOffset, overflow: "visible" },
         compact && styles.compact,
       ]}
     >

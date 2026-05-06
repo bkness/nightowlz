@@ -5,14 +5,12 @@ import {
   TextInput,
   View,
   Animated as RNAnimated,
-  TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
 import { useCallback, useRef, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import NeonScreen from "../../components/common/NeonScreen";
-import SlidingPanel from "../../components/common/SlidingPanel";
 import { gradients, surfaces } from "../../theme";
 import themeColors from "../../theme/colors";
 import typography from "../../theme/typography";
@@ -27,7 +25,6 @@ export default function DiscoverScreen() {
   const navigation = useNavigation();
   const { token } = useAuth();
   const [isFocused, setIsFocused] = useState(false);
-  const [isFilterPanelVisible, setIsFilterPanelVisible] = useState(false);
   const glowAnimation = useRef(new RNAnimated.Value(0)).current;
 
   const {
@@ -120,13 +117,6 @@ export default function DiscoverScreen() {
           returnKeyType="search"
         />
       </RNAnimated.View>
-      <TouchableOpacity
-        onPress={() => setIsFilterPanelVisible(true)}
-        style={styles.filterButton}
-        activeOpacity={0.85}
-      >
-        <Ionicons name="options" size={18} color={themeColors.neonYellow} />
-      </TouchableOpacity>
     </View>
   );
 
@@ -186,19 +176,6 @@ export default function DiscoverScreen() {
         </ScrollView>
       )}
 
-      <SlidingPanel
-        isVisible={isFilterPanelVisible}
-        onClose={() => setIsFilterPanelVisible(false)}
-        title="Search Filters"
-        snapPoints={["30%", "52%"]}
-      >
-        <Text style={styles.panelText}>
-          Pick one or more search modes above to blend drinks, dancing, music, and entertainment.
-        </Text>
-        <Text style={styles.panelText}>
-          Apple Maps runs first and Overpass fills in if Apple search is unavailable.
-        </Text>
-      </SlidingPanel>
     </NeonScreen>
   );
 }
@@ -236,24 +213,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowOffset: { width: 0, height: 0 },
   },
-  filterButton: {
-    ...surfaces.glassField,
-    marginLeft: 8,
-    width: 44,
-    height: 44,
-    alignItems: "center",
-    justifyContent: "center",
-  },
   searchInput: {
     flex: 1,
     paddingHorizontal: 12,
     paddingVertical: 10,
     color: themeColors.white,
     fontSize: 16,
-  },
-  panelText: {
-    ...typography.body,
-    color: themeColors.white,
   },
   emptyState: {
     alignItems: "center",

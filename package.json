@@ -21,11 +21,11 @@
   "dependencies": {
     "@expo/vector-icons": "^15.0.2",
     "@gorhom/bottom-sheet": "^5.2.8",
+    "protobufjs": "7.5.8",
     "react-native-reanimated": "^3.19.5"
   },
   "overrides": {
     "fast-xml-parser": "^5.7.0",
-    "protobufjs": "^7.5.5",
     "follow-redirects": "^1.15.9",
     "postcss": "^8.5.10"
   }

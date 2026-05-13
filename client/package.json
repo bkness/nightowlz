@@ -42,7 +42,7 @@
   "private": true,
   "overrides": {
     "@xmldom/xmldom": "^0.9.9",
-    "protobufjs": "^7.5.5",
+    "protobufjs": "^7.5.6",
     "follow-redirects": "^1.15.9",
     "postcss": "^8.4.49"
   }

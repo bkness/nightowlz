@@ -56,7 +56,7 @@ export default function LoginScreen({ navigation }) {
 
       setSession(data);
     } catch (error) {
-      console.error(
+      console.warn(
         "Login request failed:",
         error?.response?.data?.message || error.message,
       );

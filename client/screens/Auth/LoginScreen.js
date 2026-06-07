@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { View, Text, TextInput, StyleSheet, Pressable, Keyboard, TouchableWithoutFeedback, Alert } from "react-native";
-import Animated, { FadeIn } from "react-native-reanimated";
+import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
 import NeonScreen from "../../components/common/NeonScreen";
 import NeonButton from "../../components/common/NeonButton";
 import RoleToggle from "../../components/common/RoleToggle";
@@ -81,22 +81,23 @@ export default function LoginScreen({ navigation }) {
   return (
     <NeonScreen gradient={gradients.discover} liftDistance={0}>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <Animated.View
-          entering={FadeIn.duration(700)}
-          style={[styles.container, safePadding]}
-        >
-          {__DEV__ ? (
-            <Pressable onLongPress={handleDevEscape} delayLongPress={700}>
+        <View style={[styles.container, safePadding]}>
+          <Animated.View entering={FadeIn.duration(600)}>
+            {__DEV__ ? (
+              <Pressable onLongPress={handleDevEscape} delayLongPress={700}>
+                <Text style={styles.title}>Welcome Back</Text>
+              </Pressable>
+            ) : (
               <Text style={styles.title}>Welcome Back</Text>
-            </Pressable>
-          ) : (
-            <Text style={styles.title}>Welcome Back</Text>
-          )}
-          <Text style={styles.subtitle}>Sign in to keep your bars synced</Text>
+            )}
+            <Text style={styles.subtitle}>Sign in to keep your bars synced</Text>
+          </Animated.View>
 
-          <RoleToggle value={selectedRole} onChange={setSelectedRole} />
+          <Animated.View entering={FadeInDown.duration(500).delay(300)}>
+            <RoleToggle value={selectedRole} onChange={setSelectedRole} />
+          </Animated.View>
 
-          <View style={styles.form}>
+          <Animated.View entering={FadeInDown.duration(500).delay(500)} style={styles.form}>
             <TextInput
               value={identifier}
               onChangeText={setIdentifier}
@@ -131,18 +132,19 @@ export default function LoginScreen({ navigation }) {
                 focusedField === "password" && styles.inputFocused,
               ]}
             />
-          </View>
+          </Animated.View>
 
-          <NeonButton
-            title="Login"
-            onPress={handleLogin}
-            disabled={!canSubmit()}
-          />
-
-          <Pressable onPress={handleGoToSignUp} disabled={isRouting}>
-            <Text style={styles.switchText}>No account? Create one</Text>
-          </Pressable>
-        </Animated.View>
+          <Animated.View entering={FadeInDown.duration(500).delay(700)}>
+            <NeonButton
+              title="Login"
+              onPress={handleLogin}
+              disabled={!canSubmit()}
+            />
+            <Pressable onPress={handleGoToSignUp} disabled={isRouting}>
+              <Text style={styles.switchText}>No account? Create one</Text>
+            </Pressable>
+          </Animated.View>
+        </View>
       </TouchableWithoutFeedback>
     </NeonScreen>
   );

@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, ScrollView, View, Text } from "react-native";
+import DraggableFlatList, { ScaleDecorator, ShadowDecorator } from "react-native-draggable-flatlist";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import NeonScreen from "../../components/common/NeonScreen";
 import NeonButton from "../../components/common/NeonButton";
 import { gradients } from "../../theme";
@@ -14,6 +16,16 @@ import BarCard from "../../components/bars/BarCard";
 import { api } from "../../utils/api";
 import { useAuth } from "../../context/AuthContext";
 
+const ORDER_KEY = "mybars-order";
+
+function applyOrder(bars, order) {
+  if (!order || order.length === 0) return bars;
+  const byId = new Map(bars.map((b) => [String(b.barId), b]));
+  const ordered = order.flatMap((id) => (byId.has(id) ? [byId.get(id)] : []));
+  const newBars = bars.filter((b) => !order.includes(String(b.barId)));
+  return [...ordered, ...newBars];
+}
+
 export default function MyBarsScreen() {
   const navigation = useNavigation();
   const { user, token } = useAuth();
@@ -27,11 +39,16 @@ export default function MyBarsScreen() {
   const loadSavedBars = useCallback(async () => {
     setLoading(true);
     try {
-      const { data } = await api.get("/saved-bars", {
-        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
-        params: token ? undefined : userId ? { userId } : {},
-      });
-      setSavedBars(data.bars || []);
+      const [{ data }, orderJson] = await Promise.all([
+        api.get("/saved-bars", {
+          headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+          params: token ? undefined : userId ? { userId } : {},
+        }),
+        AsyncStorage.getItem(ORDER_KEY),
+      ]);
+      const bars = data.bars || [];
+      const order = orderJson ? JSON.parse(orderJson) : null;
+      setSavedBars(applyOrder(bars, order));
     } catch (error) {
       console.log("Failed to load saved bars", error?.message);
     } finally {
@@ -44,11 +61,21 @@ export default function MyBarsScreen() {
       const { data } = await api.delete(`/saved-bars/${barId}`, {
         headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       });
-      setSavedBars(data.bars || []);
+      const bars = data.bars || [];
+      const currentOrder = savedBars
+        .map((b) => String(b.barId))
+        .filter((id) => id !== String(barId));
+      setSavedBars(applyOrder(bars, currentOrder));
+      await AsyncStorage.setItem(ORDER_KEY, JSON.stringify(currentOrder));
     } catch (error) {
       console.log("Failed to remove saved bar", error?.message);
     }
-  }, [token]);
+  }, [token, savedBars]);
+
+  const onDragEnd = useCallback(({ data }) => {
+    setSavedBars(data);
+    AsyncStorage.setItem(ORDER_KEY, JSON.stringify(data.map((b) => String(b.barId))));
+  }, []);
 
   useEffect(() => {
     loadSavedBars();
@@ -60,83 +87,90 @@ export default function MyBarsScreen() {
     }, [loadSavedBars]),
   );
 
+  const renderItem = useCallback(({ item, drag }) => (
+    <ShadowDecorator>
+      <ScaleDecorator activeScale={0.97}>
+        <BarCard
+          name={item.name}
+          vibe={item.vibe}
+          neighborhood={item.neighborhood}
+          category={item.category}
+          dragHandleOnLongPress={drag}
+          onDelete={() => removeSavedBar(item.barId)}
+          onPress={() =>
+            navigation.navigate("BarProfile", {
+              isSaved: true,
+              fromMyBars: true,
+              bar: {
+                barId: item.barId,
+                name: item.name,
+                neighborhood: item.neighborhood,
+                vibe: item.vibe,
+                category: item.category,
+                openingHours: item.openingHours || "",
+                lat: item.lat,
+                lon: item.lon,
+                source: item.source,
+              },
+            })
+          }
+        />
+      </ScaleDecorator>
+    </ShadowDecorator>
+  ), [navigation, removeSavedBar]);
+
+  const collectionCard = savedBars.length > 0 && (
+    <View style={styles.collectionCard}>
+      <Text style={styles.collectionEyebrow}>Collection</Text>
+      <Text style={styles.collectionTitle}>{savedBars.length} saved spots</Text>
+      <Text style={styles.collectionSubtitle}>
+        {latestSavedBar
+          ? `Latest add: ${latestSavedBar.name}`
+          : "Build a shortlist of bars worth revisiting."}
+      </Text>
+      <View style={styles.collectionChipRow}>
+        <View style={styles.collectionChip}>
+          <Text style={[styles.collectionChipText, { color: themeColors.neonYellow }]}>Personal shortlist</Text>
+        </View>
+      </View>
+      <Text style={styles.swipeHint}>← swipe to remove  ·  hold ≡ to reorder</Text>
+    </View>
+  );
+
+  const header = (
+    <>
+      <ScreenTitleBlock
+        title="My Bars"
+        subtitle="Your Saved Favorites"
+        colors={themeColors}
+        style={styles.headerContainer}
+      />
+      {collectionCard}
+    </>
+  );
+
   return (
     <NeonScreen gradient={gradients.myBars}>
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-        bounces={false}
-        alwaysBounceVertical={false}
-        overScrollMode="never"
-      >
-        <ScreenTitleBlock
-          title="My Bars"
-          subtitle="Your Saved Favorites"
-          colors={themeColors}
-          style={styles.headerContainer}
-        />
-        {!loading && savedBars.length > 0 && (
-          <View style={styles.collectionCard}>
-            <Text style={styles.collectionEyebrow}>Collection</Text>
-            <Text style={styles.collectionTitle}>{savedBars.length} saved spots</Text>
-            <Text style={styles.collectionSubtitle}>
-              {latestSavedBar
-                ? `Latest add: ${latestSavedBar.name}`
-                : "Build a shortlist of bars worth revisiting."}
-            </Text>
-
-            <View style={styles.collectionChipRow}>
-              <View style={styles.collectionChip}>
-                <Text style={[styles.collectionChipText, { color: themeColors.neonYellow }]}>Personal shortlist</Text>
-              </View>
-            </View>
-          </View>
-        )}
-        {loading && (
-          <View style={styles.loaderWrap}>
-            <ActivityIndicator size="large" color={themeColors.neonYellow} />
-          </View>
-        )}
-        {!loading && savedBars.length > 0 && (
-          <View>
-            {savedBars.map((bar) => (
-              <BarCard
-                key={bar.barId}
-                name={bar.name}
-                vibe={bar.vibe}
-                neighborhood={bar.neighborhood}
-                category={bar.category}
-                onPress={() =>
-                  navigation.navigate("BarProfile", {
-                    isSaved: true,
-                    fromMyBars: true,
-                    bar: {
-                      barId: bar.barId,
-                      name: bar.name,
-                      neighborhood: bar.neighborhood,
-                      vibe: bar.vibe,
-                      category: bar.category,
-                      openingHours: bar.openingHours || "",
-                      lat: bar.lat,
-                      lon: bar.lon,
-                      source: bar.source,
-                    },
-                  })
-                }
-              />
-            ))}
-          </View>
-        )}
-        {!loading && savedBars.length === 0 && (
+      {loading ? (
+        <View style={styles.loaderWrap}>
+          <ActivityIndicator size="large" color={themeColors.neonYellow} />
+        </View>
+      ) : savedBars.length === 0 ? (
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+          bounces={false}
+        >
+          <ScreenTitleBlock
+            title="My Bars"
+            subtitle="Your Saved Favorites"
+            colors={themeColors}
+            style={styles.headerContainer}
+          />
           <EmptyStateCard
             title="No bars saved yet!"
             titleStyle={[typography.heading, { color: themeColors.white }]}
-            cardStyle={[
-              styles.emptyCard,
-              {
-                borderColor: themeColors.neonYellow,
-              },
-            ]}
+            cardStyle={[styles.emptyCard, { borderColor: themeColors.neonYellow }]}
             icon={
               <MaterialCommunityIcons
                 name="star-outline"
@@ -152,8 +186,21 @@ export default function MyBarsScreen() {
               style={styles.ctaButton}
             />
           </EmptyStateCard>
-        )}
-      </ScrollView>
+        </ScrollView>
+      ) : (
+        <DraggableFlatList
+          data={savedBars}
+          keyExtractor={(item) => String(item.barId)}
+          renderItem={renderItem}
+          onDragEnd={onDragEnd}
+          ListHeaderComponent={header}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+          bounces={false}
+          alwaysBounceVertical={false}
+          overScrollMode="never"
+        />
+      )}
     </NeonScreen>
   );
 }
@@ -168,7 +215,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   loaderWrap: {
-    paddingVertical: 20,
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
   },
   collectionCard: {
     marginBottom: 18,
@@ -215,23 +264,17 @@ const styles = StyleSheet.create({
     borderColor: "rgba(255, 184, 92, 0.25)",
     backgroundColor: "rgba(255, 184, 92, 0.12)",
   },
-  collectionChipBlue: {
-    borderRadius: 999,
-    paddingHorizontal: 10,
-    paddingVertical: 7,
-    borderWidth: 1,
-    borderColor: "rgba(123, 223, 255, 0.24)",
-    backgroundColor: "rgba(123, 223, 255, 0.1)",
-  },
   collectionChipText: {
     ...typography.caption,
     fontSize: 12,
     fontWeight: "700",
   },
-  collectionChipTextBlue: {
+  swipeHint: {
     ...typography.caption,
+    color: colors.muted,
     fontSize: 12,
-    fontWeight: "700",
+    marginTop: 10,
+    opacity: 0.7,
   },
   emptyCard: {
     alignSelf: "center",
@@ -250,11 +293,6 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     textShadowColor: colors.glowYellow,
     textShadowRadius: 12,
-  },
-  subtitle: {
-    textAlign: "center",
-    marginTop: 8,
-    marginBottom: 24,
   },
   ctaButton: {
     alignSelf: "stretch",

@@ -7,6 +7,7 @@ import ProfileScreen from "../../screens/Profile/ProfileScreen";
 import BarProfileScreen from "../../screens/BarProfile/BarProfileScreen";
 import OwnerDashboardScreen from "../../screens/Owner/OwnerDashboardScreen";
 import OwnerEditBarScreen from "../../screens/Owner/OwnerEditBarScreen";
+import OwnerManageEventsScreen from "../../screens/Owner/OwnerManageEventsScreen";
 import MyBarsScreen from "../../screens/MyBars/MyBarsScreen";
 import DiscoverScreen from "../../screens/Discover/DiscoverScreen";
 import SearchFAB from "../../components/search/SearchFAB";
@@ -107,6 +108,14 @@ export default function MainStack() {
                 component={OwnerEditBarScreen}
                 options={{
                     title: "Edit Bar",
+                    animation: "fade_from_bottom",
+                }}
+            />
+            <Stack.Screen
+                name="OwnerManageEvents"
+                component={OwnerManageEventsScreen}
+                options={{
+                    title: "Manage Events",
                     animation: "fade_from_bottom",
                 }}
             />

@@ -50,6 +50,18 @@ const barSchema = new mongoose.Schema({
         ref: 'User',
         required: true,
     },
+
+    // Manually flipped by an admin once a venue's ownership is confirmed.
+    // Event publishing is gated on this until a self-serve claim flow exists.
+    verified: {
+        type: Boolean,
+        default: false,
+    },
+
+    verifiedAt: {
+        type: Date,
+        default: null,
+    },
 }, { timestamps: true });
 
 

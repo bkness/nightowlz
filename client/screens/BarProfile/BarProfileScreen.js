@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, ScrollView, Alert, ActivityIndicator, Linking } from "react-native";
 import MapView, { Marker, PROVIDER_DEFAULT } from "react-native-maps";
 import NeonScreen from "../../components/common/NeonScreen";
@@ -22,6 +22,27 @@ function normalizeWebsiteUrl(value) {
   return /^https?:\/\//i.test(value) ? value : `https://${value}`;
 }
 
+const CATEGORY_LABELS = {
+  "live-music": "Live Music",
+  karaoke: "Karaoke",
+  trivia: "Trivia",
+  "happy-hour": "Happy Hour",
+  dj: "DJ",
+  other: "Event",
+};
+
+function formatEventDate(iso) {
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return "";
+  return date.toLocaleString([], {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
+
 export default function BarProfileScreen({ route, navigation }) {
   const { token } = useAuth();
   const bar = route.params?.bar || { name: "Unknown Bar", neighborhood: "TBD", vibe: "" };
@@ -29,6 +50,25 @@ export default function BarProfileScreen({ route, navigation }) {
   const [deleting, setDeleting] = useState(false);
   const [isSaved, setIsSaved] = useState(route.params?.isSaved || false);
   const fromMyBars = route.params?.fromMyBars || false;
+
+  // Events only exist for registered (Mongo) bars, which carry an _id.
+  // Discoverable OSM bars have no _id, so this section stays hidden for them.
+  const barMongoId = bar._id || null;
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    if (!barMongoId) return;
+    let active = true;
+    api
+      .get("/events", { params: { barId: barMongoId } })
+      .then(({ data }) => {
+        if (active) setEvents(data.events || []);
+      })
+      .catch((err) => console.warn("Failed to load events:", err?.message));
+    return () => {
+      active = false;
+    };
+  }, [barMongoId]);
 
   const hasMap = typeof bar.lat === "number" && typeof bar.lon === "number";
 
@@ -157,6 +197,26 @@ export default function BarProfileScreen({ route, navigation }) {
           </MapView>
         )}
 
+        {events.length > 0 && (
+          <View style={styles.eventsSection}>
+            <Text style={styles.eventsHeading}>What&apos;s On</Text>
+            {events.map((event) => (
+              <View key={event._id} style={styles.eventRow}>
+                <View style={styles.eventCategoryTag}>
+                  <Text style={styles.eventCategoryText}>
+                    {CATEGORY_LABELS[event.category] || "Event"}
+                  </Text>
+                </View>
+                <Text style={styles.eventTitle}>{event.title}</Text>
+                <Text style={styles.eventWhen}>{formatEventDate(event.startsAt)}</Text>
+                {!!event.description && (
+                  <Text style={styles.eventDesc}>{event.description}</Text>
+                )}
+              </View>
+            ))}
+          </View>
+        )}
+
         {(saving || deleting) ? (
           <ActivityIndicator color={colors.neonYellow} style={{ marginVertical: 16 }} />
         ) : isSaved ? (
@@ -269,5 +329,57 @@ const styles = StyleSheet.create({
   },
   buttonHalf: {
     flex: 1,
+  },
+  eventsSection: {
+    marginTop: 22,
+    marginBottom: 4,
+  },
+  eventsHeading: {
+    ...typography.subheading,
+    fontSize: 18,
+    color: colors.neonYellow,
+    marginBottom: 12,
+  },
+  eventRow: {
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 12,
+    backgroundColor: "rgba(255,255,255,0.05)",
+    borderWidth: 1,
+    borderColor: "rgba(123, 223, 255, 0.18)",
+  },
+  eventCategoryTag: {
+    alignSelf: "flex-start",
+    borderRadius: 999,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    marginBottom: 8,
+    backgroundColor: "rgba(123, 223, 255, 0.14)",
+    borderWidth: 1,
+    borderColor: "rgba(123, 223, 255, 0.3)",
+  },
+  eventCategoryText: {
+    ...typography.caption,
+    fontSize: 11,
+    fontWeight: "700",
+    color: colors.neonBlue,
+    textTransform: "uppercase",
+    letterSpacing: 0.4,
+  },
+  eventTitle: {
+    ...typography.subheading,
+    fontSize: 17,
+    lineHeight: 23,
+  },
+  eventWhen: {
+    ...typography.caption,
+    color: colors.neonYellow,
+    fontWeight: "700",
+    marginTop: 4,
+  },
+  eventDesc: {
+    ...typography.body,
+    color: colors.muted,
+    marginTop: 6,
   },
 });

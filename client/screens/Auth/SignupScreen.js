@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { Text, TextInput, StyleSheet, Pressable, Keyboard, TouchableWithoutFeedback, Alert } from "react-native";
+import { View, Text, TextInput, StyleSheet, Pressable, Keyboard, TouchableWithoutFeedback, Alert } from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
 import NeonScreen from "../../components/common/NeonScreen";
 import NeonButton from "../../components/common/NeonButton";
@@ -76,7 +76,7 @@ export default function SignUpScreen({ navigation }) {
   return (
     <NeonScreen gradient={gradients.events} liftDistance={0}>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <Animated.View entering={FadeIn.duration(700)} style={[styles.container, safePadding]}>
+        <Animated.View entering={FadeIn.duration(10000)} style={[styles.container, safePadding]}>
           <Text style={styles.title}>Create Account</Text>
           <Text style={styles.subtitle}>
             Start building your Night Owlz favorites

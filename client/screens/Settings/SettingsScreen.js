@@ -106,11 +106,6 @@ export default function SettingsScreen() {
               />
               <View style={styles.settingsList}>
                 <ThemeToggle />
-                <NeonButton
-                  title="Coming Soon"
-                  onPress={() => Alert.alert("Feature coming soon!")}
-                  style={styles.comingSoonButton}
-                />
                 <AppVersion />
               </View>
               <NeonButton
@@ -159,10 +154,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     paddingVertical: 8,
     gap: 24,
-  },
-  comingSoonButton: {
-    marginTop: -2,
-    marginBottom: -6,
   },
   logoutButton: {
     paddingHorizontal: 6,

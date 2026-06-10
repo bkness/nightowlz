@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Pressable, Alert } from "react-native";
 import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
 import NeonScreen from "../../components/common/NeonScreen";
 import NeonButton from "../../components/common/NeonButton";
@@ -112,12 +112,23 @@ export default function OwnerDashboardScreen() {
         }
 
         if (title === "Manage Events") {
-            navigation.navigate("OwnerEditBar");
+            if (activeBarId) {
+                navigation.navigate("OwnerManageEvents", {
+                    barId: activeBarId,
+                    barName: ownerBar?.name || "your venue",
+                    verified: ownerBar?.verified ?? false,
+                });
+            } else {
+                Alert.alert(
+                    "Add your venue first",
+                    "Create your bar in Edit Bar Info before adding events.",
+                );
+            }
             return;
         }
 
         if (title === "Specials & Offers") {
-            navigation.navigate("OwnerEditBar");
+            Alert.alert("Coming soon", "Specials & offers are on the roadmap.");
         }
     };
 
@@ -210,7 +221,22 @@ export default function OwnerDashboardScreen() {
 
                         <NeonButton
                             title="Preview Public Bar Profile"
-                            onPress={() => navigation.navigate("BarProfile")}
+                            onPress={() =>
+                                navigation.navigate("BarProfile", {
+                                    bar: ownerBar
+                                        ? {
+                                              _id: ownerBar._id,
+                                              name: ownerBar.name,
+                                              neighborhood: ownerBar.location,
+                                              openingHours: ownerBar.openingHours,
+                                              phone: ownerBar.phone,
+                                              website: ownerBar.website,
+                                              lat: ownerBar.coordinates?.lat ?? undefined,
+                                              lon: ownerBar.coordinates?.lng ?? undefined,
+                                          }
+                                        : undefined,
+                                })
+                            }
                             style={styles.primaryButton}
                         />
                         <NeonButton

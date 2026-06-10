@@ -5,13 +5,14 @@ import { Dimensions, StyleSheet, View } from "react-native";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 import DiscoverScreen from "../../screens/Discover/DiscoverScreen";
-import EventsScreen from "../../screens/Events/EventsScreen";
 import MyBarsScreen from "../../screens/MyBars/MyBarsScreen";
 import NeonTabIcon from "../../components/common/NeonTabIcon";
 import SwipeTabWrapper from "../SwipeTabWrapper";
 import { colors } from "../../theme";
 
-const TAB_ORDER = ["Discover", "Events", "MyBars"];
+// Events tab hidden for MVP — events are owner-published and surfaced on the
+// bar profile. Re-add to TAB_ORDER + a <Tab.Screen> once there's a discovery feed.
+const TAB_ORDER = ["Discover", "MyBars"];
 const Tab = createBottomTabNavigator();
 
 const withSwipe = (Component) => {
@@ -25,7 +26,6 @@ const withSwipe = (Component) => {
 };
 
 const DiscoverWithSwipe = withSwipe(DiscoverScreen);
-const EventsWithSwipe = withSwipe(EventsScreen);
 const MyBarsWithSwipe = withSwipe(MyBarsScreen);
 
 export default function MainTabs() {
@@ -97,20 +97,6 @@ export default function MainTabs() {
             <NeonTabIcon
               name="search"
               label="Discover"
-              focused={focused}
-              color={focused ? colors.neonYellow : colors.navInactive}
-            />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Events"
-        component={EventsWithSwipe}
-        options={{
-          tabBarIcon: ({ focused }) => (
-            <NeonTabIcon
-              name="calendar"
-              label="Events"
               focused={focused}
               color={focused ? colors.neonYellow : colors.navInactive}
             />

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import NeonScreen from "../../components/common/NeonScreen";
 import NeonButton from "../../components/common/NeonButton";
@@ -6,7 +6,7 @@ import ScreenTitleBlock from "../../components/common/ScreenTitleBlock";
 import NightOwlzIcon from "../../components/common/NightOwlzIcon";
 import { gradients, surfaces, typography } from "../../theme";
 import { useTheme } from "../../theme/ThemeProvider";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { useAuth } from "../../context/AuthContext";
 import { api } from "../../utils/api";
 
@@ -21,12 +21,16 @@ export default function ProfileScreen() {
     : "@nightowlz-user";
   const [savedBarCount, setSavedBarCount] = useState(null);
 
-  useEffect(() => {
+  const fetchSavedBarCount = useCallback(() => {
     if (!token) return;
     api.get("/saved-bars", { headers: { Authorization: `Bearer ${token}` } })
       .then(({ data }) => setSavedBarCount((data.bars || []).length))
       .catch(() => setSavedBarCount(0));
   }, [token]);
+
+  useEffect(() => { fetchSavedBarCount(); }, [fetchSavedBarCount]);
+
+  useFocusEffect(useCallback(() => { fetchSavedBarCount(); }, [fetchSavedBarCount]));
 
   return (
     <NeonScreen gradient={gradients.settings}>
@@ -74,16 +78,6 @@ export default function ProfileScreen() {
               </Text>
               <Text style={[typography.caption, styles.statLabel]}>
                 Saved Bars
-              </Text>
-            </View>
-            <View style={styles.statCard}>
-              <Text style={[typography.heading, styles.statValue]}>—</Text>
-              <Text style={[typography.caption, styles.statLabel]}>Events</Text>
-            </View>
-            <View style={styles.statCard}>
-              <Text style={[typography.heading, styles.statValue]}>—</Text>
-              <Text style={[typography.caption, styles.statLabel]}>
-                Check-ins
               </Text>
             </View>
           </View>

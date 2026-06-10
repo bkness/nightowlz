@@ -108,6 +108,23 @@ router.get("/", async (_req, res) => {
     }
 });
 
+// GET /api/bars/owner/:userId — the bar owned by a user (owner only, own bars)
+// Declared before "/:id" so the literal "owner" segment isn't swallowed by the param route.
+router.get("/owner/:userId", verifyToken, async (req, res) => {
+    try {
+        if (req.user.id !== req.params.userId) {
+            return res.status(403).json({ message: "Not authorized." });
+        }
+        const bar = await Bar.findOne({ ownerId: req.params.userId })
+            .sort({ createdAt: -1 })
+            .lean();
+        if (!bar) return res.status(404).json({ message: "No bar found for this owner." });
+        res.json(bar);
+    } catch (err) {
+        res.status(500).json({ message: "Failed to fetch owner bar." });
+    }
+});
+
 // GET /api/bars/:id
 router.get("/:id", async (req, res) => {
     try {

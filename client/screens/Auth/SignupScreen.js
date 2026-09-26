@@ -1,5 +1,7 @@
 import React, { useState, useRef } from "react";
-import { View, Text, TextInput, StyleSheet, Pressable, Keyboard, TouchableWithoutFeedback, Alert } from "react-native";
+import { View, Text, TextInput, StyleSheet, Pressable } from "react-native";
+import showAlert from "../../utils/alert";
+import DismissKeyboard from "../../components/common/DismissKeyboard";
 import Animated, { FadeIn } from "react-native-reanimated";
 import NeonScreen from "../../components/common/NeonScreen";
 import NeonButton from "../../components/common/NeonButton";
@@ -51,7 +53,7 @@ export default function SignUpScreen({ navigation }) {
         "Signup request failed:",
         error?.response?.data?.message || error.message,
       );
-      Alert.alert(
+      showAlert(
         "Signup Failed",
         error?.response?.data?.message || "An unexpected error occurred.",
       );
@@ -75,7 +77,7 @@ export default function SignUpScreen({ navigation }) {
 
   return (
     <NeonScreen gradient={gradients.events} liftDistance={0}>
-      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <DismissKeyboard>
         <Animated.View entering={FadeIn.duration(10000)} style={[styles.container, safePadding]}>
           <Text style={styles.title}>Create Account</Text>
           <Text style={styles.subtitle}>
@@ -150,7 +152,7 @@ export default function SignUpScreen({ navigation }) {
             <Text style={styles.switchText}>Already have an account? Login</Text>
           </Pressable>
         </Animated.View>
-      </TouchableWithoutFeedback>
+      </DismissKeyboard>
     </NeonScreen>
   );
 }

@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Dimensions, StyleSheet, Text, View } from "react-native";
+import { Dimensions, Platform, StyleSheet, Text, View } from "react-native";
+import { webDraggable } from "../../utils/webDrag";
+
 import Animated, {
   Extrapolation,
   interpolate,
@@ -16,6 +18,9 @@ import NeonButton from "../common/NeonButton";
 import colors from "../../theme/colors";
 import typography from "../../theme/typography";
 import { swipeTabState } from "../../navigation/swipeTabState";
+
+const IS_WEB = Platform.OS === "web";
+const WEB_DRAG_START = 4; // px of movement before a drag starts / a tap is ruled out
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 const CARD_WIDTH = SCREEN_WIDTH - 40;
@@ -127,8 +132,11 @@ export default function SwipeCardDeck({ bars, savedBarIds, onSwipeRight, onCardP
     }, 0);
   }, [bars, onSwipeRight, entryProgress]);
 
+  // Web: a mouse drag should start almost immediately, and anything that
+  // moved shouldn't count as a tap (small drags were opening the bar).
+  // Native keeps its original feel.
   const tapGesture = Gesture.Tap()
-    .maxDistance(10)
+    .maxDistance(IS_WEB ? WEB_DRAG_START : 10)
     .onEnd(() => runOnJS(handleTap)());
 
   const panGesture = Gesture.Pan()
@@ -152,6 +160,8 @@ export default function SwipeCardDeck({ bars, savedBarIds, onSwipeRight, onCardP
       }
     });
 
+  // Native keeps gesture-handler's default activation distance
+  if (IS_WEB) panGesture.minDistance(WEB_DRAG_START);
   const gesture = Gesture.Race(tapGesture, panGesture);
 
   // Front card: pan + rotate + entry lift animation
@@ -241,7 +251,7 @@ export default function SwipeCardDeck({ bars, savedBarIds, onSwipeRight, onCardP
         {middleBar && <BarSwipeCard bar={middleBar} savedBarIds={savedBarIds} animatedStyle={middleStyle} dimOverlayStyle={middleDimStyle} />}
 
         <GestureDetector gesture={gesture}>
-          <Animated.View style={[StyleSheet.absoluteFill, { zIndex: 3 }]}>
+          <Animated.View style={[StyleSheet.absoluteFill, { zIndex: 3 }, webDraggable()]}>
             <BarSwipeCard bar={frontBar} savedBarIds={savedBarIds} animatedStyle={frontStyle} />
             <Animated.View style={[styles.saveOverlay, saveStyle]} pointerEvents="none">
               <Text style={styles.saveText}>SAVE</Text>

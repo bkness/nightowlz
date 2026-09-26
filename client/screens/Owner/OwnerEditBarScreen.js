@@ -4,11 +4,11 @@ import {
     TextInput,
     StyleSheet,
     Keyboard,
-    TouchableWithoutFeedback,
-    Alert,
     ActivityIndicator,
     ScrollView,
 } from 'react-native';
+import showAlert from "../../utils/alert";
+import DismissKeyboard from "../../components/common/DismissKeyboard";
 import React, { useEffect, useMemo, useState, useRef } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import NeonButton from '../../components/common/NeonButton';
@@ -81,7 +81,7 @@ export default function OwnerEditBarScreen() {
                     openingHours: data?.openingHours || '',
                 });
             } catch (err) {
-                Alert.alert('Could not load bar', err.response?.data?.message || 'Please try again.');
+                showAlert('Could not load bar', err.response?.data?.message || 'Please try again.');
             } finally {
                 if (active) setLoading(false);
             }
@@ -116,10 +116,10 @@ export default function OwnerEditBarScreen() {
                 });
             }
 
-            Alert.alert('Success', 'Bar information saved.');
+            showAlert('Success', 'Bar information saved.');
             navigation.goBack();
         } catch (err) {
-            Alert.alert('Error saving bar', err.response?.data?.message || 'Please try again.');
+            showAlert('Error saving bar', err.response?.data?.message || 'Please try again.');
         } finally {
             setSaving(false);
         }
@@ -131,7 +131,7 @@ export default function OwnerEditBarScreen() {
     };
 
     return (
-        <TouchableWithoutFeedback onPress={handleDismiss} accessible={false}>
+        <DismissKeyboard onDismiss={() => setFocusedField(null)}>
             <NeonScreen gradient={gradients.events} liftDistance={0}>
                 <ScrollView
                     contentContainerStyle={[styles.scrollContent, safePadding]}
@@ -267,7 +267,7 @@ export default function OwnerEditBarScreen() {
                     )}
                 </ScrollView>
             </NeonScreen>
-        </TouchableWithoutFeedback>
+        </DismissKeyboard>
     );
 }
 

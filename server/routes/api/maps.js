@@ -799,6 +799,35 @@ router.get("/places", async (req, res) => {
 });
 
 // GET /api/maps/metrics
+// MapKit JS token for the web client. Signed on demand with the same Maps
+// key the server uses; 30-minute lifetime, and MapKit JS re-requests a
+// fresh one through its authorizationCallback, so nothing needs a refresh
+// job. The `origin` claim locks each token to the site that asked for it.
+const MAPKIT_WEB_ORIGINS = (process.env.MAPKIT_WEB_ORIGINS ||
+    "http://localhost:4173,http://localhost:8081,http://localhost:19006")
+    .split(",").map((o) => o.trim()).filter(Boolean);
+
+router.get("/mapkit-token", (req, res) => {
+    const origin = req.headers.origin;
+    if (!origin || !MAPKIT_WEB_ORIGINS.includes(origin)) {
+        return res.status(403).json({ error: "origin not allowed" });
+    }
+    try {
+        const config = getAppleMapsConfig();
+        const key = config.key || fs.readFileSync(config.keyPath);
+        const now = Math.floor(Date.now() / 1000);
+        const token = jwt.sign(
+            { iss: config.teamId, iat: now, exp: now + 1800, origin },
+            key,
+            { algorithm: "ES256", keyid: config.keyId }
+        );
+        res.set("Cache-Control", "no-store").type("text/plain").send(token);
+    } catch (err) {
+        logMapsEvent("mapkit_token.error", { message: err.message });
+        res.status(500).json({ error: "maps unavailable" });
+    }
+});
+
 router.get("/metrics", (_req, res) => {
     res.json(getMetricsSnapshot());
 });

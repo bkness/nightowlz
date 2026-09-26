@@ -6,11 +6,11 @@ import {
     StyleSheet,
     ScrollView,
     Pressable,
-    Alert,
     ActivityIndicator,
     Keyboard,
-    TouchableWithoutFeedback,
 } from "react-native";
+import showAlert from "../../utils/alert";
+import DismissKeyboard from "../../components/common/DismissKeyboard";
 import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import NeonScreen from "../../components/common/NeonScreen";
@@ -139,27 +139,27 @@ export default function OwnerManageEventsScreen() {
     const handleSubmit = async () => {
         Keyboard.dismiss();
         if (!barId) {
-            Alert.alert("No venue", "Create your bar in Edit Bar Info first.");
+            showAlert("No venue", "Create your bar in Edit Bar Info first.");
             return;
         }
         if (form.title.trim().length < 2) {
-            Alert.alert("Missing title", "Give the event a title.");
+            showAlert("Missing title", "Give the event a title.");
             return;
         }
         const start = parseLocalDateTime(form.startsAt);
         if (!start) {
-            Alert.alert("Invalid start", "Use the format YYYY-MM-DD HH:MM (e.g. 2026-06-12 21:00).");
+            showAlert("Invalid start", "Use the format YYYY-MM-DD HH:MM (e.g. 2026-06-12 21:00).");
             return;
         }
         let end = null;
         if (form.endsAt.trim()) {
             end = parseLocalDateTime(form.endsAt);
             if (!end) {
-                Alert.alert("Invalid end", "Use the format YYYY-MM-DD HH:MM, or leave it blank.");
+                showAlert("Invalid end", "Use the format YYYY-MM-DD HH:MM, or leave it blank.");
                 return;
             }
             if (end < start) {
-                Alert.alert("Check times", "End time can't be before the start time.");
+                showAlert("Check times", "End time can't be before the start time.");
                 return;
             }
         }
@@ -183,7 +183,7 @@ export default function OwnerManageEventsScreen() {
             resetForm();
             await loadEvents();
         } catch (err) {
-            Alert.alert(
+            showAlert(
                 "Could not save event",
                 err?.response?.data?.message || "Please try again.",
             );
@@ -193,7 +193,7 @@ export default function OwnerManageEventsScreen() {
     };
 
     const handleDelete = (event) => {
-        Alert.alert("Delete event", `Remove "${event.title}"?`, [
+        showAlert("Delete event", `Remove "${event.title}"?`, [
             { text: "Cancel", style: "cancel" },
             {
                 text: "Delete",
@@ -204,7 +204,7 @@ export default function OwnerManageEventsScreen() {
                         if (editingId === event._id) resetForm();
                         await loadEvents();
                     } catch (err) {
-                        Alert.alert(
+                        showAlert(
                             "Could not delete",
                             err?.response?.data?.message || "Please try again.",
                         );
@@ -215,7 +215,7 @@ export default function OwnerManageEventsScreen() {
     };
 
     return (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <DismissKeyboard>
             <NeonScreen gradient={gradients.events}>
                 <ScrollView
                     contentContainerStyle={[styles.scrollContent, safePadding]}
@@ -411,7 +411,7 @@ export default function OwnerManageEventsScreen() {
                     )}
                 </ScrollView>
             </NeonScreen>
-        </TouchableWithoutFeedback>
+        </DismissKeyboard>
     );
 }
 

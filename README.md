@@ -4,6 +4,8 @@ A React Native nightlife discovery app for finding bars, clubs, and live music n
 
 > Built as a solo full-stack mobile project — React Native + Expo on the frontend, Node/Express + MongoDB on the backend, Apple Maps powering real-time venue discovery.
 
+**Try it in your browser:** [nightowlz.vercel.app](https://nightowlz.vercel.app) — log in as `demo` / `nightowlz-demo`. The web version runs from the same React Native code as the iPhone app.
+
 ---
 
 ## Features
@@ -117,7 +119,8 @@ npm run client    # starts Expo
 
 ## Live
 
-Server: [https://nightowlz.onrender.com](https://nightowlz.onrender.com)  
+Web app: [https://nightowlz.vercel.app](https://nightowlz.vercel.app) (demo login: `demo` / `nightowlz-demo`)  
+API server: [https://nightowlz.onrender.com](https://nightowlz.onrender.com)  
 Mobile client: TestFlight build in progress.
 
 ## Screenshots

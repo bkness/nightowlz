@@ -4,11 +4,11 @@ import {
   Text,
   StyleSheet,
   Switch,
-  Alert,
   ScrollView,
   TouchableWithoutFeedback,
   TouchableOpacity,
 } from "react-native";
+import showAlert from "../../utils/alert";
 import { useNavigation } from "@react-navigation/native";
 import { BlurView } from "expo-blur";
 import { surfaces } from "../../theme";
@@ -57,7 +57,7 @@ export default function SettingsScreen() {
   const { logout } = useAuth();
 
   const handleLogout = () => {
-    Alert.alert("Logout", "Are you sure you want to log out?", [
+    showAlert("Logout", "Are you sure you want to log out?", [
       { text: "Cancel", style: "cancel" },
       {
         text: "Log Out",

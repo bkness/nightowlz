@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { ActivityIndicator, StyleSheet, ScrollView, View, Text } from "react-native";
+import { Platform, ActivityIndicator, StyleSheet, ScrollView, View, Text } from "react-native";
 import DraggableFlatList, { ScaleDecorator, ShadowDecorator } from "react-native-draggable-flatlist";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import NeonScreen from "../../components/common/NeonScreen";
@@ -15,6 +15,8 @@ import EmptyStateCard from "../../components/common/EmptyStateCard";
 import BarCard from "../../components/bars/BarCard";
 import { api } from "../../utils/api";
 import { useAuth } from "../../context/AuthContext";
+
+const IS_WEB = Platform.OS === "web";
 
 const ORDER_KEY = "mybars-order";
 
@@ -77,6 +79,19 @@ export default function MyBarsScreen() {
     AsyncStorage.setItem(ORDER_KEY, JSON.stringify(data.map((b) => String(b.barId))));
   }, []);
 
+  // Web: hold-to-drag reordering doesn't work reliably in the browser, so
+  // cards get up/down buttons that swap neighbours and save the same order
+  const moveBar = useCallback((index, delta) => {
+    setSavedBars((prev) => {
+      const target = index + delta;
+      if (target < 0 || target >= prev.length) return prev;
+      const next = [...prev];
+      [next[index], next[target]] = [next[target], next[index]];
+      AsyncStorage.setItem(ORDER_KEY, JSON.stringify(next.map((b) => String(b.barId))));
+      return next;
+    });
+  }, []);
+
   useEffect(() => {
     loadSavedBars();
   }, [loadSavedBars]);
@@ -87,7 +102,9 @@ export default function MyBarsScreen() {
     }, [loadSavedBars]),
   );
 
-  const renderItem = useCallback(({ item, drag }) => (
+  const renderItem = useCallback(({ item, drag, getIndex }) => {
+    const index = getIndex();
+    return (
     <ShadowDecorator>
       <ScaleDecorator activeScale={0.97}>
         <BarCard
@@ -95,7 +112,9 @@ export default function MyBarsScreen() {
           vibe={item.vibe}
           neighborhood={item.neighborhood}
           category={item.category}
-          dragHandleOnLongPress={drag}
+          dragHandleOnLongPress={IS_WEB ? undefined : drag}
+          onMoveUp={IS_WEB && index > 0 ? () => moveBar(index, -1) : undefined}
+          onMoveDown={IS_WEB && index < savedBars.length - 1 ? () => moveBar(index, 1) : undefined}
           onDelete={() => removeSavedBar(item.barId)}
           onPress={() =>
             navigation.navigate("BarProfile", {
@@ -117,7 +136,8 @@ export default function MyBarsScreen() {
         />
       </ScaleDecorator>
     </ShadowDecorator>
-  ), [navigation, removeSavedBar]);
+    );
+  }, [navigation, removeSavedBar, moveBar, savedBars.length]);
 
   const collectionCard = savedBars.length > 0 && (
     <View style={styles.collectionCard}>
@@ -133,7 +153,7 @@ export default function MyBarsScreen() {
           <Text style={[styles.collectionChipText, { color: themeColors.neonYellow }]}>Personal shortlist</Text>
         </View>
       </View>
-      <Text style={styles.swipeHint}>← swipe to remove  ·  hold ≡ to reorder</Text>
+      <Text style={styles.swipeHint}>{Platform.OS === "web" ? "↑↓ to reorder  ·  🗑 to remove" : "← swipe to remove  ·  hold ≡ to reorder"}</Text>
     </View>
   );
 
@@ -194,6 +214,9 @@ export default function MyBarsScreen() {
           renderItem={renderItem}
           onDragEnd={onDragEnd}
           ListHeaderComponent={header}
+          // Without a flex container the list grows to fit every row, so on
+          // web (body is overflow:hidden) there's nothing left to scroll
+          containerStyle={styles.listContainer}
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
           bounces={false}
@@ -206,6 +229,9 @@ export default function MyBarsScreen() {
 }
 
 const styles = StyleSheet.create({
+  listContainer: {
+    flex: 1,
+  },
   scrollContent: {
     paddingHorizontal: 20,
     paddingBottom: 32,

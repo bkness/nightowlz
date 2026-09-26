@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { View, Text, StyleSheet, ScrollView, Pressable, Alert } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
+import showAlert from "../../utils/alert";
 import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
 import NeonScreen from "../../components/common/NeonScreen";
 import NeonButton from "../../components/common/NeonButton";
@@ -119,7 +120,7 @@ export default function OwnerDashboardScreen() {
                     verified: ownerBar?.verified ?? false,
                 });
             } else {
-                Alert.alert(
+                showAlert(
                     "Add your venue first",
                     "Create your bar in Edit Bar Info before adding events.",
                 );
@@ -128,7 +129,7 @@ export default function OwnerDashboardScreen() {
         }
 
         if (title === "Specials & Offers") {
-            Alert.alert("Coming soon", "Specials & offers are on the roadmap.");
+            showAlert("Coming soon", "Specials & offers are on the roadmap.");
         }
     };
 

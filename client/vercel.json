@@ -1,0 +1,7 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "npm ci",
+  "buildCommand": "EXPO_PUBLIC_API_BASE_URL=https://nightowlz.onrender.com/api npx expo export -p web --output-dir dist",
+  "outputDirectory": "dist"
+}

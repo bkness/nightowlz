@@ -7,6 +7,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ThemeProvider } from "./theme/ThemeProvider";
 import { AuthProvider } from "./context/AuthContext";
 import colors from "./theme/colors";
+import DesktopShowcase from "./components/web/DesktopShowcase";
 
 const navigationTheme = {
   ...DarkTheme,
@@ -29,16 +30,18 @@ export default function App() {
   }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaProvider>
-        <AuthProvider>
-          <ThemeProvider>
-            <NavigationContainer theme={navigationTheme}>
-              <StackNavigator />
-            </NavigationContainer>
-          </ThemeProvider>
-        </AuthProvider>
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
+    <DesktopShowcase>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <SafeAreaProvider>
+          <AuthProvider>
+            <ThemeProvider>
+              <NavigationContainer theme={navigationTheme}>
+                <StackNavigator />
+              </NavigationContainer>
+            </ThemeProvider>
+          </AuthProvider>
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
+    </DesktopShowcase>
   );
 }

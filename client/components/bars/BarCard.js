@@ -1,5 +1,5 @@
 import React from "react";
-import { Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Platform, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Animated, {
   useSharedValue,
   withSpring,
@@ -13,6 +13,9 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import themeColors from "../../theme/colors";
 import surfaces from "../../theme/surfaces";
 import typography from "../../theme/typography";
+import showAlert from "../../utils/alert";
+
+const IS_WEB = Platform.OS === "web";
 
 const SWIPE_THRESHOLD = -90;
 
@@ -30,6 +33,8 @@ function BarCard({
   onToggleSave,
   onDelete,
   dragHandleOnLongPress,
+  onMoveUp,
+  onMoveDown,
 }) {
   const scale = useSharedValue(1);
   const opacity = useSharedValue(1);
@@ -151,6 +156,42 @@ function BarCard({
                 />
               </TouchableOpacity>
             )}
+            {IS_WEB && onDelete && (
+              // Swipe-to-delete is a touch gesture; on desktop it fought the
+              // list's drag-to-reorder and mouse selection, so web gets a
+              // button (with a confirm, since a click is easy to misfire)
+              <TouchableOpacity
+                onPress={() =>
+                  showAlert("Remove bar", `Remove ${name} from My Bars?`, [
+                    { text: "Cancel", style: "cancel" },
+                    { text: "Remove", style: "destructive", onPress: onDelete },
+                  ])
+                }
+                accessibilityLabel={`Remove ${name} from My Bars`}
+                hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                style={styles.removeButton}
+              >
+                <MaterialCommunityIcons name="trash-can-outline" size={20} color={themeColors.muted} />
+              </TouchableOpacity>
+            )}
+            {IS_WEB && (onMoveUp || onMoveDown) && (
+              <View style={styles.moveButtons}>
+                {[
+                  { icon: "chevron-up", action: onMoveUp, label: "up" },
+                  { icon: "chevron-down", action: onMoveDown, label: "down" },
+                ].map(({ icon, action, label }) => (
+                  <TouchableOpacity
+                    key={label}
+                    onPress={action}
+                    disabled={!action}
+                    accessibilityLabel={`Move ${name} ${label}`}
+                    style={[styles.moveButton, !action && styles.moveButtonDisabled]}
+                  >
+                    <MaterialCommunityIcons name={icon} size={20} color={themeColors.muted} />
+                  </TouchableOpacity>
+                ))}
+              </View>
+            )}
             {dragHandleOnLongPress && (
               <TouchableOpacity
                 onLongPress={dragHandleOnLongPress}
@@ -175,6 +216,9 @@ function BarCard({
   );
 
   if (!onDelete) return card;
+
+  // Web gets a remove button instead (see card below)
+  if (IS_WEB) return card;
 
   return <GestureDetector gesture={panGesture}>{card}</GestureDetector>;
 }
@@ -303,6 +347,23 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
   },
 
+  moveButtons: {
+    marginLeft: 8,
+    alignSelf: "flex-start",
+  },
+  moveButton: {
+    padding: 2,
+    opacity: 0.7,
+  },
+  moveButtonDisabled: {
+    opacity: 0.2,
+  },
+  removeButton: {
+    padding: 4,
+    marginLeft: 8,
+    alignSelf: "flex-start",
+    opacity: 0.7,
+  },
   dragHandle: {
     padding: 4,
     marginLeft: 8,

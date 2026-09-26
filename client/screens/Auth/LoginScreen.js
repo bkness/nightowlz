@@ -1,5 +1,7 @@
 import React, { useState, useRef } from "react";
-import { View, Text, TextInput, StyleSheet, Pressable, Keyboard, TouchableWithoutFeedback, Alert } from "react-native";
+import { View, Text, TextInput, StyleSheet, Pressable } from "react-native";
+import showAlert from "../../utils/alert";
+import DismissKeyboard from "../../components/common/DismissKeyboard";
 import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
 import NeonScreen from "../../components/common/NeonScreen";
 import NeonButton from "../../components/common/NeonButton";
@@ -43,7 +45,7 @@ export default function LoginScreen({ navigation }) {
 
   const handleLogin = async () => {
     if (!canSubmit()) {
-      Alert.alert("Login Failed", "Email and password are required.");
+      showAlert("Login Failed", "Email and password are required.");
       return;
     }
 
@@ -60,7 +62,7 @@ export default function LoginScreen({ navigation }) {
         "Login request failed:",
         error?.response?.data?.message || error.message,
       );
-      Alert.alert("Login Failed", getLoginErrorMessage(error));
+      showAlert("Login Failed", getLoginErrorMessage(error));
       return;
     }
 
@@ -80,7 +82,7 @@ export default function LoginScreen({ navigation }) {
 
   return (
     <NeonScreen gradient={gradients.discover} liftDistance={0}>
-      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <DismissKeyboard>
         <View style={[styles.container, safePadding]}>
           <Animated.View entering={FadeIn.duration(600)}>
             {__DEV__ ? (
@@ -145,7 +147,7 @@ export default function LoginScreen({ navigation }) {
             </Pressable>
           </Animated.View>
         </View>
-      </TouchableWithoutFeedback>
+      </DismissKeyboard>
     </NeonScreen>
   );
 }

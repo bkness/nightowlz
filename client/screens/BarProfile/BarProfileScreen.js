@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, ScrollView, Alert, ActivityIndicator, Linking } from "react-native";
-import MapView, { Marker, PROVIDER_DEFAULT } from "react-native-maps";
+import { StyleSheet, Text, View, ScrollView, ActivityIndicator, Linking } from "react-native";
+import showAlert from "../../utils/alert";
+import BarMap from "../../components/bars/BarMap";
 import NeonScreen from "../../components/common/NeonScreen";
 import { gradients } from "../../theme";
 import Header from "../../components/layout/Header";
@@ -74,7 +75,7 @@ export default function BarProfileScreen({ route, navigation }) {
 
   const handleSave = async () => {
     if (!token) {
-      Alert.alert("Sign in required", "Please log in to save bars.");
+      showAlert("Sign in required", "Please log in to save bars.");
       return;
     }
     setSaving(true);
@@ -95,11 +96,11 @@ export default function BarProfileScreen({ route, navigation }) {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setIsSaved(true);
-      Alert.alert("Saved!", `${bar.name} added to My Bars.`);
+      showAlert("Saved!", `${bar.name} added to My Bars.`);
     } catch (err) {
       const msg = err.response?.data?.message || err.message || "Could not save bar.";
       console.error("Save error:", msg);
-      Alert.alert("Error", msg);
+      showAlert("Error", msg);
     } finally {
       setSaving(false);
     }
@@ -107,18 +108,18 @@ export default function BarProfileScreen({ route, navigation }) {
 
   const handleDelete = async () => {
     if (!token) {
-      Alert.alert("Sign in required", "Please log in to remove bars.");
+      showAlert("Sign in required", "Please log in to remove bars.");
       return;
     }
     setDeleting(true);
     try {
       await api.delete(`/saved-bars/${bar.barId}`, { headers: { Authorization: `Bearer ${token}` }, });
       setIsSaved(false);
-      Alert.alert("Removed", `${bar.name} removed from My Bars.`);
+      showAlert("Removed", `${bar.name} removed from My Bars.`);
     } catch (err) {
       const msg = err.response?.data?.message || err.message || "Could not remove bar.";
       console.error("Delete error:", msg);
-      Alert.alert("Error", msg);
+      showAlert("Error", msg);
     } finally {
       setDeleting(false);
     }
@@ -144,6 +145,10 @@ export default function BarProfileScreen({ route, navigation }) {
   const detailLines = Array.isArray(bar.addressLines) && bar.addressLines.length > 0
     ? bar.addressLines
     : [bar.neighborhood].filter(Boolean);
+  // Apple Maps results set neighborhood to the joined address (server
+  // maps.js), which then showed twice — once here, once in the info card
+  const showNeighborhood =
+    !!bar.neighborhood && bar.neighborhood !== detailLines.join(", ") && !detailLines.includes(bar.neighborhood);
 
   return (
     <NeonScreen gradient={gradients.myBars}>
@@ -156,7 +161,7 @@ export default function BarProfileScreen({ route, navigation }) {
             <Text style={styles.categoryPillText}>{bar.category}</Text>
           </View>
         )}
-        {!!bar.neighborhood && (
+        {showNeighborhood && (
           <Text style={styles.neighborhood}>{bar.neighborhood}</Text>
         )}
         {!!bar.distanceMeters && (
@@ -176,26 +181,7 @@ export default function BarProfileScreen({ route, navigation }) {
           </View>
         )}
 
-        {hasMap && (
-          <MapView
-            provider={PROVIDER_DEFAULT}
-            style={styles.map}
-            initialRegion={{
-              latitude: bar.lat,
-              longitude: bar.lon,
-              latitudeDelta: 0.005,
-              longitudeDelta: 0.005,
-            }}
-            scrollEnabled={false}
-            zoomEnabled={false}
-          >
-            <Marker
-              coordinate={{ latitude: bar.lat, longitude: bar.lon }}
-              title={bar.name}
-              pinColor={colors.neonYellow}
-            />
-          </MapView>
-        )}
+        {hasMap && <BarMap bar={bar} style={styles.map} />}
 
         {events.length > 0 && (
           <View style={styles.eventsSection}>

@@ -40,7 +40,8 @@ const css = `
   box-sizing: border-box;
 }
 .no-sign {
-  margin: 0 0 1.25rem; font: 400 clamp(3.4rem, 6vw, 5rem)/1 Pacifico, cursive;
+  /* Pacifico's descenders (the g in Night) hang well below the line */
+  margin: 0 0 2rem; padding-bottom: .15em; font: 400 clamp(3.4rem, 6vw, 5rem)/1 Pacifico, cursive;
   color: #FFE3BD;
   text-shadow: 0 0 .06em #fff, 0 0 .18em var(--amber), 0 0 .5em var(--amber), 0 0 1.1em var(--pink);
   animation: no-flicker 1.6s steps(1) 1 both;
@@ -58,6 +59,14 @@ const css = `
 .no-block p, .no-block li { margin: 0; font-size: .95rem; }
 .no-block ul { margin: 0; padding: 0; list-style: none; display: grid; gap: .45rem; }
 .no-block strong { color: #EDE7F6; font-weight: 600; }
+.no-demo {
+  display: grid; grid-template-columns: max-content auto; gap: .3rem 1rem;
+  margin: 1rem 0 0; padding: .85rem 1.1rem; width: max-content;
+  border-radius: 12px; background: rgba(255,184,92,.07);
+  box-shadow: inset 0 0 0 1px rgba(255,184,92,.25);
+}
+.no-demo dt { color: #8C85A0; font-size: .9rem; }
+.no-demo dd { margin: 0; color: #FFE3BD; font-weight: 600; user-select: all; }
 .no-note { font-size: .85rem; color: #8C85A0; }
 .no-links { display: flex; gap: 1.5rem; margin-top: 2rem; }
 .no-links a {
@@ -109,9 +118,13 @@ export default function DesktopShowcase({ children }) {
             <h2>Try it</h2>
             <p>
               The app on the right is the real thing, built from the same code as the iPhone
-              version. Create an account in a few seconds. Pick <strong>Owner</strong> to see the
-              bar dashboard and event tools.
+              version. Log in with the demo account, or create your own in a few seconds and pick{" "}
+              <strong>Owner</strong> to see the bar dashboard and event tools.
             </p>
+            <dl className="no-demo">
+              <dt>Username</dt><dd>demo</dd>
+              <dt>Password</dt><dd>nightowlz-demo</dd>
+            </dl>
           </div>
 
           <div className="no-block">

@@ -1,4 +1,3 @@
-import 'dotenv/config';
 export default {
   name: "Night Owlz",
   slug: "night-owlz-client",

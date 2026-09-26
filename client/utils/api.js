@@ -1,5 +1,6 @@
 import axios from "axios";
 import Constants from "expo-constants";
+import { Platform } from "react-native";
 
 function isLocalHost(host) {
   return host === "localhost" || host === "127.0.0.1";
@@ -45,6 +46,10 @@ function buildBaseURLCandidates() {
   const host = hostUri.split(":")[0];
   const hostBased = host ? `http://${host}:3001/api` : "";
 
+  // The web build is a public site: LAN/localhost fallbacks only make sense
+  // in development, so a configured URL is the only candidate there
+  if (Platform.OS === "web" && envBase) return [cleanBaseURL(envBase)];
+
   return unique(
     [envBase, configBase, manifestBase, resolveFallbackBaseURL(), hostBased, "http://localhost:3001/api"].map(cleanBaseURL),
   );
@@ -69,9 +74,11 @@ function getNextBaseURL() {
   return BASE_URL_CANDIDATES[baseURLIndex];
 }
 
+// Web: the API runs on Render's free tier, which takes 20-50s to wake from
+// sleep. 10s made the first request of a visit fail.
 export const api = axios.create({
   baseURL,
-  timeout: 10000,
+  timeout: Platform.OS === "web" ? 60000 : 10000,
 });
 
 api.interceptors.response.use(

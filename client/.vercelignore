@@ -1,0 +1,7 @@
+# Never upload local env files, native build folders, or deps
+.env*
+node_modules
+ios
+android
+dist
+.expo

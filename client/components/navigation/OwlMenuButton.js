@@ -1,7 +1,6 @@
 import { Pressable, StyleSheet } from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
-import { useNavigation } from "@react-navigation/native";
-import { DrawerActions } from "@react-navigation/native";
+import { DrawerActions, useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import NightOwlzIcon from "../common/NightOwlzIcon";
 import colors from "../../theme/colors";

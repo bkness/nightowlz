@@ -50,7 +50,6 @@ export default function BarProfileScreen({ route, navigation }) {
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [isSaved, setIsSaved] = useState(route.params?.isSaved || false);
-  const fromMyBars = route.params?.fromMyBars || false;
 
   // Events only exist for registered (Mongo) bars, which carry an _id.
   // Discoverable OSM bars have no _id, so this section stays hidden for them.

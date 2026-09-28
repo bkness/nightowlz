@@ -25,7 +25,6 @@ function canListen(port) {
 async function findOpenPort(start, max) {
   for (let port = start; port <= max; port += 1) {
     // Probe each port sequentially to avoid races.
-    // eslint-disable-next-line no-await-in-loop
     if (await canListen(port)) {
       return port;
     }

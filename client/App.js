@@ -8,6 +8,7 @@ import { ThemeProvider } from "./theme/ThemeProvider";
 import { AuthProvider } from "./context/AuthContext";
 import colors from "./theme/colors";
 import DesktopShowcase from "./components/web/DesktopShowcase";
+import WebAnalytics from "./components/web/WebAnalytics";
 
 const navigationTheme = {
   ...DarkTheme,
@@ -30,18 +31,21 @@ export default function App() {
   }
 
   return (
-    <DesktopShowcase>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <SafeAreaProvider>
-          <AuthProvider>
-            <ThemeProvider>
-              <NavigationContainer theme={navigationTheme}>
-                <StackNavigator />
-              </NavigationContainer>
-            </ThemeProvider>
-          </AuthProvider>
-        </SafeAreaProvider>
-      </GestureHandlerRootView>
-    </DesktopShowcase>
+    <>
+      <DesktopShowcase>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <SafeAreaProvider>
+            <AuthProvider>
+              <ThemeProvider>
+                <NavigationContainer theme={navigationTheme}>
+                  <StackNavigator />
+                </NavigationContainer>
+              </ThemeProvider>
+            </AuthProvider>
+          </SafeAreaProvider>
+        </GestureHandlerRootView>
+      </DesktopShowcase>
+      <WebAnalytics />
+    </>
   );
 }

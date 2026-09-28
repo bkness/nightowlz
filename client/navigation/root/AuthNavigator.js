@@ -4,7 +4,6 @@ import SignUpScreen from "../../screens/Auth/SignupScreen";
 import {
   authScreenOptions,
   authStackOptions,
-  baseStackScreenOptions,
 } from "../options/stackOptions";
 
 const Stack = createNativeStackNavigator();

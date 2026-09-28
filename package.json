@@ -11,7 +11,8 @@
     "server": "npm --workspace server run dev",
     "client:tunnel": "npm --workspace client run start:tunnel",
     "guest": "node scripts/start-guest-dev.js",
-    "home": "node scripts/start-home-dev.js"
+    "home": "node scripts/start-home-dev.js",
+    "lint": "npm run lint --workspaces"
   },
   "devDependencies": {
     "@react-native-community/cli": "^20.1.3",

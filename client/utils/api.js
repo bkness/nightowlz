@@ -76,6 +76,7 @@ function getNextBaseURL() {
 
 // Web: the API runs on Render's free tier, which takes 20-50s to wake from
 // sleep. 10s made the first request of a visit fail.
+// eslint-disable-next-line import/no-named-as-default-member -- axios.create is the documented API
 export const api = axios.create({
   baseURL,
   timeout: Platform.OS === "web" ? 60000 : 10000,

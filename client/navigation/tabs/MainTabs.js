@@ -2,13 +2,13 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { BlurView } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
 import { Dimensions, StyleSheet, View } from "react-native";
-
-const SCREEN_WIDTH = Dimensions.get("window").width;
 import DiscoverScreen from "../../screens/Discover/DiscoverScreen";
 import MyBarsScreen from "../../screens/MyBars/MyBarsScreen";
 import NeonTabIcon from "../../components/common/NeonTabIcon";
 import SwipeTabWrapper from "../SwipeTabWrapper";
 import { colors } from "../../theme";
+
+const SCREEN_WIDTH = Dimensions.get("window").width;
 
 // Events tab hidden for MVP — events are owner-published and surfaced on the
 // bar profile. Re-add to TAB_ORDER + a <Tab.Screen> once there's a discovery feed.

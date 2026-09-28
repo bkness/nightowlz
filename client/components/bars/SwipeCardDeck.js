@@ -116,7 +116,7 @@ export default function SwipeCardDeck({ bars, savedBarIds, onSwipeRight, onCardP
     translateX.value = 0;
     translateY.value = 0;
     entryProgress.value = 1;
-  }, [bars]);
+  }, [bars, translateX, translateY, entryProgress]);
 
   const handleTap = useCallback(() => {
     onCardPress?.(bars[currentIndexRef.current]);
@@ -225,7 +225,7 @@ export default function SwipeCardDeck({ bars, savedBarIds, onSwipeRight, onCardP
     return (
       <View style={styles.doneContainer}>
         <Ionicons name="checkmark-circle-outline" size={52} color={colors.neonYellow} style={{ marginBottom: 16 }} />
-        <Text style={styles.doneTitle}>You've seen all {bars.length} spots</Text>
+        <Text style={styles.doneTitle}>You&apos;ve seen all {bars.length} spots</Text>
         <Text style={styles.doneSubtitle}>Search a new city to find more</Text>
         <NeonButton
           title="Start Over"
